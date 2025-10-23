@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { progressApi } from '../services/api';
+import { useInstallPWA } from '../hooks/useInstallPWA';
 import ConfirmModal from '../components/ConfirmModal';
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
@@ -44,6 +45,7 @@ export default function ProfilePage() {
   const [savingGoal, setSavingGoal] = useState(false);
 
   const isAdmin = roles.some((r) => r.name === 'admin');
+  const { isInstallable, installApp } = useInstallPWA();
 
   useEffect(() => {
     // Solo cargar perfil si no es admin
@@ -174,6 +176,17 @@ export default function ProfilePage() {
             >
               Volver al Panel
             </Link>
+
+            {/* Install PWA Button */}
+            {isInstallable && (
+              <button
+                onClick={installApp}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
+              >
+                <span className="text-xl sm:text-2xl">📱</span>
+                Instalar Aplicación
+              </button>
+            )}
           </div>
         </div>
 
@@ -446,6 +459,17 @@ export default function ProfilePage() {
           >
             Volver al Inicio
           </Link>
+
+          {/* Install PWA Button */}
+          {isInstallable && (
+            <button
+              onClick={installApp}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
+            >
+              <span className="text-xl sm:text-2xl">📱</span>
+              Instalar Aplicación
+            </button>
+          )}
         </div>
       </div>
 

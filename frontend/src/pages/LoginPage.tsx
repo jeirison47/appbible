@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
+import { useInstallPWA } from '../hooks/useInstallPWA';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
@@ -12,6 +13,7 @@ export default function LoginPage() {
 
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const { isInstallable, installApp } = useInstallPWA();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,6 +106,19 @@ export default function LoginPage() {
               Crear Cuenta Nueva
             </Link>
           </div>
+
+          {/* Install PWA Button */}
+          {isInstallable && (
+            <div className="mt-4">
+              <button
+                onClick={installApp}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-lg hover:from-green-600 hover:to-emerald-700 transition font-semibold shadow-lg flex items-center justify-center gap-2"
+              >
+                <span className="text-xl">📱</span>
+                Instalar Aplicación
+              </button>
+            </div>
+          )}
 
           {/* Test users */}
           <div className="mt-6 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
