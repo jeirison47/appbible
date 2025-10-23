@@ -63,4 +63,5 @@ console.log('━━━━━━━━━━━━━━━━━━━━━━�
 serve({
   fetch: app.fetch,
   port,
+  hostname: '0.0.0.0', // Required for Render/Docker containers
 });
