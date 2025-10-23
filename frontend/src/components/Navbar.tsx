@@ -89,9 +89,9 @@ export default function Navbar() {
       </div>
 
       {/* Navegación móvil - Fixed bottom bar (solo iconos) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg border-t border-white/10 z-50 pb-0">
+      <div className="md:hidden fixed bottom-0 left-0 w-screen bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg border-t border-white/10 z-50 m-0">
         {!isAdmin ? (
-          <div className="flex items-center justify-around px-2 py-3">
+          <div className="flex items-center justify-around py-4">
             <Link to="/" className={mobileNavLinkClass('/')}>
               <span className="text-2xl">🏠</span>
               <span className="text-[10px] font-medium">Inicio</span>
@@ -114,7 +114,7 @@ export default function Navbar() {
             </Link>
           </div>
         ) : (
-          <div className="flex items-center justify-around px-2 py-3">
+          <div className="flex items-center justify-around py-4">
             <Link to="/" className={mobileNavLinkClass('/')}>
               <span className="text-2xl">🏠</span>
               <span className="text-[10px] font-medium">Inicio</span>
