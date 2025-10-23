@@ -65,7 +65,7 @@ export default function BookPathPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32 pb-28">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-28">
       {/* Navbar */}
       <Navbar />
 
