@@ -14,6 +14,8 @@ interface ProgressData {
     currentStreak: number;
     longestStreak: number;
     dailyGoal: number;
+    personalDailyGoal: number | null;
+    systemDailyGoal: number;
   };
   xp: {
     totalXp: number;
@@ -76,7 +78,7 @@ interface UserStats {
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
-  const { hasPermission, permissions } = usePermission();
+  const { permissions } = usePermission();
 
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [verse, setVerse] = useState<any>(null);
