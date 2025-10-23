@@ -233,27 +233,29 @@ export default function CaminoPage() {
       {/* Progress Header */}
       <div className="sticky top-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Tu Camino Bíblico</h1>
-            <div className="text-right">
-              <p className="text-xs sm:text-sm text-gray-500">Progreso Total</p>
-              <p className="text-lg sm:text-xl font-bold text-indigo-600">{totalProgress.percentage}%</p>
-            </div>
-          </div>
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Título */}
+            <h1 className="text-base sm:text-xl font-bold text-gray-800 whitespace-nowrap">
+              Tu Camino Bíblico
+            </h1>
 
-          {/* Global Progress Bar */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1">
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            {/* Barra de progreso con porcentaje dentro */}
+            <div className="flex-1 relative">
+              <div className="w-full bg-gray-200 rounded-full h-6 sm:h-8 overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out relative"
-                  style={{ width: `${totalProgress.percentage}%` }}
+                  className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out relative flex items-center justify-center"
+                  style={{ width: `${totalProgress.percentage}%`, minWidth: '50px' }}
                 >
+                  <span className="text-xs sm:text-sm font-bold text-white z-10">
+                    {totalProgress.percentage}%
+                  </span>
                   <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
               </div>
             </div>
-            <div className="text-sm font-bold text-gray-700 whitespace-nowrap">
+
+            {/* Libros completados */}
+            <div className="text-sm sm:text-base font-bold text-gray-700 whitespace-nowrap">
               {totalProgress.completed} / {totalProgress.total}
             </div>
           </div>
