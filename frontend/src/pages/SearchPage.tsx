@@ -62,10 +62,14 @@ export default function SearchPage() {
 
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-4 sm:mb-6 lg:mb-8 text-center">
-          <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">🔍</div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 lg:mb-4">Buscar en la Biblia</h2>
-          <p className="text-sm sm:text-base lg:text-xl opacity-90">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 text-white mb-4 sm:mb-6 text-center">
+          <div className="flex justify-center mb-2 sm:mb-3">
+            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Buscar en la Biblia</h2>
+          <p className="text-xs sm:text-sm opacity-90">
             Busca por referencia (ej: "Juan 3:16") o por palabra clave
           </p>
         </div>

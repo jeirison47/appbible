@@ -347,10 +347,10 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Progreso de Hoy */}
+          {/* Meta Diaria */}
           <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium">Progreso de Hoy</p>
+              <p className="text-xs sm:text-sm text-gray-600 font-medium">Meta Diaria</p>
               <span className="text-xl sm:text-2xl">📊</span>
             </div>
             <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600">
@@ -382,9 +382,23 @@ export default function HomePage() {
             <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600">
               {progress?.user.currentStreak || 0}
             </p>
-            <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-              Récord: {progress?.user.longestStreak || 0} días
-            </p>
+            {progress?.user && (
+              <div className="mt-2 sm:mt-3">
+                <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                  <div
+                    className="bg-orange-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${progress.user.longestStreak > 0
+                        ? Math.min((progress.user.currentStreak / progress.user.longestStreak) * 100, 100)
+                        : progress.user.currentStreak > 0 ? 100 : 0}%`
+                    }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Récord: {progress.user.longestStreak || 0} días
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Tiempo de Lectura Hoy */}

@@ -67,14 +67,14 @@ export default function FreeReadingPage() {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-4 sm:mb-6 lg:mb-8 text-center">
-          <div className="mb-3 sm:mb-4 flex justify-center">
-            <svg className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 text-white mb-4 sm:mb-6 text-center">
+          <div className="mb-2 sm:mb-3 flex justify-center">
+            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
             </svg>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 lg:mb-4">Explora la Biblia</h2>
-          <p className="text-sm sm:text-base lg:text-xl opacity-90">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Explora la Biblia</h2>
+          <p className="text-xs sm:text-sm opacity-90">
             Lee cualquier libro, capítulo o versículo de manera libre
           </p>
         </div>

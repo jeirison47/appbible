@@ -263,18 +263,18 @@ export default function CaminoPage() {
       </div>
 
       {/* Hero Section */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8 lg:py-12 text-center">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-6 sm:mb-8 lg:mb-12">
-          <div className="mb-3 sm:mb-4 flex justify-center">
-            <svg className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 text-center">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 text-white mb-4 sm:mb-6">
+          <div className="mb-2 sm:mb-3 flex justify-center">
+            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
             </svg>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Tu Aventura Bíblica</h2>
-          <p className="text-sm sm:text-base lg:text-xl opacity-90 mb-2">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Tu Aventura Bíblica</h2>
+          <p className="text-xs sm:text-sm opacity-90 mb-1">
             Un camino continuo a través de la Palabra de Dios
           </p>
-          <p className="text-xs sm:text-sm lg:text-lg opacity-80">
+          <p className="text-[10px] sm:text-xs opacity-80">
             Cada punto es un capítulo. Lee para desbloquear el siguiente.
           </p>
         </div>
