@@ -62,7 +62,7 @@ export default function FreeReadingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-32">
       {/* Navbar */}
       <Navbar />
 

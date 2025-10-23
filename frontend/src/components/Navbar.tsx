@@ -29,107 +29,106 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`shadow-md ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
-      <div className="max-w-7xl mx-auto px-3 sm:px-4">
-        {/* Header principal */}
-        <div className="flex items-center justify-between py-2 sm:py-3">
-          {/* Logo y título */}
-          <Link to="/" className="flex items-center gap-2 sm:gap-3">
-            <span className="text-2xl sm:text-3xl">📖</span>
-            <div className="hidden sm:block">
-              <h1 className="text-lg sm:text-xl font-bold text-white">
-                Manah {isAdmin && 'Admin'}
-              </h1>
-              <p className="text-xs text-white/80">{user?.displayName}</p>
-            </div>
-          </Link>
-
-          {/* Enlaces de navegación - Desktop */}
-          <div className="hidden md:flex items-center gap-2">
-            <Link to="/" className={navLinkClass('/')}>
-              🏠 Inicio
+    <>
+      {/* Navbar fijo arriba */}
+      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+        <div className="max-w-7xl mx-auto">
+          {/* Primera fila: Logo izquierda + Perfil derecha */}
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 sm:gap-3">
+              <span className="text-2xl sm:text-3xl">📖</span>
+              <div>
+                <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
+                  Manah {isAdmin && 'Admin'}
+                </h1>
+                <p className="text-[10px] sm:text-xs text-white/80 hidden sm:block">{user?.displayName}</p>
+              </div>
             </Link>
 
-            {!isAdmin && (
-              <>
-                <Link to="/camino" className={navLinkClass('/camino')}>
-                  📖 Camino
-                </Link>
-                <Link to="/lectura-libre" className={navLinkClass('/lectura-libre')}>
-                  🗺️ Lectura Libre
-                </Link>
-                <Link to="/buscar" className={navLinkClass('/buscar')}>
-                  🔍 Buscar
-                </Link>
-                <Link to="/estadisticas" className={navLinkClass('/estadisticas')}>
-                  📊 Estadísticas
-                </Link>
-              </>
-            )}
+            {/* Botón Perfil */}
+            <Link
+              to="/perfil"
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
+            >
+              <span className="text-xl sm:text-2xl">👤</span>
+              <span className="hidden sm:inline font-medium">Perfil</span>
+            </Link>
+          </div>
 
-            {isAdmin && (
-              <Link to="/admin/config" className={navLinkClass('/admin/config')}>
-                ⚙️ Configuración
+          {/* Segunda fila: Navegación */}
+          <div className="border-t border-white/10">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center justify-center gap-2 px-4 py-2">
+              <Link to="/" className={navLinkClass('/')}>
+                🏠 Inicio
               </Link>
-            )}
 
-            <Link to="/perfil" className={navLinkClass('/perfil')}>
-              👤 Perfil
-            </Link>
+              {!isAdmin && (
+                <>
+                  <Link to="/camino" className={navLinkClass('/camino')}>
+                    📖 Camino
+                  </Link>
+                  <Link to="/lectura-libre" className={navLinkClass('/lectura-libre')}>
+                    🗺️ Lectura Libre
+                  </Link>
+                  <Link to="/buscar" className={navLinkClass('/buscar')}>
+                    🔍 Buscar
+                  </Link>
+                  <Link to="/estadisticas" className={navLinkClass('/estadisticas')}>
+                    📊 Estadísticas
+                  </Link>
+                </>
+              )}
+
+              {isAdmin && (
+                <Link to="/admin/config" className={navLinkClass('/admin/config')}>
+                  ⚙️ Configuración
+                </Link>
+              )}
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="md:hidden">
+              {!isAdmin ? (
+                <div className="flex items-center justify-around px-2 py-1.5">
+                  <Link to="/" className={mobileNavLinkClass('/')}>
+                    <span className="text-2xl">🏠</span>
+                    <span className="text-[10px] font-medium">Inicio</span>
+                  </Link>
+                  <Link to="/camino" className={mobileNavLinkClass('/camino')}>
+                    <span className="text-2xl">📖</span>
+                    <span className="text-[10px] font-medium">Camino</span>
+                  </Link>
+                  <Link to="/lectura-libre" className={mobileNavLinkClass('/lectura-libre')}>
+                    <span className="text-2xl">🗺️</span>
+                    <span className="text-[10px] font-medium">Libre</span>
+                  </Link>
+                  <Link to="/buscar" className={mobileNavLinkClass('/buscar')}>
+                    <span className="text-2xl">🔍</span>
+                    <span className="text-[10px] font-medium">Buscar</span>
+                  </Link>
+                  <Link to="/estadisticas" className={mobileNavLinkClass('/estadisticas')}>
+                    <span className="text-2xl">📊</span>
+                    <span className="text-[10px] font-medium">Stats</span>
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex items-center justify-around px-2 py-1.5">
+                  <Link to="/" className={mobileNavLinkClass('/')}>
+                    <span className="text-2xl">🏠</span>
+                    <span className="text-[10px] font-medium">Inicio</span>
+                  </Link>
+                  <Link to="/admin/config" className={mobileNavLinkClass('/admin/config')}>
+                    <span className="text-2xl">⚙️</span>
+                    <span className="text-[10px] font-medium">Config</span>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-
-          {/* Botón perfil móvil - solo visible en SM */}
-          <Link
-            to="/perfil"
-            className="md:hidden flex items-center gap-2 px-3 py-1.5 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
-          >
-            <span className="text-xl">👤</span>
-          </Link>
         </div>
-      </div>
-
-      {/* Navegación móvil - Fixed bottom bar (solo iconos) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg border-t border-white/10 z-50">
-        {!isAdmin ? (
-          <div className="flex items-center justify-around px-2 py-1.5">
-            <Link to="/" className={mobileNavLinkClass('/')}>
-              <span className="text-2xl">🏠</span>
-              <span className="text-[10px] font-medium">Inicio</span>
-            </Link>
-            <Link to="/camino" className={mobileNavLinkClass('/camino')}>
-              <span className="text-2xl">📖</span>
-              <span className="text-[10px] font-medium">Camino</span>
-            </Link>
-            <Link to="/lectura-libre" className={mobileNavLinkClass('/lectura-libre')}>
-              <span className="text-2xl">🗺️</span>
-              <span className="text-[10px] font-medium">Libre</span>
-            </Link>
-            <Link to="/buscar" className={mobileNavLinkClass('/buscar')}>
-              <span className="text-2xl">🔍</span>
-              <span className="text-[10px] font-medium">Buscar</span>
-            </Link>
-            <Link to="/estadisticas" className={mobileNavLinkClass('/estadisticas')}>
-              <span className="text-2xl">📊</span>
-              <span className="text-[10px] font-medium">Stats</span>
-            </Link>
-          </div>
-        ) : (
-          <div className="flex items-center justify-around px-2 py-1.5">
-            <Link to="/" className={mobileNavLinkClass('/')}>
-              <span className="text-2xl">🏠</span>
-              <span className="text-[10px] font-medium">Inicio</span>
-            </Link>
-            <Link to="/admin/config" className={mobileNavLinkClass('/admin/config')}>
-              <span className="text-2xl">⚙️</span>
-              <span className="text-[10px] font-medium">Config</span>
-            </Link>
-            <Link to="/perfil" className={mobileNavLinkClass('/perfil')}>
-              <span className="text-2xl">👤</span>
-              <span className="text-[10px] font-medium">Perfil</span>
-            </Link>
-          </div>
-        )}
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
