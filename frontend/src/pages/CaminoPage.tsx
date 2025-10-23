@@ -232,7 +232,7 @@ export default function CaminoPage() {
       <Navbar />
 
       {/* Progress Header */}
-      <div className="sticky top-0 bg-white shadow-md z-50 border-b-4 border-indigo-500">
+      <div className="sticky top-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Tu Camino Bíblico</h1>
@@ -264,7 +264,11 @@ export default function CaminoPage() {
       {/* Hero Section */}
       <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8 lg:py-12 text-center">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-6 sm:mb-8 lg:mb-12">
-          <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">📖</div>
+          <div className="mb-3 sm:mb-4 flex justify-center">
+            <svg className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
+            </svg>
+          </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Tu Aventura Bíblica</h2>
           <p className="text-sm sm:text-base lg:text-xl opacity-90 mb-2">
             Un camino continuo a través de la Palabra de Dios
@@ -302,8 +306,16 @@ export default function CaminoPage() {
                       }`}
                     >
                       {/* Testament Icon */}
-                      <div className="text-6xl mb-3 animate-pulse">
-                        {node.book.testament === 'OLD' ? '📜' : '✝️'}
+                      <div className="mb-3 flex justify-center">
+                        {node.book.testament === 'OLD' ? (
+                          <svg className="w-16 h-16 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
+                          </svg>
+                        ) : (
+                          <svg className="w-16 h-16 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                          </svg>
+                        )}
                       </div>
 
                       {/* Book Name */}
@@ -347,7 +359,9 @@ export default function CaminoPage() {
                     {/* Decorative divider */}
                     <div className="mt-8 flex items-center justify-center gap-3">
                       <div className="h-0.5 w-16 bg-gradient-to-r from-transparent to-indigo-300"></div>
-                      <div className="text-2xl">📍</div>
+                      <svg className="w-8 h-8 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                      </svg>
                       <div className="h-0.5 w-16 bg-gradient-to-l from-transparent to-indigo-300"></div>
                     </div>
                   </div>
@@ -390,17 +404,23 @@ export default function CaminoPage() {
                         }`}
                       >
                         {chapter.isRead ? (
-                          <span className="text-2xl">✓</span>
+                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                          </svg>
                         ) : chapter.isUnlocked ? (
                           <span>{chapter.chapterNumber}</span>
                         ) : (
-                          <span className="text-xl">🔒</span>
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                          </svg>
                         )}
 
                         {/* Star decoration for completed */}
                         {chapter.isRead && (
-                          <div className="absolute -top-1 -right-1 text-yellow-400 text-sm animate-pulse">
-                            ⭐
+                          <div className="absolute -top-1 -right-1 animate-pulse">
+                            <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>
                           </div>
                         )}
 
@@ -426,7 +446,7 @@ export default function CaminoPage() {
                           {chapter.isUnlocked && (
                             <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                               <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-xl">
-                                {chapter.isRead ? '✓ Releer' : '📖 Leer'}
+                                {chapter.isRead ? 'Releer' : 'Leer'}
                                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
                               </div>
                             </div>
@@ -499,7 +519,7 @@ export default function CaminoPage() {
                           {chapter.isUnlocked && (
                             <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                               <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-xl">
-                                {chapter.isRead ? '✓ Releer' : '📖 Leer'}
+                                {chapter.isRead ? 'Releer' : 'Leer'}
                                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
                               </div>
                             </div>
@@ -572,7 +592,7 @@ export default function CaminoPage() {
                           {chapter.isUnlocked && (
                             <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                               <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-xl">
-                                {chapter.isRead ? '✓ Releer' : '📖 Leer'}
+                                {chapter.isRead ? 'Releer' : 'Leer'}
                                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
                               </div>
                             </div>
