@@ -190,7 +190,7 @@ export class ProgressService {
         nextChapter = {
           id: nextChapterData.id,
           number: nextChapterData.number,
-          title: nextChapterData.title,
+          title: nextChapterData.title || '',
           unlocked: true, // En el Camino, se desbloquea automáticamente
         };
       }
@@ -202,7 +202,7 @@ export class ProgressService {
         id: chapter.id,
         bookName: chapter.book.name,
         chapterNumber: chapter.number,
-        chapterTitle: chapter.title,
+        chapterTitle: chapter.title || '',
       },
       rewards: {
         xp: {

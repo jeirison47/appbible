@@ -176,7 +176,6 @@ export class DailyGoalService {
    */
   static async getWeeklyHistory(userId: string): Promise<{
     date: Date;
-    goal: number;
     progress: number;
     completed: boolean;
     xpEarned: number;
@@ -197,17 +196,17 @@ export class DailyGoalService {
       },
       select: {
         date: true,
-        goal: true,
         chaptersRead: true,
         xpEarned: true,
+        systemGoalCompleted: true,
+        personalGoalCompleted: true,
       },
     });
 
     return history.map((day) => ({
       date: day.date,
-      goal: day.goal,
       progress: day.chaptersRead,
-      completed: day.chaptersRead >= day.goal,
+      completed: day.systemGoalCompleted || day.personalGoalCompleted,
       xpEarned: day.xpEarned,
     }));
   }
@@ -234,13 +233,14 @@ export class DailyGoalService {
     const today = await this.getTodayProgress(userId);
     const weeklyHistory = await this.getWeeklyHistory(userId);
 
-    // Contar días totales completados
+    // Contar días totales completados (días donde se completó alguna meta)
     const totalDaysCompleted = await prisma.dailyProgress.count({
       where: {
         userId,
-        chaptersRead: {
-          gte: prisma.dailyProgress.fields.goal,
-        },
+        OR: [
+          { systemGoalCompleted: true },
+          { personalGoalCompleted: true },
+        ],
       },
     });
 
