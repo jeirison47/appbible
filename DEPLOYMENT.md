@@ -1,13 +1,13 @@
 # 📦 Guía de Deployment - Manah
 
-Esta guía te ayudará a desplegar **Manah** (frontend + backend) en **Vercel** y **Railway** para tenerlo funcionando online.
+Esta guía te ayudará a desplegar **Manah** (frontend + backend) en **Vercel** y **Render** para tenerlo funcionando online.
 
 ---
 
 ## 🎯 Resumen Rápido
 
 - **Frontend**: Vercel (React + Vite)
-- **Backend**: Railway (Node.js + Hono + Prisma)
+- **Backend**: Render (Node.js + Hono + Prisma)
 - **Base de Datos**: Neon PostgreSQL (ya configurado)
 
 ---
@@ -16,35 +16,39 @@ Esta guía te ayudará a desplegar **Manah** (frontend + backend) en **Vercel** 
 
 1. Cuenta en [GitHub](https://github.com) (ya tienes el repo)
 2. Cuenta en [Vercel](https://vercel.com)
-3. Cuenta en [Railway](https://railway.app)
+3. Cuenta en [Render](https://render.com)
 4. Tu base de datos Neon ya está funcionando
 
 ---
 
-## 🚀 PARTE 1: Desplegar Backend en Railway
+## 🚀 PARTE 1: Desplegar Backend en Render
 
-### Paso 1: Crear proyecto en Railway
+### Paso 1: Crear Web Service en Render
 
-1. Ve a [railway.app](https://railway.app) y haz login con GitHub
-2. Click en **"New Project"**
-3. Selecciona **"Deploy from GitHub repo"**
+1. Ve a [render.com](https://render.com) y haz login con GitHub
+2. Click en **"New +"** → **"Web Service"**
+3. Conecta tu repositorio de GitHub si no lo has hecho
 4. Busca y selecciona: `jeirison47/appbible`
-5. Railway comenzará a detectar el proyecto
+5. Click en **"Connect"**
 
 ### Paso 2: Configurar el servicio
 
-1. Railway detectará automáticamente que es un proyecto Node.js
-2. En la configuración del servicio:
-   - **Name**: `manah-backend` (o el nombre que prefieras)
-   - **Root Directory**: `backend`
-   - **Build Command**: Railway usará `npm run build` automáticamente
-   - **Start Command**: Railway usará `npm start` automáticamente
+En la configuración del Web Service:
+
+- **Name**: `manah-backend` (o el nombre que prefieras)
+- **Region**: Elige la más cercana (ej: Oregon - US West)
+- **Branch**: `main`
+- **Root Directory**: `backend`
+- **Runtime**: `Node`
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+- **Instance Type**: `Free`
 
 ### Paso 3: Agregar variables de entorno
 
-En Railway, ve a la pestaña **"Variables"** y agrega estas variables:
+Antes de desplegar, scroll hacia abajo hasta **"Environment Variables"** y agrega:
 
-```env
+```
 DATABASE_URL=postgresql://neondb_owner:npg_XxrgLnFd8uc2@ep-empty-surf-a8btsglp-pooler.eastus2.azure.neon.tech/appbible_db?sslmode=require&connect_timeout=30
 
 JWT_SECRET=tu-super-secreto-cambiar-en-produccion-min-32-caracteres-123456789
@@ -54,34 +58,30 @@ NODE_ENV=production
 PORT=3000
 ```
 
-**IMPORTANTE**: Después de agregar las variables, agrega también:
-
-```env
+**IMPORTANTE**: Agrega también (déjala vacía por ahora):
+```
 FRONTEND_URL=
 ```
 
-(Dejarás este vacío por ahora, lo llenarás después con la URL de Vercel)
-
 ### Paso 4: Desplegar
 
-1. Click en **"Deploy"**
-2. Railway comenzará a construir y desplegar tu backend
-3. Espera 2-3 minutos
+1. Click en **"Create Web Service"**
+2. Render comenzará a construir y desplegar tu backend
+3. Espera 3-5 minutos (el primer deploy es más lento)
 
 ### Paso 5: Obtener la URL del backend
 
-1. Una vez desplegado, ve a **"Settings"** → **"Domains"**
-2. Railway habrá generado una URL como:
+1. Una vez desplegado, verás la URL en la parte superior:
    ```
-   https://manah-backend-production.up.railway.app
+   https://manah-backend.onrender.com
    ```
-3. **Copia esta URL** (la necesitarás para el frontend)
+2. **Copia esta URL** (la necesitarás para el frontend)
 
 ### Paso 6: Verificar que funciona
 
 Abre en el navegador:
 ```
-https://TU-URL-DE-RAILWAY.up.railway.app/health
+https://TU-URL-RENDER.onrender.com/health
 ```
 
 Deberías ver:
@@ -122,13 +122,13 @@ En la configuración del proyecto:
 En la sección **"Environment Variables"**, agrega:
 
 **Name**: `VITE_API_URL`  
-**Value**: `https://TU-URL-DE-RAILWAY.up.railway.app/api`
+**Value**: `https://TU-URL-RENDER.onrender.com/api`
 
-**IMPORTANTE**: Agrega `/api` al final de la URL de Railway
+**IMPORTANTE**: Agrega `/api` al final de la URL de Render
 
 Ejemplo:
 ```
-VITE_API_URL=https://manah-backend-production.up.railway.app/api
+VITE_API_URL=https://manah-backend.onrender.com/api
 ```
 
 ### Paso 4: Desplegar
@@ -144,19 +144,20 @@ VITE_API_URL=https://manah-backend-production.up.railway.app/api
 
 ## 🔧 PARTE 3: Conectar Frontend y Backend (CORS)
 
-### Paso 1: Actualizar CORS en Railway
+### Paso 1: Actualizar CORS en Render
 
-1. Vuelve a **Railway**
-2. Ve a **"Variables"**
-3. Edita la variable `FRONTEND_URL` y pon tu URL de Vercel:
+1. Vuelve a **Render**
+2. Ve a tu servicio `manah-backend`
+3. Click en **"Environment"** en el menú lateral
+4. Encuentra la variable `FRONTEND_URL` y edítala:
    ```
    FRONTEND_URL=https://manah-app.vercel.app
    ```
-4. Railway automáticamente re-desplegará el backend
+5. Click en **"Save Changes"**
 
 ### Paso 2: Esperar re-despliegue
 
-Espera 1-2 minutos a que Railway termine de re-desplegar.
+Render automáticamente re-desplegará el backend (1-2 minutos).
 
 ---
 
@@ -166,7 +167,7 @@ Espera 1-2 minutos a que Railway termine de re-desplegar.
 
 Abre:
 ```
-https://TU-URL-DE-RAILWAY.up.railway.app/health
+https://TU-URL-RENDER.onrender.com/health
 ```
 
 Deberías ver el mensaje de salud.
@@ -175,7 +176,7 @@ Deberías ver el mensaje de salud.
 
 Abre:
 ```
-https://TU-URL-DE-VERCEL.vercel.app
+https://TU-URL-VERCEL.vercel.app
 ```
 
 Deberías ver la página de login/registro de Manah.
@@ -198,7 +199,7 @@ Cada vez que hagas cambios al código:
    git push
    ```
 
-2. **Vercel** y **Railway** detectarán automáticamente los cambios y re-desplegarán
+2. **Vercel** y **Render** detectarán automáticamente los cambios y re-desplegarán
 
 ---
 
@@ -209,9 +210,9 @@ Cada vez que hagas cambios al código:
 **Problema**: "Access to fetch at '...' has been blocked by CORS policy"
 
 **Solución**:
-1. Verifica que `FRONTEND_URL` en Railway tenga la URL correcta de Vercel
+1. Verifica que `FRONTEND_URL` en Render tenga la URL correcta de Vercel
 2. Asegúrate de que no tenga `/` al final
-3. Re-despliega el backend en Railway
+3. Re-despliega el backend en Render (Manual Deploy)
 
 ### Error "Cannot connect to API"
 
@@ -228,16 +229,27 @@ Cada vez que hagas cambios al código:
 **Problema**: "Error connecting to database"
 
 **Solución**:
-1. Verifica que `DATABASE_URL` en Railway sea correcta
-2. Asegúrate de que Neon permita conexiones desde Railway
+1. Verifica que `DATABASE_URL` en Render sea correcta
+2. Asegúrate de que Neon permita conexiones desde Render
 3. Verifica que la base de datos tenga las tablas (migraciones)
+
+### Backend se duerme (Render Free)
+
+**Problema**: La primera carga es lenta después de inactividad
+
+**Explicación**: El plan gratuito de Render pone el servicio en sleep después de 15 minutos de inactividad.
+
+**Solución**: 
+- Es normal en el plan gratuito
+- Espera 30-60 segundos en la primera carga
+- Para evitarlo, actualiza al plan de pago
 
 ---
 
 ## 📝 URLs de Referencia
 
 - **GitHub Repo**: https://github.com/jeirison47/appbible
-- **Railway Dashboard**: https://railway.app/dashboard
+- **Render Dashboard**: https://dashboard.render.com
 - **Vercel Dashboard**: https://vercel.com/dashboard
 - **Neon Database**: https://neon.tech/
 
@@ -249,7 +261,7 @@ Tu aplicación **Manah** ahora está funcionando online y accesible desde cualqu
 
 URLs finales:
 - Frontend: `https://tu-app.vercel.app`
-- Backend: `https://tu-backend.up.railway.app`
+- Backend: `https://tu-backend.onrender.com`
 
 ---
 

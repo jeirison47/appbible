@@ -38,7 +38,10 @@
       "Bash(node test-ngrok.js:*)",
       "Bash(npm uninstall:*)",
       "Bash(del start-ngrok-tunnels.js test-ngrok.js backendstart-ngrok.bat frontendstart-ngrok.bat)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
