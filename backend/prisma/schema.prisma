@@ -1,0 +1,254 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USERS & AUTH ====================
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  displayName   String
+  avatarUrl     String?
+  isActive      Boolean  @default(true)
+
+  // Gamification
+  totalXp       Int      @default(0)
+  currentLevel  Int      @default(0)
+  currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  dailyGoal     Int      @default(1)
+  lastReadAt    DateTime?
+  lastActiveAt  DateTime?
+
+  // Relationships
+  userRoles     UserRole[]
+  settings      UserSettings?
+  bookProgress  BookProgress[]
+  chapterReads  ChapterRead[]
+  dailyProgress DailyProgress[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@map("users")
+}
+
+model UserSettings {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bibleVersion          String  @default("RV1960")
+  fontSize              String  @default("medium")
+  theme                 String  @default("auto")
+  notificationsEnabled  Boolean @default(true)
+  notificationTime      String  @default("20:00")
+  systemDailyGoal       Int     @default(50)
+  personalDailyGoal     Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_settings")
+}
+
+// ==================== RBAC SYSTEM ====================
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique  // 'user', 'admin', 'moderator'
+  displayName String             // 'Usuario', 'Administrador'
+  description String?
+  isSystem    Boolean  @default(false) // No se puede eliminar
+
+  // Relationships
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique  // 'read:chapters', 'manage:users'
+  displayName String             // 'Leer Capítulos', 'Gestionar Usuarios'
+  description String?
+  category    String             // 'reading', 'admin', 'user'
+
+  // Relationships
+  rolePermissions RolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([category])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+// ==================== BIBLE CONTENT ====================
+
+model Book {
+  id                String   @id @default(cuid())
+  testament         String   // 'OLD', 'NEW'
+  category          String   // 'Pentateuco', 'Evangelios', etc.
+  name              String   // 'Génesis', 'Juan'
+  slug              String   @unique
+  order             Int      @unique
+  totalChapters     Int
+  isAvailableInPath Boolean  @default(false)
+
+  chapters Chapter[]
+  progress BookProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([testament])
+  @@index([slug])
+  @@map("books")
+}
+
+model Chapter {
+  id      String @id @default(cuid())
+  bookId  String
+  book    Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  number  Int
+  title   String?
+
+  // Contenido en 2 versiones (Español e Inglés)
+  contentRV1960 String @db.Text  // Reina Valera 1960 (Español)
+  contentKJV    String @db.Text @default("")  // King James Version (Inglés)
+
+  // Versículos parseados (JSON)
+  versesRV1960 Json  // Español
+  versesKJV    Json @default("{}")  // Inglés
+
+  verseCount Int
+
+  reads ChapterRead[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([bookId, number])
+  @@index([bookId])
+  @@map("chapters")
+}
+
+// ==================== APP CONFIGURATION ====================
+
+model AppConfig {
+  id    String @id @default(cuid())
+  key   String @unique  // 'app_name', 'app_description', 'theme_color', etc.
+  value String @db.Text
+  type  String @default("string") // 'string', 'number', 'boolean', 'json'
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@map("app_config")
+}
+
+// ==================== PROGRESS TRACKING ====================
+
+model BookProgress {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId            String
+  book              Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  chaptersCompleted Int       @default(0)
+  lastChapterRead   Int       @default(0)
+  completedAt       DateTime?
+  totalXpEarned     Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
+  @@index([userId])
+  @@map("book_progress")
+}
+
+model ChapterRead {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapterId String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  readType  String   // 'PATH', 'FREE'
+  xpEarned  Int
+  timeSpent Int?     // seconds
+  readAt    DateTime @default(now())
+
+  @@unique([userId, chapterId])
+  @@index([userId, readAt])
+  @@map("chapter_reads")
+}
+
+model DailyProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+
+  xpEarned                Int     @default(0)
+  chaptersRead            Int     @default(0)
+  timeReading             Int     @default(0)
+  systemGoalCompleted     Boolean @default(false)
+  personalGoalCompleted   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId, date])
+  @@map("daily_progress")
+}

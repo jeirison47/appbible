@@ -1,0 +1,26 @@
+import { Hono } from 'hono';
+import { ProgressController } from '../controllers/progress.controller';
+import { authMiddleware } from '../middleware/auth.middleware';
+
+const progress = new Hono();
+
+// Todas las rutas requieren autenticación
+progress.use('/*', authMiddleware);
+
+// Completar capítulo
+progress.post('/complete-chapter', ProgressController.completeChapter);
+
+// Obtener progreso del usuario
+progress.get('/me', ProgressController.getMyProgress);
+
+// Obtener progreso de un libro
+progress.get('/book/:bookSlug', ProgressController.getBookProgress);
+
+// Meta diaria
+progress.put('/daily-goal', ProgressController.updateDailyGoal);
+progress.get('/daily-goal/stats', ProgressController.getDailyGoalStats);
+
+// Leaderboard
+progress.get('/leaderboard', ProgressController.getLeaderboard);
+
+export default progress;
