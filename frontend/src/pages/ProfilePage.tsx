@@ -91,22 +91,21 @@ export default function ProfilePage() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center pt-32">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
-        </div>
-      </div>
-    );
-  }
-
   // Vista de Admin
   if (isAdmin) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 pt-32">
         <Navbar />
+
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-orange-600 mx-auto"></div>
+              <p className="text-gray-600 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
+            </div>
+          </div>
+        ) : (
+          <>
 
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           {/* Profile Header Card */}
@@ -200,6 +199,8 @@ export default function ProfilePage() {
           onCancel={() => setShowLogoutModal(false)}
           type="danger"
         />
+        </>
+        )}
       </div>
     );
   }
@@ -208,6 +209,16 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pt-32">
       <Navbar />
+
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-indigo-600 mx-auto"></div>
+            <p className="text-gray-600 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
+          </div>
+        </div>
+      ) : (
+        <>
 
       <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Profile Header Card */}
@@ -483,6 +494,8 @@ export default function ProfilePage() {
         onCancel={() => setShowLogoutModal(false)}
         type="danger"
       />
+      </>
+      )}
     </div>
   );
 }
