@@ -215,21 +215,20 @@ export default function CaminoPage() {
     return 'center'; // pattern === 3
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando tu camino...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32">
       {/* Navbar */}
       <Navbar />
+
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
+            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando tu camino...</p>
+          </div>
+        </div>
+      ) : (
+        <>
 
       {/* Progress Header */}
       <div className="sticky top-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
@@ -648,6 +647,8 @@ export default function CaminoPage() {
           )}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

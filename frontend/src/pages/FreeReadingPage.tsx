@@ -50,27 +50,29 @@ export default function FreeReadingPage() {
     return acc;
   }, {} as Record<string, Book[]>);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando biblioteca...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-32">
       {/* Navbar */}
       <Navbar />
 
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
+            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando biblioteca...</p>
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Content */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-4 sm:mb-6 lg:mb-8 text-center">
-          <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">📖</div>
+          <div className="mb-3 sm:mb-4 flex justify-center">
+            <svg className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
+            </svg>
+          </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 lg:mb-4">Explora la Biblia</h2>
           <p className="text-sm sm:text-base lg:text-xl opacity-90">
             Lee cualquier libro, capítulo o versículo de manera libre
@@ -198,6 +200,8 @@ export default function FreeReadingPage() {
           ))}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

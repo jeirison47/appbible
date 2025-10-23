@@ -40,12 +40,9 @@ export default function Navbar() {
               <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
               </svg>
-              <div>
-                <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
-                  Manah {isAdmin && 'Admin'}
-                </h1>
-                <p className="text-[10px] sm:text-xs text-white/80 hidden sm:block">{user?.displayName}</p>
-              </div>
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
+                Manah {isAdmin && 'Admin'}
+              </h1>
             </Link>
 
             {/* Botón Perfil */}
