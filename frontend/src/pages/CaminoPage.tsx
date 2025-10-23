@@ -227,18 +227,18 @@ export default function CaminoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-20 md:pb-0">
       {/* Navbar */}
       <Navbar />
 
       {/* Progress Header */}
       <div className="sticky top-0 bg-white shadow-md z-50 border-b-4 border-indigo-500">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <h1 className="text-2xl font-bold text-gray-800">Tu Camino Bíblico</h1>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Tu Camino Bíblico</h1>
             <div className="text-right">
-              <p className="text-sm text-gray-500">Progreso Total</p>
-              <p className="text-xl font-bold text-indigo-600">{totalProgress.percentage}%</p>
+              <p className="text-xs sm:text-sm text-gray-500">Progreso Total</p>
+              <p className="text-lg sm:text-xl font-bold text-indigo-600">{totalProgress.percentage}%</p>
             </div>
           </div>
 
@@ -262,21 +262,21 @@ export default function CaminoPage() {
       </div>
 
       {/* Hero Section */}
-      <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl shadow-2xl p-12 text-white mb-12">
-          <div className="text-6xl mb-4">📖</div>
-          <h2 className="text-4xl font-bold mb-4">Tu Aventura Bíblica</h2>
-          <p className="text-xl opacity-90 mb-2">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-8 lg:py-12 text-center">
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-6 sm:mb-8 lg:mb-12">
+          <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">📖</div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Tu Aventura Bíblica</h2>
+          <p className="text-sm sm:text-base lg:text-xl opacity-90 mb-2">
             Un camino continuo a través de la Palabra de Dios
           </p>
-          <p className="text-lg opacity-80">
+          <p className="text-xs sm:text-sm lg:text-lg opacity-80">
             Cada punto es un capítulo. Lee para desbloquear el siguiente.
           </p>
         </div>
       </div>
 
       {/* Single Continuous Path */}
-      <div className="max-w-3xl mx-auto px-4 pb-20">
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 pb-8">
         <div className="relative">
           {pathNodes.map((node, index) => {
             const prevNode = index > 0 ? pathNodes[index - 1] : null;
