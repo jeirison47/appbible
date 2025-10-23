@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { progressApi } from '../services/api';
+import Navbar from '../components/Navbar';
 
 interface Chapter {
   id: string;
@@ -63,34 +64,31 @@ export default function BookPathPage() {
     return 'center'; // pattern === 3
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando camino...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 flex items-center justify-center">
-        <div className="text-center bg-white rounded-2xl shadow-xl p-8">
-          <p className="text-gray-600 text-lg mb-4">No se pudo cargar el libro</p>
-          <Link to="/camino" className="text-indigo-600 hover:underline font-semibold">
-            ← Volver al Camino
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50">
-      {/* Fixed Header */}
-      <nav className="sticky top-0 bg-white shadow-md z-20 border-b-4 border-indigo-500">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32 pb-28">
+      {/* Navbar */}
+      <Navbar />
+
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
+            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando camino...</p>
+          </div>
+        </div>
+      ) : !data ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+          <div className="text-center bg-white rounded-2xl shadow-xl p-8">
+            <p className="text-gray-600 text-lg mb-4">No se pudo cargar el libro</p>
+            <Link to="/camino" className="text-indigo-600 hover:underline font-semibold">
+              ← Volver al Camino
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Fixed Header */}
+          <nav className="fixed top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -112,21 +110,32 @@ export default function BookPathPage() {
         </div>
       </nav>
 
-      {/* Progress Bar */}
-      <div className="sticky top-[73px] bg-white shadow-sm z-10 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+      {/* Progress Bar - Fixed Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t-4 border-indigo-500">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Título del libro */}
+            <h2 className="text-sm sm:text-base font-bold text-gray-800 whitespace-nowrap">
+              {data.book.name}
+            </h2>
+
+            {/* Barra de progreso con porcentaje dentro */}
+            <div className="flex-1 relative">
+              <div className="w-full bg-gray-200 rounded-full h-6 sm:h-8 overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-4 rounded-full transition-all duration-500 ease-out relative"
-                  style={{ width: `${data.progress.percentage}%` }}
+                  className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out relative flex items-center justify-center"
+                  style={{ width: `${data.progress.percentage}%`, minWidth: '50px' }}
                 >
+                  <span className="text-xs sm:text-sm font-bold text-white z-10">
+                    {data.progress.percentage}%
+                  </span>
                   <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
               </div>
             </div>
-            <div className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+
+            {/* Capítulos completados */}
+            <div className="text-sm sm:text-base font-bold text-gray-700 whitespace-nowrap">
               {data.progress.chaptersCompleted} / {data.progress.totalChapters}
             </div>
           </div>
@@ -134,7 +143,7 @@ export default function BookPathPage() {
       </div>
 
       {/* Path Content */}
-      <div className="max-w-3xl mx-auto px-4 py-12 relative">
+      <div className="max-w-3xl mx-auto px-4 pt-24 pb-12 relative">
         {/* Title Section */}
         <div className="text-center mb-16">
           <div className={`inline-block px-6 py-3 rounded-full text-white font-bold text-lg mb-4 ${
@@ -439,6 +448,8 @@ export default function BookPathPage() {
           )}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
