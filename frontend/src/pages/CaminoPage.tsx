@@ -227,7 +227,7 @@ export default function CaminoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-24 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-28 md:pb-0">
       {/* Navbar */}
       <Navbar />
 

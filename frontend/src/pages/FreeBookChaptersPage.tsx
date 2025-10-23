@@ -65,7 +65,7 @@ export default function FreeBookChaptersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-24 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-28 md:pb-0">
       {/* Header */}
       <nav className="bg-white shadow-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
