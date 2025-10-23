@@ -111,7 +111,7 @@ export default function BookPathPage() {
       </nav>
 
       {/* Progress Bar - Fixed Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t-4 border-indigo-500">
+      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 border-t-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Título del libro */}
