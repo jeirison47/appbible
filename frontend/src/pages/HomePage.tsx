@@ -459,22 +459,24 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Debug: Permissions */}
-        <details className="mt-6 bg-white rounded-lg shadow p-4">
-          <summary className="cursor-pointer font-semibold text-gray-700">
-            Ver Permisos del Sistema
-          </summary>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {permissions.map((perm) => (
-              <span
-                key={perm}
-                className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm"
-              >
-                {perm}
-              </span>
-            ))}
-          </div>
-        </details>
+        {/* Debug: Permissions - Solo para Admin */}
+        {isAdmin && (
+          <details className="mt-6 bg-white rounded-lg shadow p-4">
+            <summary className="cursor-pointer font-semibold text-gray-700">
+              Ver Permisos del Sistema
+            </summary>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {permissions.map((perm) => (
+                <span
+                  key={perm}
+                  className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm"
+                >
+                  {perm}
+                </span>
+              ))}
+            </div>
+          </details>
+        )}
       </div>
     </div>
   );
