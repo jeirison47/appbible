@@ -168,7 +168,7 @@ export default function ProfilePage() {
                 <div className="flex flex-wrap gap-2">
                   {roles.map((role) => (
                     <span
-                      key={role.id}
+                      key={role.name}
                       className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold"
                     >
                       👑 {role.displayName}
@@ -263,7 +263,7 @@ export default function ProfilePage() {
               <div className="flex flex-wrap gap-2">
                 {roles.map((role) => (
                   <span
-                    key={role.id}
+                    key={role.name}
                     className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold"
                   >
                     {role.displayName}

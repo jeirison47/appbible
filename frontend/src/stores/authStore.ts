@@ -9,6 +9,7 @@ interface User {
   currentLevel: number;
   currentStreak: number;
   longestStreak?: number;
+  createdAt?: string;
   settings?: {
     bibleVersion: string;
     fontSize: string;
