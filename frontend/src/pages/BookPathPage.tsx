@@ -88,7 +88,7 @@ export default function BookPathPage() {
       ) : (
         <>
           {/* Fixed Header */}
-          <nav className="fixed top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+          <nav className="fixed top-32 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -143,7 +143,7 @@ export default function BookPathPage() {
       </div>
 
       {/* Path Content */}
-      <div className="max-w-3xl mx-auto px-4 pt-24 pb-12 relative">
+      <div className="max-w-3xl mx-auto px-4 pt-52 pb-12 relative">
         {/* Title Section */}
         <div className="text-center mb-16">
           <div className={`inline-block px-6 py-3 rounded-full text-white font-bold text-lg mb-4 ${
