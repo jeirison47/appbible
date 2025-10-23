@@ -70,8 +70,8 @@ export default function StatsPage() {
 
   const loadProgress = async () => {
     try {
-      const data = await progressApi.getUserProgress();
-      setProgress(data);
+      const data = await progressApi.getMyProgress();
+      setProgress(data.data);
       setLoading(false);
     } catch (error: any) {
       console.error('Failed to load progress:', error);
