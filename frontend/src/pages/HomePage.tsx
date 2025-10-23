@@ -160,7 +160,7 @@ export default function HomePage() {
   // Vista de Admin
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 pb-20 md:pb-0">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 pb-24 md:pb-0">
         {/* Navbar */}
         <Navbar />
 
@@ -277,7 +277,7 @@ export default function HomePage() {
 
   // Vista de Usuario Regular
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pb-24 md:pb-0">
       {/* Navbar */}
       <Navbar />
 

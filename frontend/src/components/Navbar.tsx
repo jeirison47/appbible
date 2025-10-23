@@ -89,12 +89,9 @@ export default function Navbar() {
       </div>
 
       {/* Navegación móvil - Fixed bottom bar (solo iconos) */}
-      <div
-        className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg border-t border-white/10 z-50"
-        style={{ paddingBottom: 'max(0.375rem, env(safe-area-inset-bottom))' }}
-      >
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg border-t border-white/10 z-50 pb-0">
         {!isAdmin ? (
-          <div className="flex items-center justify-around px-2 pt-1.5">
+          <div className="flex items-center justify-around px-2 py-3">
             <Link to="/" className={mobileNavLinkClass('/')}>
               <span className="text-2xl">🏠</span>
               <span className="text-[10px] font-medium">Inicio</span>
@@ -117,7 +114,7 @@ export default function Navbar() {
             </Link>
           </div>
         ) : (
-          <div className="flex items-center justify-around px-2 pt-1.5">
+          <div className="flex items-center justify-around px-2 py-3">
             <Link to="/" className={mobileNavLinkClass('/')}>
               <span className="text-2xl">🏠</span>
               <span className="text-[10px] font-medium">Inicio</span>
