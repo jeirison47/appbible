@@ -49,6 +49,8 @@ export const authApi = {
 export const readingApi = {
   getBooks: () => fetchAPI('/reading/books'),
 
+  getBooksWithCompletion: () => fetchAPI('/reading/books/with-completion'),
+
   getBook: (bookSlug: string) => fetchAPI(`/reading/books/${bookSlug}`),
 
   getChapter: (bookSlug: string, chapterNumber: number, version: string = 'RV1960') =>

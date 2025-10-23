@@ -11,19 +11,11 @@ interface Book {
   category: string;
   totalChapters: number;
   order: number;
-}
-
-interface BookWithProgress {
-  book: Book;
-  progress: {
-    completed: number;
-    total: number;
-    percentage: number;
-  };
+  completed: boolean;
 }
 
 export default function CaminoPage() {
-  const [booksWithProgress, setBooksWithProgress] = useState<BookWithProgress[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalProgress, setTotalProgress] = useState({ completed: 0, total: 0, percentage: 0 });
 
@@ -35,29 +27,26 @@ export default function CaminoPage() {
     try {
       setLoading(true);
 
-      // Cargar progreso total del camino
-      const totalProgressRes = await progressApi.getCaminoProgress();
+      // Hacer solo 2 llamadas API en paralelo
+      const [progressRes, booksRes] = await Promise.all([
+        progressApi.getMyProgress(),
+        readingApi.getBooksWithCompletion(),
+      ]);
+
+      // Configurar progreso total (de los stats del progreso del usuario)
+      const { stats } = progressRes.data;
+      const totalBooks = 66;
+      const booksCompleted = stats.booksCompleted || 0;
+      const globalProgress = Math.round((booksCompleted / totalBooks) * 100);
+
       setTotalProgress({
-        completed: totalProgressRes.data.completedBooks,
-        total: totalProgressRes.data.totalBooks,
-        percentage: totalProgressRes.data.globalProgress,
+        completed: booksCompleted,
+        total: totalBooks,
+        percentage: globalProgress,
       });
 
-      // Cargar lista de libros
-      const booksRes = await readingApi.getBooks();
-      const books: Book[] = booksRes.data.books;
-
-      // Mapear libros con progreso predeterminado (sin hacer llamadas individuales)
-      const booksWithProgress: BookWithProgress[] = books.map((book) => ({
-        book,
-        progress: {
-          completed: 0,
-          total: book.totalChapters,
-          percentage: 0,
-        },
-      }));
-
-      setBooksWithProgress(booksWithProgress);
+      // Configurar libros (ya vienen con el campo completed)
+      setBooks(booksRes.books);
     } catch (error) {
       console.error('Failed to load camino data:', error);
     } finally {
@@ -132,7 +121,7 @@ export default function CaminoPage() {
       {/* Books Grid */}
       <div className="max-w-6xl mx-auto px-3 sm:px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {booksWithProgress.map(({ book, progress }) => (
+          {books.map((book) => (
             <Link
               key={book.id}
               to={`/camino/${book.slug}`}
@@ -162,25 +151,17 @@ export default function CaminoPage() {
                 <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">{book.name}</h3>
                 <p className="text-sm opacity-90 mb-4 text-center">{book.category}</p>
 
-                {/* Progress Stats */}
+                {/* Total Chapters */}
                 <div className="bg-white/20 rounded-xl py-3 px-4 backdrop-blur mb-3">
-                  <p className="text-xs font-semibold mb-1 text-center">Progreso del Libro</p>
+                  <p className="text-xs font-semibold mb-1 text-center">Total de Capítulos</p>
                   <p className="text-2xl font-bold text-center">
-                    {progress.completed} / {progress.total}
+                    {book.totalChapters}
                   </p>
                 </div>
 
-                {/* Progress bar */}
-                <div className="w-full bg-white/30 rounded-full h-2 overflow-hidden mb-3">
-                  <div
-                    className="bg-white h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${progress.percentage}%` }}
-                  ></div>
-                </div>
-
                 {/* Completion badge */}
-                {progress.percentage === 100 && (
-                  <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold inline-block">
+                {book.completed && (
+                  <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold inline-block w-full text-center mb-3">
                     ✓ COMPLETADO
                   </div>
                 )}

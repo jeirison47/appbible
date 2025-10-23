@@ -31,6 +31,60 @@ export class ReadingController {
   }
 
   /**
+   * Obtener todos los libros con información de completado para el usuario
+   */
+  static async getBooksWithCompletion(c: Context) {
+    try {
+      const userId = c.get('userId');
+
+      // Obtener todos los libros
+      const books = await prisma.book.findMany({
+        orderBy: { order: 'asc' },
+        select: {
+          id: true,
+          testament: true,
+          category: true,
+          name: true,
+          slug: true,
+          order: true,
+          totalChapters: true,
+          isAvailableInPath: true,
+        },
+      });
+
+      // Obtener todos los capítulos completados por el usuario en una sola consulta
+      const completedChapters = await prisma.chapterRead.findMany({
+        where: { userId },
+        select: {
+          chapter: {
+            select: {
+              bookId: true,
+            },
+          },
+        },
+      });
+
+      // Contar capítulos completados por libro
+      const completedCountByBook = completedChapters.reduce((acc, read) => {
+        const bookId = read.chapter.bookId;
+        acc[bookId] = (acc[bookId] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      // Agregar campo completed a cada libro
+      const booksWithCompletion = books.map((book) => ({
+        ...book,
+        completed: (completedCountByBook[book.id] || 0) === book.totalChapters,
+      }));
+
+      return c.json({ books: booksWithCompletion });
+    } catch (error) {
+      console.error('Get books with completion error:', error);
+      return c.json({ error: 'Failed to get books with completion' }, 500);
+    }
+  }
+
+  /**
    * Obtener un capítulo específico de un libro
    */
   static async getChapter(c: Context) {

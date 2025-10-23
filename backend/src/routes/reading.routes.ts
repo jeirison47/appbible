@@ -8,6 +8,13 @@ const reading = new Hono();
 // Todas las rutas requieren autenticación
 reading.use('*', authMiddleware);
 
+// GET /books/with-completion - Listar libros con información de completado
+reading.get(
+  '/books/with-completion',
+  requirePermission('read:chapters'),
+  ReadingController.getBooksWithCompletion
+);
+
 // GET /books - Listar todos los libros
 reading.get(
   '/books',
