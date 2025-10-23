@@ -148,11 +148,9 @@ admin.get(
         },
       });
 
-      // Obtener la meta diaria del sistema
-      const firstUserSettings = await prisma.userSettings.findFirst({
-        select: {
-          systemDailyGoal: true,
-        },
+      // Obtener la meta diaria por defecto desde AppConfig
+      const defaultGoalConfig = await prisma.appConfig.findUnique({
+        where: { key: 'default_daily_goal' },
       });
 
       return c.json({
@@ -162,7 +160,7 @@ admin.get(
           activeUsers,
           totalChaptersRead,
           totalXpEarned: totalXpResult._sum.totalXp || 0,
-          systemDailyGoal: firstUserSettings?.systemDailyGoal || 50,
+          defaultDailyGoal: parseInt(defaultGoalConfig?.value || '1'),
         },
       });
     } catch (error) {
@@ -227,10 +225,10 @@ admin.get(
 );
 
 /**
- * PUT /system-daily-goal - Actualizar meta diaria del sistema
+ * PUT /default-daily-goal - Actualizar meta diaria por defecto para nuevos usuarios
  */
 admin.put(
-  '/system-daily-goal',
+  '/default-daily-goal',
   requirePermission('view:analytics'),
   async (c) => {
     try {
@@ -247,20 +245,24 @@ admin.put(
         );
       }
 
-      // Actualizar la meta del sistema para todos los usuarios
-      await prisma.userSettings.updateMany({
-        data: {
-          systemDailyGoal: goal,
+      // Actualizar la configuración de meta diaria por defecto en AppConfig
+      await prisma.appConfig.upsert({
+        where: { key: 'default_daily_goal' },
+        update: { value: goal.toString() },
+        create: {
+          key: 'default_daily_goal',
+          value: goal.toString(),
+          type: 'number',
         },
       });
 
       return c.json({
         success: true,
-        message: 'Meta diaria del sistema actualizada exitosamente',
+        message: 'Meta diaria por defecto actualizada exitosamente',
       });
     } catch (error) {
-      console.error('Update system daily goal error:', error);
-      return c.json({ error: 'Failed to update system daily goal' }, 500);
+      console.error('Update default daily goal error:', error);
+      return c.json({ error: 'Failed to update default daily goal' }, 500);
     }
   }
 );

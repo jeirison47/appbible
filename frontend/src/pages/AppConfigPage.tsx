@@ -10,6 +10,8 @@ interface AppConfig {
   theme_color: string;
   background_color: string;
   default_bible_version: string;
+  default_daily_goal: string;
+  streak_xp_required: string;
   xp_per_chapter: string;
   xp_per_minute_free_reading: string;
   bonus_streak_multiplier: string;
@@ -23,6 +25,8 @@ export default function AppConfigPage() {
     theme_color: '#4F46E5',
     background_color: '#ffffff',
     default_bible_version: 'RV1960',
+    default_daily_goal: '1',
+    streak_xp_required: '100',
     xp_per_chapter: '100',
     xp_per_minute_free_reading: '10',
     bonus_streak_multiplier: '1.5',
@@ -58,7 +62,7 @@ export default function AppConfigPage() {
       const configArray = Object.entries(config).map(([key, value]) => ({
         key,
         value: value.toString(),
-        type: key.includes('xp_') || key.includes('multiplier') ? 'number' : 'string',
+        type: key.includes('xp_') || key.includes('multiplier') || key.includes('goal') || key.includes('required') ? 'number' : 'string',
       }));
 
       await configApi.updateMultipleConfig(configArray);
@@ -229,6 +233,44 @@ export default function AppConfigPage() {
             <span>🎮</span>
             Gamificación y XP
           </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Default Daily Goal */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Meta Diaria por Defecto
+              </label>
+              <input
+                type="number"
+                value={config.default_daily_goal}
+                onChange={(e) => handleChange('default_daily_goal', e.target.value)}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-2xl font-bold"
+                min="1"
+                max="10"
+              />
+              <p className="text-sm text-gray-500 mt-1 text-center">
+                Capítulos por día para nuevos usuarios
+              </p>
+            </div>
+
+            {/* Streak XP Required */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                XP Requerido para Racha
+              </label>
+              <input
+                type="number"
+                value={config.streak_xp_required}
+                onChange={(e) => handleChange('streak_xp_required', e.target.value)}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-2xl font-bold"
+                min="10"
+                step="10"
+              />
+              <p className="text-sm text-gray-500 mt-1 text-center">
+                XP mínimo diario para mantener racha
+              </p>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* XP per Chapter */}

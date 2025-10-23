@@ -12,6 +12,8 @@ async function main() {
     { key: 'theme_color', value: '#4F46E5', type: 'string' },
     { key: 'background_color', value: '#ffffff', type: 'string' },
     { key: 'default_bible_version', value: 'RV1960', type: 'string' },
+    { key: 'default_daily_goal', value: '1', type: 'number' },
+    { key: 'streak_xp_required', value: '100', type: 'number' },
     { key: 'xp_per_chapter', value: '100', type: 'number' },
     { key: 'xp_per_minute_free_reading', value: '10', type: 'number' },
     { key: 'bonus_streak_multiplier', value: '1.5', type: 'number' },

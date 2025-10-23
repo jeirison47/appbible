@@ -234,8 +234,7 @@ export class ProgressService {
         dailyGoal: true,
         settings: {
           select: {
-            systemDailyGoal: true,
-            personalDailyGoal: true,
+            dailyGoal: true,
           },
         },
       },
@@ -341,9 +340,7 @@ export class ProgressService {
         currentLevel: user.currentLevel,
         currentStreak: user.currentStreak,
         longestStreak: user.longestStreak,
-        dailyGoal: user.dailyGoal, // Mantener por compatibilidad (deprecated)
-        systemDailyGoal: user.settings.systemDailyGoal,
-        personalDailyGoal: user.settings.personalDailyGoal,
+        dailyGoal: user.settings.dailyGoal,
       },
       xp: xpStats,
       streak: streakStats,

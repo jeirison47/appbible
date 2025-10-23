@@ -35,7 +35,7 @@ export default function RegisterPage() {
     try {
       const data = await authApi.register({ email, password, displayName });
       setAuth(data.user, data.roles, data.permissions, data.token);
-      toast.success('¡Registro exitoso! Bienvenido a BibliaQuest');
+      toast.success('¡Registro exitoso! Bienvenido a Manah');
       navigate('/');
     } catch (err: any) {
       setError(err.message || 'Error al registrarse');
@@ -52,7 +52,7 @@ export default function RegisterPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              📖 BibliaQuest
+              📖 Manah
             </h1>
             <p className="text-gray-600 text-lg font-semibold mb-1">
               Crear cuenta nueva

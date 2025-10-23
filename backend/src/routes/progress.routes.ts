@@ -23,4 +23,7 @@ progress.get('/daily-goal/stats', ProgressController.getDailyGoalStats);
 // Leaderboard
 progress.get('/leaderboard', ProgressController.getLeaderboard);
 
+// Tiempo de lectura
+progress.post('/reading-time', ProgressController.recordReadingTime);
+
 export default progress;

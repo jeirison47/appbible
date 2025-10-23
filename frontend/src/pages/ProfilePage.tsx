@@ -16,8 +16,6 @@ interface ProfileData {
     currentStreak: number;
     longestStreak: number;
     dailyGoal: number;
-    systemDailyGoal: number;
-    personalDailyGoal: number | null;
     createdAt: string;
   };
   stats: {
@@ -42,9 +40,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState(false);
-  const [newGoal, setNewGoal] = useState<number | null>(null);
+  const [newGoal, setNewGoal] = useState<number>(1);
   const [savingGoal, setSavingGoal] = useState(false);
-  const [useSystemGoal, setUseSystemGoal] = useState(true);
 
   const isAdmin = roles.some((r) => r.name === 'admin');
 
@@ -61,10 +58,7 @@ export default function ProfilePage() {
     try {
       const data = await progressApi.getMyProgress();
       setProfile(data.data);
-      // Inicializar con la meta personal si existe, sino con la del sistema
-      const hasPersonalGoal = data.data.user.personalDailyGoal !== null;
-      setUseSystemGoal(!hasPersonalGoal);
-      setNewGoal(hasPersonalGoal ? data.data.user.personalDailyGoal : data.data.user.systemDailyGoal);
+      setNewGoal(data.data.user.dailyGoal);
       setLoading(false);
     } catch (error) {
       console.error('Failed to load profile:', error);
@@ -81,45 +75,9 @@ export default function ProfilePage() {
     navigate('/login');
   };
 
-  const handleSaveGoal = async () => {
-    // Si usa meta del sistema, guardar null; sino guardar el valor seleccionado
-    const goalToSave = useSystemGoal ? null : newGoal;
-
-    if (!useSystemGoal && (newGoal! < 1 || newGoal! > 10)) {
-      toast.error('La meta debe estar entre 1 y 10 capítulos');
-      return;
-    }
-
-    setSavingGoal(true);
-    try {
-      await progressApi.updateDailyGoal(goalToSave!);
-      toast.success(useSystemGoal
-        ? 'Usando meta del sistema'
-        : 'Meta personal actualizada exitosamente');
-      setEditingGoal(false);
-      // Recargar perfil para obtener datos actualizados
-      await loadProfile();
-    } catch (error: any) {
-      toast.error(error.message || 'Error al actualizar meta diaria');
-    } finally {
-      setSavingGoal(false);
-    }
-  };
-
   const handleCancelEdit = () => {
-    const hasPersonalGoal = profile?.user.personalDailyGoal !== null;
-    setUseSystemGoal(!hasPersonalGoal);
-    setNewGoal(hasPersonalGoal ? profile.user.personalDailyGoal : profile?.user.systemDailyGoal || 1);
+    setNewGoal(profile?.user.dailyGoal || 1);
     setEditingGoal(false);
-  };
-
-  const handleToggleGoalType = (useSystem: boolean) => {
-    setUseSystemGoal(useSystem);
-    if (useSystem) {
-      setNewGoal(profile?.user.systemDailyGoal || 1);
-    } else {
-      setNewGoal(profile?.user.personalDailyGoal || 1);
-    }
   };
 
   const formatDate = (dateString: string) => {
@@ -133,10 +91,10 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center pb-20 md:pb-0">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando perfil...</p>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-indigo-600 mx-auto"></div>
+          <p className="text-gray-600 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
         </div>
       </div>
     );
@@ -145,27 +103,25 @@ export default function ProfilePage() {
   // Vista de Admin
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50">
-        {/* Navbar */}
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 pb-20 md:pb-0">
         <Navbar />
 
-        {/* Content */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           {/* Profile Header Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-            <div className="flex items-center gap-6 mb-6">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
               {/* Avatar */}
-              <div className="w-24 h-24 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white text-3xl sm:text-4xl font-bold shadow-lg">
                 {user?.displayName?.charAt(0).toUpperCase() || 'A'}
               </div>
 
               {/* User Info */}
-              <div className="flex-1">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              <div className="flex-1 text-center sm:text-left">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                   {user?.displayName}
                 </h2>
-                <p className="text-gray-600 mb-2">{user?.email}</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="text-sm sm:text-base text-gray-600 mb-2">{user?.email}</p>
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   {roles.map((role) => (
                     <span
                       key={role.name}
@@ -179,51 +135,48 @@ export default function ProfilePage() {
             </div>
 
             {/* Member Since */}
-            <div className="border-t border-gray-200 pt-4">
-              <p className="text-sm text-gray-500">
+            <div className="border-t border-gray-200 pt-3 sm:pt-4">
+              <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
                 Administrador desde {formatDate(user?.createdAt || new Date().toISOString())}
               </p>
             </div>
           </div>
 
           {/* Admin Info Card */}
-          <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl shadow-xl p-8 mb-6 text-white">
-            <div className="flex items-center gap-4 mb-4">
-              <span className="text-5xl">👑</span>
-              <div>
-                <h3 className="text-2xl font-bold">Panel de Administración</h3>
-                <p className="opacity-90">Tienes acceso completo al sistema</p>
+          <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 text-white">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+              <span className="text-4xl sm:text-5xl">👑</span>
+              <div className="text-center sm:text-left">
+                <h3 className="text-xl sm:text-2xl font-bold">Panel de Administración</h3>
+                <p className="text-sm sm:text-base opacity-90">Tienes acceso completo al sistema</p>
               </div>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4">
-              <p className="text-sm opacity-90">
+            <div className="bg-white bg-opacity-20 rounded-lg p-3 sm:p-4">
+              <p className="text-xs sm:text-sm opacity-90">
                 Como administrador, puedes gestionar usuarios, ver estadísticas del sistema y configurar parámetros globales desde el panel principal.
               </p>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="space-y-4">
-            {/* Logout Button */}
+          <div className="space-y-3 sm:space-y-4">
             <button
               onClick={handleLogout}
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
             >
-              <span className="text-2xl">🚪</span>
+              <span className="text-xl sm:text-2xl">🚪</span>
               Cerrar Sesión
             </button>
 
-            {/* Back to Home */}
             <Link
               to="/"
-              className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 py-4 px-6 rounded-xl font-bold text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
+              className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
             >
               Volver al Panel
             </Link>
           </div>
         </div>
 
-        {/* Logout Confirmation Modal */}
         <ConfirmModal
           isOpen={showLogoutModal}
           title="Cerrar Sesión"
@@ -240,27 +193,25 @@ export default function ProfilePage() {
 
   // Vista de Usuario Regular
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      {/* Navbar */}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pb-20 md:pb-0">
       <Navbar />
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Profile Header Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-          <div className="flex items-center gap-6 mb-6">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Avatar */}
-            <div className="w-24 h-24 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl sm:text-4xl font-bold shadow-lg">
               {user?.displayName?.charAt(0).toUpperCase() || 'U'}
             </div>
 
             {/* User Info */}
-            <div className="flex-1">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <div className="flex-1 text-center sm:text-left">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
                 {user?.displayName}
               </h2>
-              <p className="text-gray-600 mb-2">{user?.email}</p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-sm sm:text-base text-gray-600 mb-2">{user?.email}</p>
+              <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                 {roles.map((role) => (
                   <span
                     key={role.name}
@@ -275,8 +226,8 @@ export default function ProfilePage() {
 
           {/* Member Since */}
           {profile?.user?.createdAt && (
-            <div className="border-t border-gray-200 pt-4">
-              <p className="text-sm text-gray-500">
+            <div className="border-t border-gray-200 pt-3 sm:pt-4">
+              <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
                 Miembro desde {formatDate(profile.user.createdAt)}
               </p>
             </div>
@@ -284,23 +235,23 @@ export default function ProfilePage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
           {/* XP & Level Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <span className="text-2xl">⭐</span>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+              <span className="text-xl sm:text-2xl">⭐</span>
               Experiencia y Nivel
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Nivel Actual</span>
-                <span className="text-2xl font-bold text-purple-600">
+                <span className="text-sm sm:text-base text-gray-600">Nivel Actual</span>
+                <span className="text-xl sm:text-2xl font-bold text-purple-600">
                   {profile?.user.currentLevel || 0}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Experiencia Total</span>
-                <span className="text-2xl font-bold text-indigo-600">
+                <span className="text-sm sm:text-base text-gray-600">Experiencia Total</span>
+                <span className="text-xl sm:text-2xl font-bold text-indigo-600">
                   {profile?.user.totalXp || 0} XP
                 </span>
               </div>
@@ -308,21 +259,21 @@ export default function ProfilePage() {
           </div>
 
           {/* Streaks Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <span className="text-2xl">🔥</span>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+              <span className="text-xl sm:text-2xl">🔥</span>
               Rachas de Lectura
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Racha Actual</span>
-                <span className="text-2xl font-bold text-orange-600">
+                <span className="text-sm sm:text-base text-gray-600">Racha Actual</span>
+                <span className="text-xl sm:text-2xl font-bold text-orange-600">
                   {profile?.user.currentStreak || 0} días
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Racha Más Larga</span>
-                <span className="text-2xl font-bold text-red-600">
+                <span className="text-sm sm:text-base text-gray-600">Racha Más Larga</span>
+                <span className="text-xl sm:text-2xl font-bold text-red-600">
                   {profile?.user.longestStreak || 0} días
                 </span>
               </div>
@@ -331,115 +282,85 @@ export default function ProfilePage() {
         </div>
 
         {/* Reading Stats Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span className="text-2xl">📚</span>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6">
+          <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+            <span className="text-xl sm:text-2xl">📚</span>
             Estadísticas de Lectura
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center">
-              <p className="text-sm text-gray-600 font-medium mb-1">Capítulos Leídos</p>
-              <p className="text-4xl font-bold text-blue-600">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Capítulos Leídos</p>
+              <p className="text-3xl sm:text-4xl font-bold text-blue-600">
                 {profile?.stats.totalChaptersRead || 0}
               </p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
-              <p className="text-sm text-gray-600 font-medium mb-1">Libros Completados</p>
-              <p className="text-4xl font-bold text-green-600">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Libros Completados</p>
+              <p className="text-3xl sm:text-4xl font-bold text-green-600">
                 {profile?.stats.booksCompleted || 0}
               </p>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
-              <p className="text-sm text-gray-600 font-medium mb-1">Libros en Progreso</p>
-              <p className="text-4xl font-bold text-purple-600">
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Libros en Progreso</p>
+              <p className="text-3xl sm:text-4xl font-bold text-purple-600">
                 {profile?.stats.booksInProgress || 0}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Daily Goals Section */}
-        <div className="space-y-4 mb-6">
-          <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 px-2">
-            <span className="text-2xl">🎯</span>
-            Metas Diarias
+        {/* Daily Goal Section */}
+        <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2 px-1 sm:px-2">
+            <span className="text-xl sm:text-2xl">🎯</span>
+            Meta Diaria
           </h3>
 
-          {/* Meta del Sistema Card - Solo Lectura */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-indigo-200">
+          {/* Meta Diaria Card - Editable */}
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-green-200">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                <span>🎯</span>
-                Meta del Sistema
-              </h4>
-              {profile?.user.personalDailyGoal === null && (
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">
-                  En uso
-                </span>
-              )}
-            </div>
-            <div className="text-center">
-              <div className="text-5xl font-bold text-indigo-600 mb-1">
-                {profile?.user.systemDailyGoal}
-              </div>
-              <p className="text-sm text-gray-600">
-                {profile?.user.systemDailyGoal === 1 ? 'capítulo' : 'capítulos'} por día
-              </p>
-              <p className="text-xs text-gray-500 mt-2">
-                Configurado por el administrador. Aplica a todos los usuarios que no tengan meta personal.
-              </p>
-            </div>
-          </div>
-
-          {/* Meta Personal Card - Editable */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-green-200">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <h4 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
                 <span>⭐</span>
-                Meta Personal
+                Tu Meta
               </h4>
-              <div className="flex items-center gap-2">
-                {profile?.user.personalDailyGoal !== null && (
-                  <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
-                    En uso
-                  </span>
-                )}
-                {!editingGoal && (
-                  <button
-                    onClick={() => setEditingGoal(true)}
-                    className="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition text-sm font-semibold"
-                  >
-                    ✏️ Editar
-                  </button>
-                )}
-              </div>
+              {!editingGoal && (
+                <button
+                  onClick={() => {
+                    setNewGoal(profile?.user.dailyGoal || 1);
+                    setEditingGoal(true);
+                  }}
+                  className="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition text-xs sm:text-sm font-semibold"
+                >
+                  ✏️ Editar
+                </button>
+              )}
             </div>
 
             {editingGoal ? (
-              <div className="space-y-4">
-                <div className="text-center mb-4">
-                  <div className="text-5xl font-bold text-green-600 mb-1">
-                    {newGoal || 1}
+              <div className="space-y-3 sm:space-y-4">
+                <div className="text-center mb-3 sm:mb-4">
+                  <div className="text-4xl sm:text-5xl font-bold text-green-600 mb-1">
+                    {newGoal}
                   </div>
-                  <p className="text-sm text-gray-600">
-                    {(newGoal || 1) === 1 ? 'capítulo' : 'capítulos'} por día
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    {newGoal === 1 ? 'capítulo' : 'capítulos'} por día
                   </p>
                 </div>
 
-                {/* Controles para ajustar meta personal */}
+                {/* Controles para ajustar meta */}
                 <div className="space-y-3">
-                  <div className="flex items-center justify-center gap-4">
+                  <div className="flex items-center justify-center gap-3 sm:gap-4">
                     <button
-                      onClick={() => setNewGoal(Math.max(1, (newGoal || 1) - 1))}
-                      className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-xl"
-                      disabled={(newGoal || 1) <= 1}
+                      onClick={() => setNewGoal(Math.max(1, newGoal - 1))}
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-lg sm:text-xl"
+                      disabled={newGoal <= 1}
                     >
                       −
                     </button>
                     <button
-                      onClick={() => setNewGoal(Math.min(10, (newGoal || 1) + 1))}
-                      className="w-12 h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-xl"
-                      disabled={(newGoal || 1) >= 10}
+                      onClick={() => setNewGoal(Math.min(10, newGoal + 1))}
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-lg sm:text-xl"
+                      disabled={newGoal >= 10}
                     >
                       +
                     </button>
@@ -451,7 +372,7 @@ export default function ProfilePage() {
                       <button
                         key={goal}
                         onClick={() => setNewGoal(goal)}
-                        className={`py-2 px-3 rounded-lg font-semibold transition ${
+                        className={`py-2 px-2 sm:px-3 rounded-lg font-semibold text-sm sm:text-base transition ${
                           newGoal === goal
                             ? 'bg-green-600 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -464,10 +385,10 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-3">
+                <div className="flex gap-2 sm:gap-3 pt-2 sm:pt-3">
                   <button
                     onClick={handleCancelEdit}
-                    className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold text-sm sm:text-base"
                     disabled={savingGoal}
                   >
                     Cancelar
@@ -476,8 +397,8 @@ export default function ProfilePage() {
                     onClick={async () => {
                       setSavingGoal(true);
                       try {
-                        await progressApi.updateDailyGoal(newGoal || 1);
-                        toast.success('Meta personal actualizada exitosamente');
+                        await progressApi.updateDailyGoal(newGoal);
+                        toast.success('Meta diaria actualizada exitosamente');
                         setEditingGoal(false);
                         await loadProfile();
                       } catch (error: any) {
@@ -487,7 +408,7 @@ export default function ProfilePage() {
                       }
                     }}
                     disabled={savingGoal}
-                    className="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-semibold disabled:opacity-50"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition font-semibold text-sm sm:text-base disabled:opacity-50"
                   >
                     {savingGoal ? 'Guardando...' : 'Guardar'}
                   </button>
@@ -495,54 +416,39 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div className="text-center">
-                {profile?.user.personalDailyGoal !== null ? (
-                  <>
-                    <div className="text-5xl font-bold text-green-600 mb-1">
-                      {profile.user.personalDailyGoal}
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      {profile.user.personalDailyGoal === 1 ? 'capítulo' : 'capítulos'} por día
-                    </p>
-                    <p className="text-xs text-gray-500 mt-2">
-                      Esta es tu meta personalizada. Click en Editar para cambiarla.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-4xl text-gray-400 mb-2">-</div>
-                    <p className="text-sm text-gray-600 mb-2">No configurada</p>
-                    <p className="text-xs text-gray-500">
-                      Estás usando la meta del sistema. Click en Editar para establecer tu meta personal.
-                    </p>
-                  </>
-                )}
+                <div className="text-4xl sm:text-5xl font-bold text-green-600 mb-1">
+                  {profile?.user.dailyGoal}
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  {profile?.user.dailyGoal === 1 ? 'capítulo' : 'capítulos'} por día
+                </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Esta es tu meta diaria. Click en Editar para cambiarla.
+                </p>
               </div>
             )}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="space-y-4">
-          {/* Logout Button */}
+        <div className="space-y-3 sm:space-y-4">
           <button
             onClick={handleLogout}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
           >
-            <span className="text-2xl">🚪</span>
+            <span className="text-xl sm:text-2xl">🚪</span>
             Cerrar Sesión
           </button>
 
-          {/* Back to Home */}
           <Link
             to="/"
-            className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 py-4 px-6 rounded-xl font-bold text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
+            className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
           >
             Volver al Inicio
           </Link>
         </div>
       </div>
 
-      {/* Logout Confirmation Modal */}
       <ConfirmModal
         isOpen={showLogoutModal}
         title="Cerrar Sesión"

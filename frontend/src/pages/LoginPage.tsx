@@ -38,7 +38,7 @@ export default function LoginPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              📖 BibliaQuest
+              📖 Manah
             </h1>
             <p className="text-gray-600 text-lg font-semibold">
               Iniciar Sesión
@@ -108,8 +108,8 @@ export default function LoginPage() {
           {/* Test users */}
           <div className="mt-6 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
             <p className="font-semibold mb-1">Usuarios de prueba:</p>
-            <p>Admin: admin@bibliaquest.com / admin123</p>
-            <p>User: user@bibliaquest.com / user123</p>
+            <p>Admin: admin@manah.com / admin123</p>
+            <p>User: user@manah.com / user123</p>
           </div>
         </div>
       </div>

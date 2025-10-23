@@ -50,8 +50,7 @@ model UserSettings {
   theme                 String  @default("auto")
   notificationsEnabled  Boolean @default(true)
   notificationTime      String  @default("20:00")
-  systemDailyGoal       Int     @default(50)
-  personalDailyGoal     Int?
+  dailyGoal             Int     @default(1) // Meta diaria configurable por el usuario
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

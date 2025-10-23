@@ -40,8 +40,8 @@ export class DailyGoalService {
       throw new Error('Usuario no encontrado');
     }
 
-    // Usar meta personal si existe, sino usar meta del sistema
-    const goal = user.settings.personalDailyGoal ?? user.settings.systemDailyGoal;
+    // Usar la meta configurada por el usuario
+    const goal = user.settings.dailyGoal;
 
     // Buscar o crear progreso diario
     let dailyProgress = await prisma.dailyProgress.findUnique({
@@ -103,8 +103,8 @@ export class DailyGoalService {
       throw new Error('Usuario no encontrado');
     }
 
-    // Usar meta personal si existe, sino usar meta del sistema
-    const goal = user.settings.personalDailyGoal ?? user.settings.systemDailyGoal;
+    // Usar la meta configurada por el usuario
+    const goal = user.settings.dailyGoal;
 
     // Buscar o crear progreso diario
     let dailyProgress = await prisma.dailyProgress.findUnique({
@@ -156,18 +156,18 @@ export class DailyGoalService {
   }
 
   /**
-   * Actualiza la meta diaria personal del usuario
+   * Actualiza la meta diaria del usuario
    */
-  static async updateDailyGoal(userId: string, newGoal: number | null): Promise<void> {
-    // Validar que la meta sea razonable (1-10 capítulos) o null para usar la del sistema
-    if (newGoal !== null && (newGoal < 1 || newGoal > 10)) {
+  static async updateDailyGoal(userId: string, newGoal: number): Promise<void> {
+    // Validar que la meta sea razonable (1-10 capítulos)
+    if (newGoal < 1 || newGoal > 10) {
       throw new Error('La meta debe estar entre 1 y 10 capítulos');
     }
 
-    // Actualizar la meta personal en UserSettings
+    // Actualizar la meta en UserSettings
     await prisma.userSettings.update({
       where: { userId },
-      data: { personalDailyGoal: newGoal },
+      data: { dailyGoal: newGoal },
     });
   }
 
