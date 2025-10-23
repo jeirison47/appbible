@@ -127,7 +127,7 @@ export default function FreeVerseReaderPage() {
   const currentVerseText = chapter.chapter.verses[currentVerse.toString()];
 
   return (
-    <div className="min-h-screen bg-white pb-28 md:pb-0">
+    <div className="min-h-screen bg-white pb-20 md:pb-0">
       {/* Fixed Header */}
       <nav className="sticky top-0 bg-white border-b border-gray-200 shadow-sm z-10">
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
