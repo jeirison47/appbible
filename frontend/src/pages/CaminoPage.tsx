@@ -47,32 +47,16 @@ export default function CaminoPage() {
       const booksRes = await readingApi.getBooks();
       const books: Book[] = booksRes.data.books;
 
-      // Cargar progreso de cada libro
-      const booksWithProgressPromises = books.map(async (book) => {
-        try {
-          const progressRes = await progressApi.getBookProgress(book.slug);
-          return {
-            book,
-            progress: {
-              completed: progressRes.data.progress.chaptersCompleted,
-              total: progressRes.data.progress.totalChapters,
-              percentage: progressRes.data.progress.percentage,
-            },
-          };
-        } catch (error) {
-          console.error(`Error loading progress for ${book.name}:`, error);
-          return {
-            book,
-            progress: {
-              completed: 0,
-              total: book.totalChapters,
-              percentage: 0,
-            },
-          };
-        }
-      });
+      // Mapear libros con progreso predeterminado (sin hacer llamadas individuales)
+      const booksWithProgress: BookWithProgress[] = books.map((book) => ({
+        book,
+        progress: {
+          completed: 0,
+          total: book.totalChapters,
+          percentage: 0,
+        },
+      }));
 
-      const booksWithProgress = await Promise.all(booksWithProgressPromises);
       setBooksWithProgress(booksWithProgress);
     } catch (error) {
       console.error('Failed to load camino data:', error);
