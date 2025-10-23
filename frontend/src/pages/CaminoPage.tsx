@@ -230,8 +230,8 @@ export default function CaminoPage() {
       ) : (
         <>
 
-      {/* Progress Header */}
-      <div className="sticky top-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+      {/* Progress Bar - Fixed Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t-4 border-indigo-500">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Título */}
@@ -281,7 +281,7 @@ export default function CaminoPage() {
       </div>
 
       {/* Single Continuous Path */}
-      <div className="max-w-3xl mx-auto px-3 sm:px-4 pb-8">
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 pb-28">
         <div className="relative">
           {pathNodes.map((node, index) => {
             const prevNode = index > 0 ? pathNodes[index - 1] : null;
