@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { readingApi, progressApi } from '../services/api';
 import Navbar from '../components/Navbar';
@@ -18,6 +18,8 @@ export default function CaminoPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalProgress, setTotalProgress] = useState({ completed: 0, total: 0, percentage: 0 });
+  const [currentBookSlug, setCurrentBookSlug] = useState<string | null>(null);
+  const currentBookRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadBooksData();
@@ -47,12 +49,30 @@ export default function CaminoPage() {
 
       // Configurar libros (ya vienen con el campo completed)
       setBooks(booksRes.books);
+
+      // Encontrar el libro actual (primer libro no completado)
+      const currentBook = booksRes.books.find((book: Book) => !book.completed);
+      if (currentBook) {
+        setCurrentBookSlug(currentBook.slug);
+      }
     } catch (error) {
       console.error('Failed to load camino data:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Auto-scroll al libro actual cuando se carga la página
+  useEffect(() => {
+    if (!loading && currentBookRef.current) {
+      setTimeout(() => {
+        currentBookRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 300);
+    }
+  }, [loading, currentBookSlug]);
 
   // Agrupar libros por categoría
   const groupBooksByCategory = () => {
@@ -157,7 +177,11 @@ export default function CaminoPage() {
                   const isLeft = globalIndex % 2 === 0;
 
                   return (
-                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[52%] md:pr-[60%]' : 'pl-[52%] md:pl-[60%]'}`}>
+                    <div
+                      key={book.id}
+                      ref={book.slug === currentBookSlug ? currentBookRef : null}
+                      className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[52%] md:pr-[60%]' : 'pl-[52%] md:pl-[60%]'}`}
+                    >
                       {/* Center Dot */}
                       <div className={`absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 rounded-full ${book.testament === 'OLD' ? 'bg-blue-500' : 'bg-purple-500'} border-3 border-white shadow-lg z-10`}></div>
 

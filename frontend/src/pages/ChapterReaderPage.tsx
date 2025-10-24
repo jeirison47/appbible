@@ -103,28 +103,46 @@ export default function ChapterReaderPage() {
     }
   };
 
+  const handleExit = () => {
+    navigate(`/camino`);
+  };
+
+  const handleContinueToNext = () => {
+    if (!chapter) return;
+
+    // Si hay siguiente capítulo en el mismo libro
+    if (chapter.chapter.number < chapter.book.totalChapters) {
+      const nextChapterNum = chapter.chapter.number + 1;
+      navigate(`/camino/${bookSlug}/${nextChapterNum}`);
+    } else {
+      // Es el último capítulo, navegar al primer capítulo del siguiente libro
+      // Por ahora, volver a camino (necesitaremos lógica adicional para obtener el siguiente libro)
+      navigate(`/camino`);
+    }
+  };
+
   // Rewards Modal - mostrar por encima de todo
   if (showRewards && rewards && chapter) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto">
           <div className="text-center">
             {/* Celebration Icon */}
-            <div className="text-8xl mb-4">🎉</div>
+            <div className="text-6xl sm:text-7xl mb-3">🎉</div>
 
-            <h2 className="text-4xl font-bold text-gray-800 mb-2">
-              ¡Capítulo Completado!
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1">
+              ¡Completado!
             </h2>
-            <p className="text-gray-600 text-lg mb-8">
+            <p className="text-gray-600 mb-6">
               {chapter.book.name} {chapter.chapter.number}
             </p>
 
             {/* Rewards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 gap-3 mb-6">
               {/* XP Reward */}
-              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6">
-                <p className="text-sm text-gray-600 mb-1">Experiencia Ganada</p>
-                <p className="text-4xl font-bold text-indigo-600 mb-2">
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-4">
+                <p className="text-xs text-gray-600 mb-1">Experiencia Ganada</p>
+                <p className="text-3xl font-bold text-indigo-600 mb-2">
                   +{rewards.xp.totalXp} XP
                 </p>
                 {rewards.xp.leveledUp && (
@@ -142,18 +160,18 @@ export default function ChapterReaderPage() {
               </div>
 
               {/* Streak Reward */}
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6">
-                <p className="text-sm text-gray-600 mb-1">Racha</p>
-                <p className="text-4xl font-bold text-orange-600 mb-2">
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4">
+                <p className="text-xs text-gray-600 mb-1">Racha</p>
+                <p className="text-3xl font-bold text-orange-600 mb-2">
                   🔥 {rewards.streak.currentStreak} días
                 </p>
                 {rewards.streak.streakExtended && (
-                  <p className="text-sm text-green-600 font-semibold">
+                  <p className="text-xs text-green-600 font-semibold">
                     ✓ Racha extendida
                   </p>
                 )}
                 {rewards.streak.streakStarted && !rewards.streak.streakExtended && (
-                  <p className="text-sm text-blue-600 font-semibold">
+                  <p className="text-xs text-blue-600 font-semibold">
                     ⚡ Nueva racha iniciada
                   </p>
                 )}
@@ -163,36 +181,60 @@ export default function ChapterReaderPage() {
               </div>
             </div>
 
+            {/* Streak Progress Bar - New */}
+            {rewards.dailyGoal && (
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-4 mb-4">
+                <p className="text-xs text-gray-600 mb-2">Progreso de Racha de Hoy</p>
+                <div className="w-full bg-white rounded-full h-2.5 mb-2">
+                  <div
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2.5 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min((rewards.xp.totalXp / 10) * 100, 100)}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {rewards.xp.totalXp} / 10 XP para mantener racha
+                </p>
+              </div>
+            )}
+
             {/* Daily Goal Progress */}
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 mb-8">
-              <p className="text-sm text-gray-600 mb-2">Meta Diaria</p>
-              <p className="text-2xl font-bold text-green-600 mb-3">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 mb-6">
+              <p className="text-xs text-gray-600 mb-2">Meta Diaria</p>
+              <p className="text-lg font-bold text-green-600 mb-2">
                 {rewards.dailyGoal.progress} / {rewards.dailyGoal.goal} capítulos
               </p>
-              <div className="w-full bg-white rounded-full h-3 mb-2">
+              <div className="w-full bg-white rounded-full h-2.5 mb-2">
                 <div
-                  className="bg-green-600 h-3 rounded-full transition-all duration-300"
+                  className="bg-green-600 h-2.5 rounded-full transition-all duration-300"
                   style={{ width: `${rewards.dailyGoal.percentage}%` }}
                 ></div>
               </div>
               {rewards.dailyGoal.completed ? (
-                <p className="text-green-700 font-semibold">
+                <p className="text-green-700 font-semibold text-xs">
                   ✓ ¡Meta diaria completada!
                 </p>
               ) : (
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-xs">
                   {rewards.dailyGoal.chaptersRemaining} capítulos restantes
                 </p>
               )}
             </div>
 
-            {/* Continue Button */}
-            <button
-              onClick={handleContinue}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-8 rounded-xl font-bold text-lg hover:shadow-lg transition transform hover:scale-105"
-            >
-              Continuar al Camino
-            </button>
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={handleExit}
+                className="bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-300 transition"
+              >
+                Salir
+              </button>
+              <button
+                onClick={handleContinueToNext}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition"
+              >
+                Continuar
+              </button>
+            </div>
           </div>
         </div>
       </div>
