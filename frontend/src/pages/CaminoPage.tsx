@@ -150,16 +150,16 @@ export default function CaminoPage() {
               {/* Books in this category */}
               <div className="relative">
                 {/* Center Line */}
-                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-indigo-300 transform -translate-x-1/2"></div>
+                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-indigo-300 transform -translate-x-1/2"></div>
 
                 {categoryBooks.map((book, index) => {
                   const globalIndex = bookCounter + index;
                   const isLeft = globalIndex % 2 === 0;
 
                   return (
-                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'md:pr-[60%]' : 'md:pl-[60%]'}`}>
+                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[60%]' : 'pl-[60%]'}`}>
                       {/* Center Dot */}
-                      <div className={`hidden md:block absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 rounded-full ${book.testament === 'OLD' ? 'bg-blue-500' : 'bg-purple-500'} border-3 border-white shadow-lg z-10`}></div>
+                      <div className={`absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 rounded-full ${book.testament === 'OLD' ? 'bg-blue-500' : 'bg-purple-500'} border-3 border-white shadow-lg z-10`}></div>
 
                       <Link to={`/camino/${book.slug}`} className="group block">
                         <div
