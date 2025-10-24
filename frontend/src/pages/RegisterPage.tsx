@@ -51,16 +51,16 @@ export default function RegisterPage() {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="flex justify-center mb-3">
+            <div className="flex items-center justify-center gap-3 mb-3">
               <img
                 src="/logo-color-manah.png"
                 alt="Manah Logo"
-                className="h-14 w-auto"
+                className="h-12 w-auto"
               />
+              <h1 className="text-3xl font-bold text-gray-800">
+                Manah
+              </h1>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-1">
-              Manah
-            </h1>
             <p className="text-gray-600 font-medium mb-1">
               Crear cuenta nueva
             </p>
