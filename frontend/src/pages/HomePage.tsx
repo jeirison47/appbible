@@ -113,27 +113,21 @@ export default function HomePage() {
       loadSystemStats();
       loadUserStats();
     } else {
-      // Cargar progreso del usuario regular
-      progressApi
-        .getMyProgress()
-        .then((data) => {
+      // Cargar progreso del usuario regular y versículo del día en paralelo
+      Promise.all([
+        progressApi.getMyProgress().then((data) => {
           setProgress(data.data);
-        })
-        .catch((err) => {
+        }).catch((err) => {
           console.error('Failed to load progress:', err);
-        });
-
-      // Cargar versículo del día
-      readingApi
-        .getVerseOfTheDay('RV1960')
-        .then((data) => {
+        }),
+        readingApi.getVerseOfTheDay('RV1960').then((data) => {
           setVerse(data.verse);
-          setLoading(false);
-        })
-        .catch((err) => {
+        }).catch((err) => {
           console.error('Failed to load verse of the day:', err);
-          setLoading(false);
-        });
+        })
+      ]).finally(() => {
+        setLoading(false);
+      });
     }
   }, [isAdmin]);
 
@@ -306,14 +300,22 @@ export default function HomePage() {
               <p className="text-gray-600 mt-3 sm:mt-4 text-sm sm:text-base">Cargando...</p>
             </div>
           ) : verse ? (
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-6">
+            <Link
+              to={`/lectura-libre/${verse.reference.bookSlug}/${verse.reference.chapter}/${verse.reference.verse}`}
+              className="block bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:from-indigo-100 hover:to-purple-100 transition-all transform hover:scale-[1.02] cursor-pointer"
+            >
               <p className="text-base sm:text-lg lg:text-xl text-gray-700 leading-relaxed mb-3 sm:mb-4">
                 "{verse.text}"
               </p>
-              <p className="text-xs sm:text-sm text-gray-600 font-semibold">
-                {verse.reference.fullReference} ({verse.version})
-              </p>
-            </div>
+              <div className="flex items-center justify-between">
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  {verse.reference.fullReference} ({verse.version})
+                </p>
+                <span className="text-xs sm:text-sm text-indigo-600 font-semibold flex items-center gap-1">
+                  Leer más →
+                </span>
+              </div>
+            </Link>
           ) : (
             <p className="text-gray-600 text-sm sm:text-base">No se pudo cargar el versículo</p>
           )}
@@ -327,23 +329,34 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm text-gray-600 font-medium">XP Total</p>
               <span className="text-xl sm:text-2xl">⭐</span>
             </div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-indigo-600">{progress?.user.totalXp || 0}</p>
-            {progress?.xp && (
-              <div className="mt-2 sm:mt-3">
-                <div className="flex justify-between text-xs text-gray-600 mb-1">
-                  <span>Nivel {progress.xp.currentLevel}</span>
-                  <span>{progress.xp.progress.percentage}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                  <div
-                    className="bg-indigo-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${progress.xp.progress.percentage}%` }}
-                  ></div>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {progress.xp.progress.remaining} XP para nivel {progress.xp.currentLevel + 1}
-                </p>
+            {loading || !progress ? (
+              <div className="animate-pulse">
+                <div className="h-8 sm:h-10 bg-gray-200 rounded w-20 mb-2 sm:mb-3"></div>
+                <div className="h-3 bg-gray-200 rounded w-full mb-1"></div>
+                <div className="h-2 bg-gray-200 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 rounded w-3/4 mt-1"></div>
               </div>
+            ) : (
+              <>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-indigo-600">{progress.user.totalXp}</p>
+                {progress.xp && (
+                  <div className="mt-2 sm:mt-3">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>Nivel {progress.xp.currentLevel}</span>
+                      <span>{progress.xp.progress.percentage}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                      <div
+                        className="bg-indigo-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${progress.xp.progress.percentage}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {progress.xp.progress.remaining} XP para nivel {progress.xp.currentLevel + 1}
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -353,23 +366,33 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm text-gray-600 font-medium">Meta Diaria</p>
               <span className="text-xl sm:text-2xl">📊</span>
             </div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600">
-              {progress?.dailyGoal.progress || 0}/{progress?.dailyGoal.goal || 1}
-            </p>
-            {progress?.dailyGoal && (
-              <div className="mt-2 sm:mt-3">
-                <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                  <div
-                    className="bg-green-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${progress.dailyGoal.percentage}%` }}
-                  ></div>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {progress.dailyGoal.completed
-                    ? '¡Meta completada! 🎉'
-                    : `${progress.dailyGoal.chaptersRemaining} ${progress.dailyGoal.chaptersRemaining === 1 ? 'cap. restante' : 'caps. restantes'}`}
-                </p>
+            {loading || !progress ? (
+              <div className="animate-pulse">
+                <div className="h-8 sm:h-10 bg-gray-200 rounded w-16 mb-2 sm:mb-3"></div>
+                <div className="h-2 bg-gray-200 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 rounded w-3/4 mt-1"></div>
               </div>
+            ) : (
+              <>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600">
+                  {progress.dailyGoal.progress}/{progress.dailyGoal.goal}
+                </p>
+                {progress.dailyGoal && (
+                  <div className="mt-2 sm:mt-3">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                      <div
+                        className="bg-green-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${progress.dailyGoal.percentage}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {progress.dailyGoal.completed
+                        ? '¡Meta completada! 🎉'
+                        : `${progress.dailyGoal.chaptersRemaining} ${progress.dailyGoal.chaptersRemaining === 1 ? 'cap. restante' : 'caps. restantes'}`}
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -379,25 +402,35 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm text-gray-600 font-medium">Racha</p>
               <span className="text-xl sm:text-2xl">🔥</span>
             </div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600">
-              {progress?.user.currentStreak || 0}
-            </p>
-            {progress?.user && (
-              <div className="mt-2 sm:mt-3">
-                <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
-                  <div
-                    className="bg-orange-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                    style={{
-                      width: `${progress.user.longestStreak > 0
-                        ? Math.min((progress.user.currentStreak / progress.user.longestStreak) * 100, 100)
-                        : progress.user.currentStreak > 0 ? 100 : 0}%`
-                    }}
-                  ></div>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Récord: {progress.user.longestStreak || 0} días
-                </p>
+            {loading || !progress ? (
+              <div className="animate-pulse">
+                <div className="h-8 sm:h-10 bg-gray-200 rounded w-12 mb-2 sm:mb-3"></div>
+                <div className="h-2 bg-gray-200 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 rounded w-2/3 mt-1"></div>
               </div>
+            ) : (
+              <>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600">
+                  {progress.user.currentStreak}
+                </p>
+                {progress.user && (
+                  <div className="mt-2 sm:mt-3">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                      <div
+                        className="bg-orange-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${progress.user.longestStreak > 0
+                            ? Math.min((progress.user.currentStreak / progress.user.longestStreak) * 100, 100)
+                            : progress.user.currentStreak > 0 ? 100 : 0}%`
+                        }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Récord: {progress.user.longestStreak} días
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -407,12 +440,21 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm text-gray-600 font-medium">Tiempo Hoy</p>
               <span className="text-xl sm:text-2xl">⏱️</span>
             </div>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600">
-              {formattedTime}
-            </p>
-            <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-              {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Acumulando...'}
-            </p>
+            {loading || !progress ? (
+              <div className="animate-pulse">
+                <div className="h-8 sm:h-10 bg-gray-200 rounded w-20 mb-1 sm:mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+              </div>
+            ) : (
+              <>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600">
+                  {formattedTime}
+                </p>
+                <p className="text-xs text-gray-500 mt-1 sm:mt-2">
+                  {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Acumulando...'}
+                </p>
+              </>
+            )}
           </div>
         </div>
 
