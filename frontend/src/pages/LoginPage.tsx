@@ -41,9 +41,9 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <img
-                src="/logo-header-manah.png"
+                src="/logo-color-manah.png"
                 alt="Manah Logo"
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             </div>
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
