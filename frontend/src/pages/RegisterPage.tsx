@@ -57,8 +57,8 @@ export default function RegisterPage() {
                 alt="Manah Logo"
                 className="h-12 w-auto"
               />
-              <h1 className="text-4xl font-bold text-gray-800" style={{ fontFamily: 'Pacifico, cursive' }}>
-                Manah
+              <h1 className="text-4xl font-bold text-gray-800" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
+                manah
               </h1>
             </div>
             <p className="text-gray-500 text-sm">
