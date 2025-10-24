@@ -39,8 +39,15 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <img
+                src="/logo-header-manah.png"
+                alt="Manah Logo"
+                className="h-16 w-auto"
+              />
+            </div>
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              📖 Manah
+              Manah
             </h1>
             <p className="text-gray-600 text-lg font-semibold">
               Iniciar Sesión
@@ -119,13 +126,6 @@ export default function LoginPage() {
               </button>
             </div>
           )}
-
-          {/* Test users */}
-          <div className="mt-6 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
-            <p className="font-semibold mb-1">Usuarios de prueba:</p>
-            <p>Admin: admin@manah.com / admin123</p>
-            <p>User: user@manah.com / user123</p>
-          </div>
         </div>
       </div>
     </div>
