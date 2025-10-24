@@ -55,7 +55,7 @@ export default function RegisterPage() {
               <img
                 src="/logo-color-manah.png"
                 alt="Manah Logo"
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
               <h1 className="text-4xl font-bold text-gray-800" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
                 manah
