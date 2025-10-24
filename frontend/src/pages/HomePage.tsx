@@ -294,10 +294,14 @@ export default function HomePage() {
             Versículo del Día
           </h3>
 
-          {loading ? (
-            <div className="text-center py-6 sm:py-8">
-              <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
-              <p className="text-gray-600 mt-3 sm:mt-4 text-sm sm:text-base">Cargando...</p>
+          {loading || !verse ? (
+            <div className="animate-pulse bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-6">
+              <div className="space-y-3">
+                <div className="h-4 bg-indigo-200 rounded w-full"></div>
+                <div className="h-4 bg-indigo-200 rounded w-5/6"></div>
+                <div className="h-4 bg-indigo-200 rounded w-4/6"></div>
+                <div className="h-3 bg-indigo-200 rounded w-32 mt-4"></div>
+              </div>
             </div>
           ) : verse ? (
             <Link
