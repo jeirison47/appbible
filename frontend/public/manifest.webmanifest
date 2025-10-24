@@ -1,0 +1,64 @@
+{
+  "name": "Manah - Lee la Biblia con Gamificación",
+  "short_name": "Manah",
+  "description": "Descubre la Biblia de forma interactiva con gamificación. Gana XP, mantén rachas diarias y completa tu camino de lectura.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "lifestyle", "books"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Mi Camino",
+      "short_name": "Camino",
+      "description": "Ver mi progreso en el camino de lectura",
+      "url": "/camino",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Lectura Libre",
+      "short_name": "Lectura",
+      "description": "Explorar libros y capítulos libremente",
+      "url": "/lectura-libre",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Estadísticas",
+      "short_name": "Stats",
+      "description": "Ver mis estadísticas de lectura",
+      "url": "/estadisticas",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

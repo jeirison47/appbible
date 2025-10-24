@@ -103,32 +103,8 @@ export default function ChapterReaderPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-lg">Cargando capítulo...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!chapter) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 text-lg">No se pudo cargar el capítulo</p>
-          <Link to="/camino" className="text-indigo-600 hover:underline mt-4 inline-block">
-            Volver al Camino
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  // Rewards Modal
-  if (showRewards && rewards) {
+  // Rewards Modal - mostrar por encima de todo
+  if (showRewards && rewards && chapter) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
@@ -225,9 +201,9 @@ export default function ChapterReaderPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Simple Header - Only Logo and Profile */}
+      {/* Simple Header - Only Logo and Profile - Siempre visible */}
       <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3">
@@ -253,41 +229,58 @@ export default function ChapterReaderPage() {
         </div>
       </nav>
 
-      {/* Secondary Header - Back Button, Title, Version Selector */}
-      <div className="fixed top-14 sm:top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-40">
-        <div className="max-w-4xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link
-                to={`/camino/${bookSlug}`}
-                className="text-gray-600 hover:text-gray-800 flex items-center gap-1"
-              >
-                <span className="text-xl">←</span>
-                <span className="hidden sm:inline">Volver</span>
-              </Link>
-              <div>
-                <p className="text-xs text-gray-500">{chapter.book.category}</p>
-                <h1 className="text-sm sm:text-lg font-bold text-gray-800">
-                  {chapter.book.name} {chapter.chapter.number}
-                </h1>
-              </div>
-            </div>
-
-            {/* Version Selector */}
-            <select
-              value={version}
-              onChange={(e) => setVersion(e.target.value as any)}
-              className="px-2 py-1 sm:px-3 sm:py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            >
-              <option value="RV1960">RV1960</option>
-              <option value="KJV">KJV</option>
-            </select>
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] pt-32">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
+            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando capítulo...</p>
           </div>
         </div>
-      </div>
+      ) : !chapter ? (
+        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] pt-32">
+          <div className="text-center bg-white rounded-2xl shadow-xl p-8">
+            <p className="text-gray-600 text-lg mb-4">No se pudo cargar el capítulo</p>
+            <Link to="/camino" className="text-indigo-600 hover:underline font-semibold">
+              ← Volver al Camino
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Secondary Header - Back Button, Title, Version Selector */}
+          <div className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+            <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+              <div className="flex items-center justify-between">
+                <Link
+                  to={`/camino/${bookSlug}`}
+                  className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition font-semibold text-sm sm:text-base"
+                >
+                  <span className="text-xl sm:text-2xl">←</span>
+                  <span>Volver</span>
+                </Link>
+                <div className="text-center">
+                  <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800">
+                    {chapter.book.name} - Capítulo {chapter.chapter.number}
+                  </h1>
+                </div>
+
+                {/* Version Selector */}
+                <div className="text-right">
+                  <select
+                    value={version}
+                    onChange={(e) => setVersion(e.target.value as any)}
+                    className="px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-xs sm:text-sm font-semibold"
+                  >
+                    <option value="RV1960">ES RV1960</option>
+                    <option value="KJV">EN KJV</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
 
       {/* Chapter Content */}
-      <div className="max-w-4xl mx-auto px-4 pt-32 sm:pt-36 pb-12">
+      <div className="max-w-6xl mx-auto px-4 pt-48 sm:pt-52 pb-12">
 
         {/* Verses */}
         <div className="space-y-6 mb-16">
@@ -366,6 +359,8 @@ export default function ChapterReaderPage() {
           )}
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

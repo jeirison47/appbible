@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { progressApi } from '../services/api';
-import Navbar from '../components/Navbar';
+import { useAuthStore } from '../stores/authStore';
 
 interface Chapter {
   id: string;
@@ -34,6 +34,8 @@ interface BookProgressData {
 
 export default function BookPathPage() {
   const { bookSlug } = useParams<{ bookSlug: string }>();
+  const roles = useAuthStore((state) => state.roles);
+  const isAdmin = roles.some((r) => r.name === 'admin');
   const [data, setData] = useState<BookProgressData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -66,8 +68,35 @@ export default function BookPathPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-28">
-      {/* Navbar */}
-      <Navbar />
+      {/* Simple Header - Only Logo and Profile */}
+      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 sm:gap-3">
+              <img
+                src="/logo-header-manah.png"
+                alt="Manah Logo"
+                className="h-8 sm:h-10 w-auto"
+              />
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
+                Manah {isAdmin && 'Admin'}
+              </h1>
+            </Link>
+
+            {/* Botón Perfil */}
+            <Link
+              to="/perfil"
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+              </svg>
+              <span className="hidden sm:inline font-medium">Perfil</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {loading ? (
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
@@ -88,8 +117,8 @@ export default function BookPathPage() {
       ) : (
         <>
           {/* Fixed Header */}
-          <nav className="fixed top-32 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+          <nav className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+        <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
               to="/camino"
@@ -99,12 +128,10 @@ export default function BookPathPage() {
               <span>Volver</span>
             </Link>
             <div className="text-center">
-              <p className="text-sm text-gray-500">{data.book.category}</p>
               <h1 className="text-xl font-bold text-gray-800">{data.book.name}</h1>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-500">Progreso</p>
-              <p className="text-xl font-bold text-indigo-600">{data.progress.percentage}%</p>
+              <p className="text-sm text-gray-500">{data.book.category}</p>
             </div>
           </div>
         </div>
@@ -112,7 +139,7 @@ export default function BookPathPage() {
 
       {/* Progress Bar - Fixed Bottom */}
       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 border-t-4 border-indigo-500">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Título del libro */}
             <h2 className="text-sm sm:text-base font-bold text-gray-800 whitespace-nowrap">
@@ -143,17 +170,10 @@ export default function BookPathPage() {
       </div>
 
       {/* Path Content */}
-      <div className="max-w-3xl mx-auto px-4 pt-52 pb-12 relative">
+      <div className="max-w-6xl mx-auto px-4 pt-36 sm:pt-40 pb-12 relative">
         {/* Title Section */}
         <div className="text-center mb-16">
-          <div className={`inline-block px-6 py-3 rounded-full text-white font-bold text-lg mb-4 ${
-            data.book.testament === 'OLD'
-              ? 'bg-gradient-to-r from-blue-500 to-blue-600'
-              : 'bg-gradient-to-r from-purple-500 to-purple-600'
-          }`}>
-            {data.book.testament === 'OLD' ? '📜' : '✝️'} {data.book.name}
-          </div>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-lg font-semibold">
             {data.book.totalChapters} capítulos en tu camino
           </p>
         </div>

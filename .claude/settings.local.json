@@ -44,7 +44,8 @@
       "Bash(git push:*)",
       "Bash(dir:*)",
       "Bash(rd /s /q 20251023113954_simplify_daily_goals)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(del vite.svg icon-app.png icono2-app.png icon-manah.png)"
     ],
     "deny": [],
     "ask": []

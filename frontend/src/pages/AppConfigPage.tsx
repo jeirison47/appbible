@@ -94,7 +94,7 @@ export default function AppConfigPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50">
       <Navbar />
 
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 border-l-4 border-orange-600">
           <h2 className="text-4xl font-bold text-gray-800 mb-2">

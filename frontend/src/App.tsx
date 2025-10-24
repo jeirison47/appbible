@@ -16,6 +16,8 @@ import SearchPage from './pages/SearchPage';
 import StatsPage from './pages/StatsPage';
 import AppConfigPage from './pages/AppConfigPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from './components/ScrollToTop';
+import ScrollToTopButton from './components/ScrollToTopButton';
 import { useAuthStore } from './stores/authStore';
 import { authApi } from './services/api';
 
@@ -63,6 +65,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
+        <ScrollToTopButton />
         <Routes>
           <Route
             path="/login"

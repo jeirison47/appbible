@@ -107,7 +107,7 @@ export default function ProfilePage() {
         ) : (
           <>
 
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           {/* Profile Header Card */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
@@ -220,7 +220,7 @@ export default function ProfilePage() {
       ) : (
         <>
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Profile Header Card */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
@@ -463,13 +463,6 @@ export default function ProfilePage() {
             <span className="text-xl sm:text-2xl">🚪</span>
             Cerrar Sesión
           </button>
-
-          <Link
-            to="/"
-            className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
-          >
-            Volver al Inicio
-          </Link>
 
           {/* Install PWA Button */}
           {isInstallable && (

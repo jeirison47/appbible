@@ -65,7 +65,7 @@ export default function FreeReadingPage() {
       ) : (
         <>
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 text-white mb-4 sm:mb-6 text-center">
           <div className="mb-2 sm:mb-3 flex justify-center">

@@ -54,6 +54,18 @@ export default function CaminoPage() {
     }
   };
 
+  // Agrupar libros por categoría
+  const groupBooksByCategory = () => {
+    const grouped: { [key: string]: Book[] } = {};
+    books.forEach((book) => {
+      if (!grouped[book.category]) {
+        grouped[book.category] = [];
+      }
+      grouped[book.category].push(book);
+    });
+    return grouped;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32 pb-28">
       {/* Navbar */}
@@ -70,7 +82,7 @@ export default function CaminoPage() {
         <>
       {/* Progress Bar - Fixed Bottom */}
       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t-4 border-indigo-500">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Título */}
             <h1 className="text-base sm:text-xl font-bold text-gray-800 whitespace-nowrap">
@@ -118,62 +130,93 @@ export default function CaminoPage() {
         </div>
       </div>
 
-      {/* Books Grid */}
-      <div className="max-w-6xl mx-auto px-3 sm:px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {books.map((book) => (
-            <Link
-              key={book.id}
-              to={`/camino/${book.slug}`}
-              className="group"
-            >
-              <div
-                className={`rounded-2xl sm:rounded-3xl shadow-2xl p-5 sm:p-6 text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl ${
-                  book.testament === 'OLD'
-                    ? 'bg-gradient-to-br from-blue-500 to-blue-700'
-                    : 'bg-gradient-to-br from-purple-500 to-purple-700'
-                }`}
-              >
-                {/* Testament Icon */}
-                <div className="mb-3 flex justify-center">
-                  {book.testament === 'OLD' ? (
-                    <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M19 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
-                    </svg>
-                  ) : (
-                    <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                    </svg>
-                  )}
-                </div>
+      {/* Books Timeline - Grouped by Category */}
+      <div className="max-w-3xl mx-auto px-3 sm:px-4">
+        {Object.entries(groupBooksByCategory()).map(([category, categoryBooks], categoryIndex) => {
+          let bookCounter = 0;
+          // Contar los libros en las categorías anteriores para mantener el patrón alternado
+          Object.entries(groupBooksByCategory()).slice(0, categoryIndex).forEach(([_, prevBooks]) => {
+            bookCounter += prevBooks.length;
+          });
 
-                {/* Book Name */}
-                <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">{book.name}</h3>
-                <p className="text-sm opacity-90 mb-4 text-center">{book.category}</p>
-
-                {/* Total Chapters */}
-                <div className="bg-white/20 rounded-xl py-3 px-4 backdrop-blur mb-3">
-                  <p className="text-xs font-semibold mb-1 text-center">Total de Capítulos</p>
-                  <p className="text-2xl font-bold text-center">
-                    {book.totalChapters}
-                  </p>
-                </div>
-
-                {/* Completion badge */}
-                {book.completed && (
-                  <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold inline-block w-full text-center mb-3">
-                    ✓ COMPLETADO
-                  </div>
-                )}
-
-                {/* Ver detalles hover indicator */}
-                <div className="mt-3 text-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-sm font-semibold">Ver capítulos →</p>
-                </div>
+          return (
+            <div key={category} className="mb-8">
+              {/* Category Header */}
+              <div className="text-center mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 mb-2">{category}</h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 mx-auto rounded-full"></div>
               </div>
-            </Link>
-          ))}
-        </div>
+
+              {/* Books in this category */}
+              <div className="relative">
+                {/* Center Line */}
+                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-indigo-300 transform -translate-x-1/2"></div>
+
+                {categoryBooks.map((book, index) => {
+                  const globalIndex = bookCounter + index;
+                  const isLeft = globalIndex % 2 === 0;
+
+                  return (
+                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'md:pr-[60%]' : 'md:pl-[60%]'}`}>
+                      {/* Center Dot */}
+                      <div className={`hidden md:block absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 rounded-full ${book.testament === 'OLD' ? 'bg-blue-500' : 'bg-purple-500'} border-3 border-white shadow-lg z-10`}></div>
+
+                      <Link to={`/camino/${book.slug}`} className="group block">
+                        <div
+                          className={`rounded-2xl shadow-xl p-4 sm:p-6 text-white transform transition-all duration-300 hover:scale-105 hover:shadow-2xl min-h-[240px] sm:min-h-[280px] flex flex-col justify-between ${
+                            book.testament === 'OLD'
+                              ? 'bg-gradient-to-br from-blue-500 to-blue-700'
+                              : 'bg-gradient-to-br from-purple-500 to-purple-700'
+                          }`}
+                        >
+                          <div className="flex-1 flex flex-col justify-center">
+                            {/* Testament Icon */}
+                            <div className="mb-3 flex justify-center">
+                              {book.testament === 'OLD' ? (
+                                <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M19 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
+                                </svg>
+                              ) : (
+                                <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                </svg>
+                              )}
+                            </div>
+
+                            {/* Book Name */}
+                            <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">{book.name}</h3>
+                            <p className="text-xs sm:text-sm opacity-90 mb-4 text-center">{book.category}</p>
+
+                            {/* Total Chapters */}
+                            <div className="bg-white/20 rounded-lg py-3 px-4 backdrop-blur mb-3">
+                              <p className="text-xs font-semibold mb-1 text-center">Capítulos</p>
+                              <p className="text-2xl sm:text-3xl font-bold text-center">
+                                {book.totalChapters}
+                              </p>
+                            </div>
+
+                            {/* Completion badge */}
+                            {book.completed && (
+                              <div className="bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-full text-xs font-bold flex items-center justify-center gap-2">
+                                <span>✓</span>
+                                <span>COMPLETADO</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Ver detalles indicator */}
+                          <div className="mt-auto pt-3 text-center">
+                            <p className="text-sm font-semibold group-hover:underline transition-all">Ver capítulos →</p>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
       </>
       )}

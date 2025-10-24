@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { readingApi } from '../services/api';
-import Navbar from '../components/Navbar';
+import { useAuthStore } from '../stores/authStore';
 
 interface Chapter {
   number: number;
@@ -21,6 +21,8 @@ interface BookData {
 
 export default function FreeBookChaptersPage() {
   const { bookSlug } = useParams<{ bookSlug: string }>();
+  const roles = useAuthStore((state) => state.roles);
+  const isAdmin = roles.some((r) => r.name === 'admin');
   const [book, setBook] = useState<BookData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,19 +44,46 @@ export default function FreeBookChaptersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-32">
-      {/* Navbar */}
-      <Navbar />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Simple Header - Only Logo and Profile */}
+      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 sm:gap-3">
+              <img
+                src="/logo-header-manah.png"
+                alt="Manah Logo"
+                className="h-8 sm:h-10 w-auto"
+              />
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
+                Manah {isAdmin && 'Admin'}
+              </h1>
+            </Link>
+
+            {/* Botón Perfil */}
+            <Link
+              to="/perfil"
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+              </svg>
+              <span className="hidden sm:inline font-medium">Perfil</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {loading ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+        <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
             <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando capítulos...</p>
           </div>
         </div>
       ) : !book ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+        <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
           <div className="text-center bg-white rounded-2xl shadow-xl p-8">
             <p className="text-gray-600 text-lg mb-4">No se pudo cargar el libro</p>
             <Link to="/lectura-libre" className="text-indigo-600 hover:underline font-semibold">
@@ -64,9 +93,9 @@ export default function FreeBookChaptersPage() {
         </div>
       ) : (
         <>
-      {/* Header */}
-      <nav className="bg-white shadow-lg sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+      {/* Secondary Header */}
+      <nav className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <Link
               to="/lectura-libre"
@@ -88,31 +117,7 @@ export default function FreeBookChaptersPage() {
       </nav>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8 lg:py-12">
-        {/* Book Header */}
-        <div className={`rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-12 text-white mb-6 sm:mb-8 lg:mb-12 text-center ${
-          book.testament === 'OLD'
-            ? 'bg-gradient-to-r from-blue-600 to-blue-700'
-            : 'bg-gradient-to-r from-purple-600 to-purple-700'
-        }`}>
-          <div className="mb-3 sm:mb-4 flex justify-center">
-            {book.testament === 'OLD' ? (
-              <svg className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
-              </svg>
-            ) : (
-              <svg className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-              </svg>
-            )}
-          </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">{book.name}</h2>
-          <p className="text-base sm:text-lg lg:text-xl opacity-90">{book.category}</p>
-          <p className="text-sm sm:text-base lg:text-lg opacity-80 mt-2">
-            {book.totalChapters} {book.totalChapters === 1 ? 'capítulo' : 'capítulos'} para explorar
-          </p>
-        </div>
-
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 pt-36 sm:pt-40 pb-6">
         {/* Chapters Grid */}
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
           {book.chapters.map((chapter) => (
