@@ -39,19 +39,16 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="flex items-center justify-center gap-3">
               <img
                 src="/logo-color-manah.png"
                 alt="Manah Logo"
                 className="h-12 w-auto"
               />
-              <h1 className="text-3xl font-bold text-gray-800">
+              <h1 className="text-4xl font-bold text-gray-800" style={{ fontFamily: 'Pacifico, cursive' }}>
                 Manah
               </h1>
             </div>
-            <p className="text-gray-600 font-medium">
-              Iniciar Sesión
-            </p>
           </div>
 
           {/* Error message */}
@@ -65,7 +62,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
+                Correo
               </label>
               <input
                 type="email"

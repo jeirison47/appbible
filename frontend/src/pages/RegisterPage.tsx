@@ -57,13 +57,10 @@ export default function RegisterPage() {
                 alt="Manah Logo"
                 className="h-12 w-auto"
               />
-              <h1 className="text-3xl font-bold text-gray-800">
+              <h1 className="text-4xl font-bold text-gray-800" style={{ fontFamily: 'Pacifico, cursive' }}>
                 Manah
               </h1>
             </div>
-            <p className="text-gray-600 font-medium mb-1">
-              Crear cuenta nueva
-            </p>
             <p className="text-gray-500 text-sm">
               Únete y comienza tu aventura bíblica
             </p>
@@ -95,7 +92,7 @@ export default function RegisterPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
+                Correo <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
