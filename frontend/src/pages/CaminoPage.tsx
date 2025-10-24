@@ -67,7 +67,7 @@ export default function CaminoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32 pb-28">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32 pb-28 overflow-x-hidden">
       {/* Navbar */}
       <Navbar />
 
@@ -131,7 +131,7 @@ export default function CaminoPage() {
       </div>
 
       {/* Books Timeline - Grouped by Category */}
-      <div className="max-w-3xl mx-auto px-3 sm:px-4">
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 overflow-x-hidden">
         {Object.entries(groupBooksByCategory()).map(([category, categoryBooks], categoryIndex) => {
           let bookCounter = 0;
           // Contar los libros en las categorías anteriores para mantener el patrón alternado
@@ -157,7 +157,7 @@ export default function CaminoPage() {
                   const isLeft = globalIndex % 2 === 0;
 
                   return (
-                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[60%]' : 'pl-[60%]'}`}>
+                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[52%] md:pr-[60%]' : 'pl-[52%] md:pl-[60%]'}`}>
                       {/* Center Dot */}
                       <div className={`absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 rounded-full ${book.testament === 'OLD' ? 'bg-blue-500' : 'bg-purple-500'} border-3 border-white shadow-lg z-10`}></div>
 
