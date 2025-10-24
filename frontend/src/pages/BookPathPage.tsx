@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { progressApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
@@ -38,6 +38,8 @@ export default function BookPathPage() {
   const isAdmin = roles.some((r) => r.name === 'admin');
   const [data, setData] = useState<BookProgressData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentChapterNumber, setCurrentChapterNumber] = useState<number | null>(null);
+  const currentChapterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (bookSlug) {
@@ -49,12 +51,31 @@ export default function BookPathPage() {
     try {
       const response = await progressApi.getBookProgress(bookSlug!);
       setData(response.data);
+
+      // Encontrar el capítulo actual (primer capítulo no leído o el siguiente al último leído)
+      const currentChapter = response.data.chapters.find((ch: Chapter) => !ch.isRead);
+      if (currentChapter) {
+        setCurrentChapterNumber(currentChapter.number);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error('Failed to load book progress:', error);
       setLoading(false);
     }
   };
+
+  // Auto-scroll al capítulo actual cuando se carga la página
+  useEffect(() => {
+    if (!loading && currentChapterRef.current) {
+      setTimeout(() => {
+        currentChapterRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 300);
+    }
+  }, [loading, currentChapterNumber]);
 
   // Función para determinar la posición horizontal del nodo (1 por fila)
   // Patrón: izquierda → centro → derecha → centro → izquierda...
@@ -187,7 +208,11 @@ export default function BookPathPage() {
             const isLocked = !chapter.isUnlocked;
 
             return (
-              <div key={chapter.id} className="relative mb-4">
+              <div
+                key={chapter.id}
+                ref={chapter.number === currentChapterNumber ? currentChapterRef : null}
+                className="relative mb-4"
+              >
                 {/* Grid with 3 columns */}
                 <div className="grid grid-cols-3 items-center mx-auto" style={{ maxWidth: '600px' }}>
                   {/* Left column */}
