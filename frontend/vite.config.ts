@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
-        name: 'Manah - Lee la Biblia con Gamificación',
+        name: 'Manah - Alimenta tu Espíritu',
         short_name: 'Manah',
         description: 'Descubre la Biblia de forma interactiva con gamificación. Gana XP, mantén rachas diarias y completa tu camino de lectura.',
         theme_color: '#4F46E5',
