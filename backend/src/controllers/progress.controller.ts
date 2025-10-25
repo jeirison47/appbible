@@ -266,11 +266,14 @@ export class ProgressController {
         );
       }
 
-      await DailyGoalService.recordReadingTime(userId, seconds);
+      const result = await DailyGoalService.recordReadingTime(userId, seconds);
 
       return c.json({
         success: true,
         message: 'Tiempo registrado',
+        data: {
+          xpAwarded: result.xpAwarded,
+        },
       });
     } catch (error: any) {
       console.error('Error recording reading time:', error);

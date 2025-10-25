@@ -15,7 +15,7 @@ async function main() {
     { key: 'default_daily_goal', value: '1', type: 'number' },
     { key: 'streak_xp_required', value: '100', type: 'number' },
     { key: 'xp_per_chapter', value: '100', type: 'number' },
-    { key: 'xp_per_minute_free_reading', value: '10', type: 'number' },
+    { key: 'xp_per_minute_reading', value: '10', type: 'number' },
     { key: 'bonus_streak_multiplier', value: '1.5', type: 'number' },
   ];
 

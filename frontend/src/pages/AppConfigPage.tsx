@@ -13,7 +13,7 @@ interface AppConfig {
   default_daily_goal: string;
   streak_xp_required: string;
   xp_per_chapter: string;
-  xp_per_minute_free_reading: string;
+  xp_per_minute_reading: string;
   bonus_streak_multiplier: string;
   streak_goal_xp_per_day: string;
 }
@@ -29,7 +29,7 @@ export default function AppConfigPage() {
     default_daily_goal: '1',
     streak_xp_required: '100',
     xp_per_chapter: '100',
-    xp_per_minute_free_reading: '10',
+    xp_per_minute_reading: '10',
     bonus_streak_multiplier: '1.5',
     streak_goal_xp_per_day: '50',
   });
@@ -292,20 +292,20 @@ export default function AppConfigPage() {
               </p>
             </div>
 
-            {/* XP per Minute Free Reading */}
+            {/* XP per Minute Reading */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
-                XP por Minuto (Lectura Libre)
+                XP por Minuto de Lectura
               </label>
               <input
                 type="number"
-                value={config.xp_per_minute_free_reading}
-                onChange={(e) => handleChange('xp_per_minute_free_reading', e.target.value)}
+                value={config.xp_per_minute_reading}
+                onChange={(e) => handleChange('xp_per_minute_reading', e.target.value)}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-2xl font-bold"
                 min="1"
               />
               <p className="text-sm text-gray-500 mt-1 text-center">
-                XP por cada 10 minutos de lectura libre
+                XP por cada minuto de lectura
               </p>
             </div>
 

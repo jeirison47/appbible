@@ -251,6 +251,7 @@ model DailyProgress {
   xpEarned                Int     @default(0)
   chaptersRead            Int     @default(0)
   timeReading             Int     @default(0)
+  timeXpAwarded           Int     @default(0) // Segundos por los que ya se otorgó XP
   systemGoalCompleted     Boolean @default(false)
   personalGoalCompleted   Boolean @default(false)
 

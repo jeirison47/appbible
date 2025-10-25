@@ -266,18 +266,24 @@ export class DailyGoalService {
 
   /**
    * Registra tiempo de lectura (en segundos) para el día actual
+   * Otorga XP por cada minuto completado
    * Nota: timeReading se guarda en SEGUNDOS en la BD
    * El frontend se encarga de convertir a minutos/horas para mostrar
    */
-  static async recordReadingTime(userId: string, seconds: number): Promise<void> {
+  static async recordReadingTime(userId: string, seconds: number): Promise<{ xpAwarded: number }> {
     if (seconds < 1) {
-      return; // No registrar si es menos de 1 segundo
+      return { xpAwarded: 0 }; // No registrar si es menos de 1 segundo
     }
 
     const today = startOfDay(new Date());
 
+    // Obtener configuración de XP por minuto
+    const { ConfigService } = await import('./config.service');
+    const xpPerMinuteStr = await ConfigService.getConfigByKey('xp_per_minute_reading');
+    const xpPerMinute = xpPerMinuteStr ? parseInt(xpPerMinuteStr) : 10;
+
     // Buscar o crear el registro de progreso diario
-    const dailyProgress = await prisma.dailyProgress.findUnique({
+    let dailyProgress = await prisma.dailyProgress.findUnique({
       where: {
         userId_date: {
           userId,
@@ -286,34 +292,64 @@ export class DailyGoalService {
       },
     });
 
-    if (dailyProgress) {
-      // Actualizar tiempo de lectura (acumular segundos)
-      const newTimeReading = dailyProgress.timeReading + seconds;
-
-      await prisma.dailyProgress.update({
-        where: {
-          userId_date: {
-            userId,
-            date: today,
-          },
-        },
-        data: {
-          timeReading: newTimeReading,
-        },
-      });
-    } else {
+    if (!dailyProgress) {
       // Crear nuevo registro
-      await prisma.dailyProgress.create({
+      dailyProgress = await prisma.dailyProgress.create({
         data: {
           userId,
           date: today,
           chaptersRead: 0,
           xpEarned: 0,
           timeReading: seconds,
+          timeXpAwarded: 0,
           systemGoalCompleted: false,
           personalGoalCompleted: false,
         },
       });
     }
+
+    // Calcular nuevo tiempo total de lectura
+    const newTimeReading = dailyProgress.timeReading + seconds;
+
+    // Calcular minutos completos actuales vs minutos completos previos
+    const previousMinutes = Math.floor(dailyProgress.timeXpAwarded / 60);
+    const newMinutes = Math.floor(newTimeReading / 60);
+
+    // Calcular cuántos minutos nuevos se completaron
+    const minutesCompleted = newMinutes - previousMinutes;
+
+    // Calcular XP a otorgar
+    const xpToAward = minutesCompleted * xpPerMinute;
+
+    // Actualizar tiempo de lectura
+    await prisma.dailyProgress.update({
+      where: {
+        userId_date: {
+          userId,
+          date: today,
+        },
+      },
+      data: {
+        timeReading: newTimeReading,
+        timeXpAwarded: newMinutes * 60, // Actualizar hasta qué segundo se otorgó XP
+        xpEarned: { increment: xpToAward },
+      },
+    });
+
+    // Si hay XP para otorgar, actualizar usuario y crear registro
+    if (xpToAward > 0) {
+      const { XpService } = await import('./xp.service');
+      await XpService.awardXp({
+        userId,
+        amount: xpToAward,
+        reason: `Tiempo de lectura (${minutesCompleted} ${minutesCompleted === 1 ? 'minuto' : 'minutos'})`,
+        metadata: {
+          minutesRead: minutesCompleted,
+          xpPerMinute,
+        },
+      });
+    }
+
+    return { xpAwarded: xpToAward };
   }
 }
