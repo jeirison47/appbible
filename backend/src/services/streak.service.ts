@@ -78,8 +78,15 @@ export class StreakService {
         const daysSinceLastRead = differenceInDays(today, lastRead);
 
         if (daysSinceLastRead === 0) {
-          // Ya cumplió el objetivo hoy, no hacer nada
-          newCurrentStreak = user.currentStreak;
+          // Ya cumplió el objetivo hoy
+          // Si la racha es 0, establecerla en 1 (primera vez cumpliendo)
+          if (user.currentStreak === 0) {
+            newCurrentStreak = 1;
+            streakStarted = true;
+          } else {
+            // Si ya tiene racha, mantenerla
+            newCurrentStreak = user.currentStreak;
+          }
         } else if (daysSinceLastRead === 1) {
           // Cumplió ayer, extender la racha
           newCurrentStreak = user.currentStreak + 1;
