@@ -28,7 +28,9 @@ export default function LoginPage() {
           const accessToken = await getAccessTokenSilently();
 
           // Enviar a backend
-          const apiUrl = import.meta.env.VITE_API_URL || 'https://appbible.onrender.com';
+          const baseUrl = import.meta.env.VITE_API_URL || 'https://appbible.onrender.com';
+          // Remover /api del final si existe para evitar duplicación
+          const apiUrl = baseUrl.replace(/\/api$/, '');
           const response = await fetch(`${apiUrl}/api/auth/auth0-login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
