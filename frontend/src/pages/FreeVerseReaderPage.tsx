@@ -41,11 +41,14 @@ export default function FreeVerseReaderPage() {
   const [viewMode, setViewMode] = useState<'verse' | 'chapter'>('verse');
 
   // Timer de lectura - inicia automáticamente cuando se carga la página
-  const { seconds, start } = useReadingTimer();
+  const { seconds, start, reset } = useReadingTimer();
   const lastRecordedSecondsRef = useRef(0);
 
   useEffect(() => {
     if (bookSlug && chapterNumber) {
+      // Resetear el timer antes de cargar un nuevo capítulo
+      reset();
+      lastRecordedSecondsRef.current = 0;
       loadChapter();
       // Iniciar timer cuando se carga el capítulo
       start();
