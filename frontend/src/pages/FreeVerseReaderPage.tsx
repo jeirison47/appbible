@@ -41,7 +41,7 @@ export default function FreeVerseReaderPage() {
   const [viewMode, setViewMode] = useState<'verse' | 'chapter'>('verse');
 
   // Timer de lectura - inicia automáticamente cuando se carga la página
-  const { seconds, start, reset } = useReadingTimer();
+  const { seconds, formattedTime, start, reset } = useReadingTimer();
   const lastRecordedSecondsRef = useRef(0);
 
   useEffect(() => {
@@ -369,6 +369,17 @@ export default function FreeVerseReaderPage() {
                   <span className="text-lg sm:text-xl lg:text-2xl">→</span>
                 </div>
               </button>
+            </div>
+
+            {/* Timer Debug - Solo para testing */}
+            <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-80 text-white px-6 py-3 rounded-full shadow-lg z-50">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="font-mono text-lg font-bold">{formattedTime}</span>
+                </div>
+                <span className="text-xs text-gray-300">({seconds}s)</span>
+              </div>
             </div>
           </>
         )}
