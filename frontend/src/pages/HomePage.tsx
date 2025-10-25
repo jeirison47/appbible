@@ -5,6 +5,7 @@ import { usePermission } from '../hooks/usePermission';
 import { progressApi, readingApi, adminApi } from '../services/api';
 import { toast } from 'react-hot-toast';
 import Navbar from '../components/Navbar';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface ProgressData {
   user: {
@@ -78,7 +79,9 @@ interface UserStats {
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
+  const logoutLocal = useAuthStore((state) => state.logout);
   const { permissions } = usePermission();
+  const { isAuthenticated, user: auth0User, logout } = useAuth0();
 
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [verse, setVerse] = useState<any>(null);

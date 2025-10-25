@@ -6,6 +6,7 @@ import { useInstallPWA } from '../hooks/useInstallPWA';
 import ConfirmModal from '../components/ConfirmModal';
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface ProfileData {
   user: {
@@ -36,6 +37,7 @@ export default function ProfilePage() {
   const roles = useAuthStore((state) => state.roles);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
+  const { logout: auth0Logout, isAuthenticated } = useAuth0();
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -73,8 +75,20 @@ export default function ProfilePage() {
   };
 
   const confirmLogout = () => {
+    // Limpiar store local
     logout();
-    navigate('/login');
+
+    // Si está autenticado con Auth0, cerrar sesión en Auth0 también
+    if (isAuthenticated) {
+      auth0Logout({
+        logoutParams: {
+          returnTo: `${window.location.origin}/login`
+        }
+      });
+    } else {
+      // Si no está autenticado con Auth0, solo redirigir
+      navigate('/login');
+    }
   };
 
   const handleCancelEdit = () => {

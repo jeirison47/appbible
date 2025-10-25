@@ -45,7 +45,9 @@
       "Bash(dir:*)",
       "Bash(rd /s /q 20251023113954_simplify_daily_goals)",
       "Bash(find:*)",
-      "Bash(del vite.svg icon-app.png icono2-app.png icon-manah.png)"
+      "Bash(del vite.svg icon-app.png icono2-app.png icon-manah.png)",
+      "Bash(npx prisma db push)",
+      "Bash(npx prisma:*)"
     ],
     "deny": [],
     "ask": []

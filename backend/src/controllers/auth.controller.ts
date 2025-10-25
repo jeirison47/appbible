@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { RBACService } from '../services/rbac.service';
+import { Auth0Service } from '../services/auth0.service';
 
 const prisma = new PrismaClient();
 
@@ -191,6 +192,57 @@ export class AuthController {
     } catch (error) {
       console.error('Me error:', error);
       return c.json({ error: 'Failed to get user info' }, 500);
+    }
+  }
+
+  /**
+   * Login con Auth0 (Google, Facebook, etc.)
+   */
+  static async auth0Login(c: Context) {
+    try {
+      const { accessToken } = await c.req.json();
+
+      if (!accessToken) {
+        return c.json({ error: 'Access token is required' }, 400);
+      }
+
+      // Procesar login con Auth0
+      const user = await Auth0Service.processAuth0Login(accessToken);
+
+      // Obtener roles y permisos
+      const roles = await RBACService.getUserRoles(user.id);
+      const permissions = await RBACService.getUserPermissions(user.id);
+
+      // Generar token JWT propio
+      const token = jwt.sign(
+        {
+          userId: user.id,
+          permissions,
+        },
+        process.env.JWT_SECRET!,
+        { expiresIn: '7d' }
+      );
+
+      return c.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          displayName: user.displayName,
+          avatarUrl: user.avatarUrl,
+          totalXp: user.totalXp,
+          currentLevel: user.currentLevel,
+          currentStreak: user.currentStreak,
+        },
+        roles: roles.map((r) => ({
+          name: r.role.name,
+          displayName: r.role.displayName,
+        })),
+        permissions,
+        token,
+      });
+    } catch (error: any) {
+      console.error('Auth0 login error:', error);
+      return c.json({ error: error.message || 'Auth0 login failed' }, 500);
     }
   }
 }
