@@ -159,11 +159,13 @@ export default function FreeVerseReaderPage() {
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3">
-              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
-              </svg>
-              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
-                Manah {isAdmin && 'Admin'}
+              <img
+                src="/logo-header-manah.png"
+                alt="Manah Logo"
+                className="h-8 sm:h-10 w-auto"
+              />
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
+                manah {isAdmin && 'Admin'}
               </h1>
             </Link>
 
