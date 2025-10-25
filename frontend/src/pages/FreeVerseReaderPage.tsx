@@ -235,7 +235,7 @@ export default function FreeVerseReaderPage() {
           </div>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-4 pt-48 sm:pt-52 pb-12">
+      <div className="max-w-6xl mx-auto px-4 pt-32 sm:pt-36 pb-12">
         {/* View Mode Toggle Button */}
         <div className="text-center mb-6">
           <button
