@@ -100,8 +100,8 @@ export default function BookPathPage() {
                 alt="Manah Logo"
                 className="h-8 sm:h-10 w-auto"
               />
-              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
-                Manah {isAdmin && 'Admin'}
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
+                manah {isAdmin && 'Admin'}
               </h1>
             </Link>
 
