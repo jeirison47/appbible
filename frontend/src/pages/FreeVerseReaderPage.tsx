@@ -208,22 +208,15 @@ export default function FreeVerseReaderPage() {
               <div className="flex items-center justify-between">
                 <Link
                   to={`/lectura-libre/${bookSlug}`}
-                  className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition font-semibold text-sm sm:text-base"
+                  className="flex items-center gap-1 sm:gap-2 text-gray-600 hover:text-indigo-600 transition font-semibold text-sm sm:text-base"
                 >
                   <span className="text-xl sm:text-2xl">←</span>
-                  <span>Volver</span>
+                  <span className="hidden sm:inline">Volver</span>
                 </Link>
                 <div className="text-center flex-1">
                   <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800">
                     {chapter.book.name} - Capítulo {chapter.chapter.number}
                   </h1>
-                  {/* View Mode Toggle Button */}
-                  <button
-                    onClick={toggleViewMode}
-                    className="mt-1 px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition text-xs font-semibold inline-block"
-                  >
-                    {viewMode === 'verse' ? '📖 Ver capítulo completo' : '🔍 Vista por versículo'}
-                  </button>
                 </div>
 
                 {/* Version Selector */}
@@ -231,7 +224,7 @@ export default function FreeVerseReaderPage() {
                   <select
                     value={version}
                     onChange={(e) => setVersion(e.target.value as any)}
-                    className="px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-xs sm:text-sm font-semibold"
+                    className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md sm:rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-xs sm:text-sm font-semibold"
                   >
                     <option value="RV1960">ES RV1960</option>
                     <option value="KJV">EN KJV</option>
@@ -243,6 +236,16 @@ export default function FreeVerseReaderPage() {
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-4 pt-48 sm:pt-52 pb-12">
+        {/* View Mode Toggle Button */}
+        <div className="text-center mb-6">
+          <button
+            onClick={toggleViewMode}
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl hover:bg-indigo-700 transition text-sm sm:text-base font-semibold shadow-md"
+          >
+            {viewMode === 'verse' ? '📖 Ver capítulo completo' : '🔍 Vista por versículo'}
+          </button>
+        </div>
+
         {viewMode === 'verse' ? (
           <>
             {/* Single Verse View */}
@@ -379,17 +382,6 @@ export default function FreeVerseReaderPage() {
                   <span className="text-lg sm:text-xl lg:text-2xl">→</span>
                 </div>
               </button>
-            </div>
-
-            {/* Timer Debug - Solo para testing */}
-            <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-80 text-white px-6 py-3 rounded-full shadow-lg z-50">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="font-mono text-lg font-bold">{formattedTime}</span>
-                </div>
-                <span className="text-xs text-gray-300">({seconds}s)</span>
-              </div>
             </div>
           </>
         )}
