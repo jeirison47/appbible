@@ -204,7 +204,7 @@ export default function StatsPage() {
                 {formattedTime}
               </p>
               <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-                {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Sigue leyendo para ganar XP'}
+                Sigue leyendo para ganar XP
               </p>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 sm:p-5 lg:p-6">

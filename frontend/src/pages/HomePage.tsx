@@ -461,7 +461,7 @@ export default function HomePage() {
                   {formattedTime}
                 </p>
                 <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-                  {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Sigue leyendo para ganar XP'}
+                  Sigue leyendo para ganar XP
                 </p>
               </>
             )}

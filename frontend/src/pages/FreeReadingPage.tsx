@@ -110,26 +110,10 @@ export default function FreeReadingPage() {
             <div className="text-center sm:text-right">
               <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-600">{formatTime(todayReadingTime)}</p>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                {todayReadingTime >= 600
-                  ? `${Math.floor(todayReadingTime / 600)} bloques completados (${Math.floor(todayReadingTime / 600) * 10} XP)`
-                  : 'Sigue leyendo para ganar XP'}
+                Sigue leyendo para ganar XP
               </p>
             </div>
           </div>
-          {todayReadingTime >= 60 && todayReadingTime < 600 && (
-            <div className="mt-4">
-              <div className="flex justify-between text-xs text-gray-600 mb-1">
-                <span>Progreso al próximo bloque de 10 min</span>
-                <span>{Math.floor((todayReadingTime % 600) / 60)} / 10 minutos</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-orange-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((todayReadingTime % 600) / 600) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Testament Filter */}
