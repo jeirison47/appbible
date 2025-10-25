@@ -28,7 +28,7 @@ export default function RegisterPage() {
           const accessToken = await getAccessTokenSilently();
 
           // Enviar a backend
-          const apiUrl = import.meta.env.VITE_API_URL || 'https://manah-backend.onrender.com';
+          const apiUrl = import.meta.env.VITE_API_URL || 'https://appbible.onrender.com';
           const response = await fetch(`${apiUrl}/api/auth/auth0-login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
