@@ -7,6 +7,7 @@ import readingRoutes from './routes/reading.routes';
 import adminRoutes from './routes/admin.routes';
 import progressRoutes from './routes/progress.routes';
 import configRoutes from './routes/config.routes';
+import { initializeDefaultConfig } from './scripts/init-config';
 
 const app = new Hono();
 
@@ -49,6 +50,9 @@ app.onError((err, c) => {
   console.error('Server error:', err);
   return c.json({ error: 'Internal server error' }, 500);
 });
+
+// Initialize default configuration
+initializeDefaultConfig().catch(console.error);
 
 // Start server
 const port = parseInt(process.env.PORT || '3000');

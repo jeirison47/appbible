@@ -14,6 +14,7 @@ model User {
   email         String   @unique
   passwordHash  String?
   displayName   String
+  nickname      String?  @unique
   avatarUrl     String?
   isActive      Boolean  @default(true)
 
@@ -29,6 +30,11 @@ model User {
   dailyGoal     Int      @default(1)
   lastReadAt    DateTime?
   lastActiveAt  DateTime?
+
+  // Streak Goal System
+  streakGoal               Int?      // Meta de racha actual (null si no hay meta activa)
+  streakGoalStartedAt      DateTime? // Cuando se estableció la meta actual
+  lastStreakGoalCompleted  Int?      // Última meta completada (para validar progresión)
 
   // Relationships
   userRoles     UserRole[]

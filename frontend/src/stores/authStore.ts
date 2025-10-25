@@ -4,7 +4,9 @@ interface User {
   id: string;
   email: string;
   displayName: string;
+  nickname?: string;
   avatarUrl?: string | null;
+  authProvider?: string;
   totalXp: number;
   currentLevel: number;
   currentStreak: number;

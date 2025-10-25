@@ -47,7 +47,9 @@
       "Bash(find:*)",
       "Bash(del vite.svg icon-app.png icono2-app.png icon-manah.png)",
       "Bash(npx prisma db push)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(cmd.exe /c \"taskkill /PID 22432 /F\")",
+      "Bash(timeout 3 curl:*)"
     ],
     "deny": [],
     "ask": []

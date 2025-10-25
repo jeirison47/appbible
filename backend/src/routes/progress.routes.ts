@@ -23,6 +23,9 @@ progress.get('/book/:bookSlug', ProgressController.getBookProgress);
 progress.put('/daily-goal', ProgressController.updateDailyGoal);
 progress.get('/daily-goal/stats', ProgressController.getDailyGoalStats);
 
+// Meta de racha
+progress.put('/streak-goal', ProgressController.setStreakGoal);
+
 // Leaderboard
 progress.get('/leaderboard', ProgressController.getLeaderboard);
 

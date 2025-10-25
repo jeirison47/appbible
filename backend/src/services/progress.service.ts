@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { XpService } from './xp.service';
 import { StreakService } from './streak.service';
 import { DailyGoalService } from './dailyGoal.service';
+import { ConfigService } from './config.service';
 
 const prisma = new PrismaClient();
 
@@ -231,6 +232,9 @@ export class ProgressService {
         currentStreak: true,
         longestStreak: true,
         dailyGoal: true,
+        streakGoal: true,
+        streakGoalStartedAt: true,
+        lastStreakGoalCompleted: true,
         settings: {
           select: {
             dailyGoal: true,
@@ -251,6 +255,10 @@ export class ProgressService {
 
     // Daily Goal Stats
     const dailyGoalStats = await DailyGoalService.getTodayProgress(userId);
+
+    // Obtener XP por día desde configuración
+    const xpPerDayStr = await ConfigService.getConfigByKey('streak_goal_xp_per_day');
+    const xpPerDay = xpPerDayStr ? parseInt(xpPerDayStr) : 50;
 
     // Book Progress
     const booksProgress = await prisma.bookProgress.findMany({
@@ -345,6 +353,14 @@ export class ProgressService {
       xp: xpStats,
       streak: streakStats,
       dailyGoal: dailyGoalStats,
+      streakGoal: {
+        current: user.streakGoal,
+        startedAt: user.streakGoalStartedAt,
+        lastCompleted: user.lastStreakGoalCompleted,
+        progress: user.streakGoal ? Math.floor((user.currentStreak / user.streakGoal) * 100) : 0,
+        canSetNew: !user.streakGoal || (user.streakGoal && user.currentStreak >= user.streakGoal),
+        xpPerDay: xpPerDay,
+      },
       books: booksProgress.map((bp) => ({
         bookName: bp.book.name,
         bookSlug: bp.book.slug,

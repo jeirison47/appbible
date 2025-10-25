@@ -1,6 +1,9 @@
 import { Context } from 'hono';
 import { ProgressService } from '../services/progress.service';
 import { DailyGoalService } from '../services/dailyGoal.service';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export class ProgressController {
   /**
@@ -275,6 +278,105 @@ export class ProgressController {
         {
           success: false,
           message: error.message || 'Error al registrar tiempo',
+        },
+        400
+      );
+    }
+  }
+
+  /**
+   * PUT /api/progress/streak-goal
+   * Establece una nueva meta de racha
+   */
+  static async setStreakGoal(c: Context) {
+    try {
+      const userId = c.get('userId');
+      const body = await c.req.json();
+
+      const { goal } = body;
+
+      // Validar que goal sea un número
+      if (!goal || typeof goal !== 'number' || goal < 1) {
+        return c.json(
+          {
+            success: false,
+            message: 'goal debe ser un número positivo',
+          },
+          400
+        );
+      }
+
+      // Obtener usuario actual
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return c.json(
+          {
+            success: false,
+            message: 'Usuario no encontrado',
+          },
+          404
+        );
+      }
+
+      // Validar que no haya una meta activa sin cumplir
+      if (user.streakGoal && user.currentStreak < user.streakGoal) {
+        return c.json(
+          {
+            success: false,
+            message: `Ya tienes una meta activa de ${user.streakGoal} días. Debes completarla antes de establecer una nueva.`,
+          },
+          400
+        );
+      }
+
+      // Validar que la nueva meta sea mayor que la racha actual
+      if (goal <= user.currentStreak) {
+        return c.json(
+          {
+            success: false,
+            message: `La meta debe ser mayor a tu racha actual (${user.currentStreak} días)`,
+          },
+          400
+        );
+      }
+
+      // Validar progresión: nueva meta debe ser mayor que la última completada
+      if (user.lastStreakGoalCompleted && goal <= user.lastStreakGoalCompleted) {
+        return c.json(
+          {
+            success: false,
+            message: `La meta debe ser mayor que tu última meta completada (${user.lastStreakGoalCompleted} días)`,
+          },
+          400
+        );
+      }
+
+      // Establecer nueva meta
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          streakGoal: goal,
+          streakGoalStartedAt: new Date(),
+        },
+      });
+
+      return c.json({
+        success: true,
+        message: `Meta de racha establecida: ${goal} días`,
+        data: {
+          streakGoal: goal,
+          currentStreak: user.currentStreak,
+        },
+      });
+    } catch (error: any) {
+      console.error('Error setting streak goal:', error);
+      return c.json(
+        {
+          success: false,
+          message: error.message || 'Error al establecer meta de racha',
         },
         400
       );

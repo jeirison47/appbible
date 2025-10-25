@@ -28,6 +28,21 @@ interface ProgressData {
       percentage: number;
     };
   };
+  streak: {
+    current: number;
+    longest: number;
+    lastReadAt: string | null;
+    status: {
+      hasStreak: boolean;
+      currentStreak: number;
+      isAtRisk: boolean;
+      goalMetToday: boolean;
+      daysUntilLost: number;
+      xpToday: number;
+      xpRequired: number;
+      xpProgress: number;
+    };
+  };
   dailyGoal: {
     goal: number;
     progress: number;
@@ -424,22 +439,26 @@ export default function HomePage() {
             ) : (
               <>
                 <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600">
-                  {progress.user.currentStreak}
+                  {progress.user.currentStreak} días
                 </p>
-                {progress.user && (
+                {progress.streak?.status && (
                   <div className="mt-2 sm:mt-3">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>{progress.streak.status.xpToday} XP</span>
+                      <span>{Math.floor(progress.streak.status.xpProgress)}%</span>
+                    </div>
                     <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
                       <div
                         className="bg-orange-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
                         style={{
-                          width: `${progress.user.longestStreak > 0
-                            ? Math.min((progress.user.currentStreak / progress.user.longestStreak) * 100, 100)
-                            : progress.user.currentStreak > 0 ? 100 : 0}%`
+                          width: `${Math.min(progress.streak.status.xpProgress, 100)}%`
                         }}
                       ></div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Récord: {progress.user.longestStreak} días
+                      {progress.streak.status.goalMetToday
+                        ? '¡Meta del día cumplida! ✨'
+                        : `${progress.streak.status.xpRequired - progress.streak.status.xpToday} XP para mantener racha`}
                     </p>
                   </div>
                 )}
@@ -496,7 +515,7 @@ export default function HomePage() {
                   <p className="opacity-90 text-sm sm:text-base">Comienza tu camino de lectura guiado</p>
                 )}
               </div>
-              <span className="text-3xl sm:text-4xl lg:text-5xl">📖</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl">🛣</span>
             </div>
           </Link>
 
@@ -523,7 +542,7 @@ export default function HomePage() {
                   <p className="opacity-90 text-sm sm:text-base">Explora cualquier libro o capítulo</p>
                 )}
               </div>
-              <span className="text-3xl sm:text-4xl lg:text-5xl">🗺️</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl">📖</span>
             </div>
           </Link>
         </div>

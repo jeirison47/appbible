@@ -4,6 +4,35 @@ import jwksClient from 'jwks-rsa';
 
 const prisma = new PrismaClient();
 
+/**
+ * Genera un nickname único a partir de un email
+ */
+async function generateUniqueNickname(email: string): Promise<string> {
+  // Extraer la parte antes del @
+  const baseNickname = email.split('@')[0];
+
+  // Verificar si ya existe
+  const existing = await prisma.user.findUnique({
+    where: { nickname: baseNickname }
+  });
+
+  // Si no existe, retornar el nickname base
+  if (!existing) {
+    return baseNickname;
+  }
+
+  // Si existe, agregar número al final
+  let counter = 1;
+  let nicknameWithNumber = `${baseNickname}${counter}`;
+
+  while (await prisma.user.findUnique({ where: { nickname: nicknameWithNumber } })) {
+    counter++;
+    nicknameWithNumber = `${baseNickname}${counter}`;
+  }
+
+  return nicknameWithNumber;
+}
+
 // Cliente JWKS para verificar tokens de Auth0
 const client = jwksClient({
   jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
@@ -81,10 +110,14 @@ export class Auth0Service {
       }
     } else {
       // Usuario no existe - crear nuevo
+      // Generar nickname único desde el email
+      const nickname = await generateUniqueNickname(tokenPayload.email);
+
       user = await prisma.user.create({
         data: {
           email: tokenPayload.email,
           displayName: tokenPayload.name || tokenPayload.email.split('@')[0],
+          nickname,
           auth0Id: tokenPayload.sub,
           authProvider: 'auth0',
           avatarUrl: tokenPayload.picture,

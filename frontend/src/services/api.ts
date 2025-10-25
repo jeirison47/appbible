@@ -41,6 +41,18 @@ export const authApi = {
     }),
 
   me: () => fetchAPI('/auth/me'),
+
+  updateProfile: (data: { displayName?: string; nickname?: string }) =>
+    fetchAPI('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  changePassword: (data: { currentPassword: string; newPassword: string }) =>
+    fetchAPI('/auth/password', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 };
 
 /**
@@ -138,6 +150,12 @@ export const progressApi = {
     }),
 
   getDailyGoalStats: () => fetchAPI('/progress/daily-goal/stats'),
+
+  setStreakGoal: (goal: number) =>
+    fetchAPI('/progress/streak-goal', {
+      method: 'PUT',
+      body: JSON.stringify({ goal }),
+    }),
 
   getLeaderboard: () => fetchAPI('/progress/leaderboard'),
 };

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { startOfDay, differenceInDays, subDays } from 'date-fns';
+import { ConfigService } from './config.service';
 
 const prisma = new PrismaClient();
 
@@ -93,14 +94,45 @@ export class StreakService {
       // Actualizar récord si es necesario
       const newLongestStreak = Math.max(newCurrentStreak, user.longestStreak);
 
+      // Verificar si se completó una meta de racha
+      const userWithGoal = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          streakGoal: true,
+          totalXp: true,
+        },
+      });
+
+      let streakGoalCompleted = false;
+      let streakGoalXpReward = 0;
+      let updateData: any = {
+        currentStreak: newCurrentStreak,
+        longestStreak: newLongestStreak,
+        lastReadAt: now,
+      };
+
+      // Si hay meta activa y se cumplió
+      if (userWithGoal?.streakGoal && newCurrentStreak >= userWithGoal.streakGoal) {
+        streakGoalCompleted = true;
+        // Obtener XP por día desde configuración (default: 50)
+        const xpPerDayStr = await ConfigService.getConfigByKey('streak_goal_xp_per_day');
+        const xpPerDay = xpPerDayStr ? parseInt(xpPerDayStr) : 50;
+        // Calcular XP de recompensa (xpPerDay * días de meta)
+        streakGoalXpReward = userWithGoal.streakGoal * xpPerDay;
+
+        updateData = {
+          ...updateData,
+          totalXp: userWithGoal.totalXp + streakGoalXpReward,
+          lastStreakGoalCompleted: userWithGoal.streakGoal,
+          streakGoal: null, // Limpiar meta actual
+          streakGoalStartedAt: null,
+        };
+      }
+
       // Actualizar usuario
       await prisma.user.update({
         where: { id: userId },
-        data: {
-          currentStreak: newCurrentStreak,
-          longestStreak: newLongestStreak,
-          lastReadAt: now,
-        },
+        data: updateData,
       });
 
       return {

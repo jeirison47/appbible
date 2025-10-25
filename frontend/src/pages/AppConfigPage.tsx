@@ -15,6 +15,7 @@ interface AppConfig {
   xp_per_chapter: string;
   xp_per_minute_free_reading: string;
   bonus_streak_multiplier: string;
+  streak_goal_xp_per_day: string;
 }
 
 export default function AppConfigPage() {
@@ -30,6 +31,7 @@ export default function AppConfigPage() {
     xp_per_chapter: '100',
     xp_per_minute_free_reading: '10',
     bonus_streak_multiplier: '1.5',
+    streak_goal_xp_per_day: '50',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -62,7 +64,7 @@ export default function AppConfigPage() {
       const configArray = Object.entries(config).map(([key, value]) => ({
         key,
         value: value.toString(),
-        type: key.includes('xp_') || key.includes('multiplier') || key.includes('goal') || key.includes('required') ? 'number' : 'string',
+        type: key.includes('xp_') || key.includes('multiplier') || key.includes('goal') || key.includes('required') || key.includes('_per_') ? 'number' : 'string',
       }));
 
       await configApi.updateMultipleConfig(configArray);
@@ -325,6 +327,34 @@ export default function AppConfigPage() {
                 Bonus XP por mantener racha (1.5 = +50%)
               </p>
             </div>
+          </div>
+
+          {/* Streak Goal XP Per Day */}
+          <div className="mt-6 bg-orange-50 border-2 border-orange-200 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-3xl">🎯</span>
+              <div>
+                <h4 className="text-lg font-bold text-gray-800">XP por Día de Meta de Racha</h4>
+                <p className="text-sm text-gray-600">
+                  Recompensa por cada día de meta de racha completada
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <input
+                type="number"
+                value={config.streak_goal_xp_per_day}
+                onChange={(e) => handleChange('streak_goal_xp_per_day', e.target.value)}
+                className="w-full px-4 py-3 border-2 border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-3xl font-bold bg-white"
+                min="1"
+                step="5"
+              />
+              <span className="text-xl font-bold text-gray-600">XP/día</span>
+            </div>
+            <p className="text-sm text-gray-600 mt-3 bg-white rounded-lg p-3 border border-orange-200">
+              <strong>Ejemplo:</strong> Si el usuario establece una meta de 10 días y este valor es 50,
+              ganará <strong>500 XP</strong> (10 × 50) al completar la meta.
+            </p>
           </div>
         </div>
 
