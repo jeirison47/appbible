@@ -82,7 +82,7 @@ export default function StatsPage() {
   const formatTime = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}min ${secs}seg`;
   };
 
   const formattedTime = formatTime(seconds);
