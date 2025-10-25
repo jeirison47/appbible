@@ -58,8 +58,9 @@ export default function FreeVerseReaderPage() {
   // Enviar tiempo de lectura al backend cada minuto
   useEffect(() => {
     if (seconds > 0 && seconds % 60 === 0 && seconds !== lastRecordedSecondsRef.current) {
+      const incrementalSeconds = seconds - lastRecordedSecondsRef.current;
       lastRecordedSecondsRef.current = seconds;
-      progressApi.recordReadingTime(seconds).catch((error) => {
+      progressApi.recordReadingTime(incrementalSeconds).catch((error) => {
         console.log('No se pudo registrar el tiempo de lectura');
       });
     }
@@ -69,9 +70,12 @@ export default function FreeVerseReaderPage() {
   useEffect(() => {
     return () => {
       if (seconds > 0) {
-        progressApi.recordReadingTime(seconds).catch((error) => {
-          console.log('No se pudo registrar el tiempo de lectura al salir');
-        });
+        const incrementalSeconds = seconds - lastRecordedSecondsRef.current;
+        if (incrementalSeconds > 0) {
+          progressApi.recordReadingTime(incrementalSeconds).catch((error) => {
+            console.log('No se pudo registrar el tiempo de lectura al salir');
+          });
+        }
       }
     };
   }, [seconds]);
