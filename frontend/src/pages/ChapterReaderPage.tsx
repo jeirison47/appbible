@@ -252,7 +252,7 @@ export default function ChapterReaderPage() {
               <img
                 src="/logo-header-manah.png"
                 alt="Manah Logo"
-                className="h-6 sm:h-8 w-auto"
+                className="h-8 sm:h-10 w-auto"
               />
               <h1 className="text-base sm:text-lg md:text-xl font-bold text-white" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
                 manah {isAdmin && 'Admin'}
