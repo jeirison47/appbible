@@ -26,9 +26,9 @@ export default function FreeReadingPage() {
 
   const loadTodayReadingTime = async () => {
     try {
-      const data = await progressApi.getProgress();
-      if (data.dailyGoal?.minutesRead) {
-        setTodayReadingTime(data.dailyGoal.minutesRead); // Viene en segundos
+      const data = await progressApi.getMyProgress();
+      if (data.data?.dailyGoal?.minutesRead) {
+        setTodayReadingTime(data.data.dailyGoal.minutesRead); // Viene en segundos
       }
     } catch (error) {
       console.log('No se pudo cargar el tiempo de lectura');
