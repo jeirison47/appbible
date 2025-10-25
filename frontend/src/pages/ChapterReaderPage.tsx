@@ -110,27 +110,29 @@ export default function ChapterReaderPage() {
     }
   };
 
-  const handleContinue = () => {
-    if (rewards && rewards.xp) {
-      // Navegar de vuelta al camino del libro
-      navigate(`/camino/${bookSlug}`);
-    }
+  const handleCloseModal = () => {
+    setShowRewards(false);
+    setRewards(null);
+    setCompleting(false);
   };
 
   const handleExit = () => {
+    handleCloseModal();
     navigate(`/camino`);
   };
 
   const handleContinueToNext = () => {
     if (!chapter) return;
 
+    // Cerrar el modal primero
+    handleCloseModal();
+
     // Si hay siguiente capítulo en el mismo libro
     if (chapter.chapter.number < chapter.book.totalChapters) {
       const nextChapterNum = chapter.chapter.number + 1;
       navigate(`/camino/${bookSlug}/${nextChapterNum}`);
     } else {
-      // Es el último capítulo, navegar al primer capítulo del siguiente libro
-      // Por ahora, volver a camino (necesitaremos lógica adicional para obtener el siguiente libro)
+      // Es el último capítulo, volver a camino
       navigate(`/camino`);
     }
   };
@@ -140,7 +142,7 @@ export default function ChapterReaderPage() {
   const rewardsModal = showRewards && rewards && chapter && (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop difuminado */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleExit}></div>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleCloseModal}></div>
 
       {/* Modal content */}
       <div className="relative bg-white rounded-2xl shadow-2xl p-3 sm:p-4 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
@@ -178,17 +180,17 @@ export default function ChapterReaderPage() {
               </div>
 
               {/* Streak Progress Bar - Bottom left */}
-              {rewards.dailyGoal && (
+              {rewards.streak && (
                 <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-2.5 flex flex-col justify-center text-center">
                   <p className="text-xs text-gray-600 mb-1">Progreso de Racha de Hoy</p>
                   <div className="w-full bg-white rounded-full h-1.5 mb-1">
                     <div
                       className="bg-gradient-to-r from-yellow-400 to-orange-500 h-1.5 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min((rewards.xp.totalXp / 10) * 100, 100)}%` }}
+                      style={{ width: `${Math.min(((rewards.streak.xpToday + rewards.xp.totalXp) / rewards.streak.xpRequired) * 100, 100)}%` }}
                     ></div>
                   </div>
                   <p className="text-xs text-gray-600">
-                    {rewards.xp.totalXp} / 10 XP para mantener racha
+                    {rewards.streak.xpToday + rewards.xp.totalXp} / {rewards.streak.xpRequired} XP para mantener racha
                   </p>
                 </div>
               )}
@@ -247,11 +249,13 @@ export default function ChapterReaderPage() {
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3">
-              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
-              </svg>
-              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white">
-                Manah {isAdmin && 'Admin'}
+              <img
+                src="/logo-header-manah.png"
+                alt="Manah Logo"
+                className="h-6 sm:h-8 w-auto"
+              />
+              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
+                manah {isAdmin && 'Admin'}
               </h1>
             </Link>
 

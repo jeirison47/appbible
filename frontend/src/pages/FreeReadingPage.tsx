@@ -95,27 +95,6 @@ export default function FreeReadingPage() {
           </p>
         </div>
 
-        {/* Reading Timer Card */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 lg:mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-2xl sm:text-3xl">
-                ⏱️
-              </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-800">Tiempo de Lectura Hoy</h3>
-                <p className="text-xs sm:text-sm text-gray-600">Acumula tiempo y gana XP por cada 10 minutos</p>
-              </div>
-            </div>
-            <div className="text-center sm:text-right">
-              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-600">{formatTime(todayReadingTime)}</p>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                Sigue leyendo para ganar XP
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Testament Filter */}
         <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 lg:mb-8">
           <button

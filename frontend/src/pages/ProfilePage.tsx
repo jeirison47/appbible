@@ -29,6 +29,7 @@ interface ProfileData {
     goal: number;
     progress: number;
     completed: boolean;
+    minutesRead?: number; // Tiempo de lectura en segundos
   };
   streakGoal: {
     current: number | null;
@@ -60,6 +61,9 @@ export default function ProfilePage() {
   const [newStreakGoal, setNewStreakGoal] = useState<number>(10);
   const [savingStreakGoal, setSavingStreakGoal] = useState(false);
 
+  // Tiempo de lectura
+  const [seconds, setSeconds] = useState(0);
+
   // Edición de perfil
   const [editingProfile, setEditingProfile] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState('');
@@ -90,12 +94,27 @@ export default function ProfilePage() {
       const data = await progressApi.getMyProgress();
       setProfile(data.data);
       setNewGoal(data.data.user.dailyGoal);
+
+      // Actualizar tiempo de lectura
+      if (data.data.dailyGoal?.minutesRead) {
+        setSeconds(data.data.dailyGoal.minutesRead);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error('Failed to load profile:', error);
       setLoading(false);
     }
   };
+
+  // Formatear tiempo de lectura
+  const formatTime = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}min ${secs}seg`;
+  };
+
+  const formattedTime = formatTime(seconds);
 
   const handleLogout = () => {
     setShowLogoutModal(true);
@@ -562,6 +581,23 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Reading Timer Card */}
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6 border-t-4 border-purple-500">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-gray-800">Tiempo de Lectura Hoy</h3>
+              <p className="text-xs sm:text-sm text-gray-600">Acumula tiempo y gana XP cada 10 minutos</p>
+            </div>
+            <span className="text-3xl sm:text-4xl">⏱️</span>
+          </div>
+          <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-600 text-center">
+            {formattedTime}
+          </p>
+          <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
+            Sigue leyendo para ganar más XP
+          </p>
         </div>
 
         {/* Goals Section */}
