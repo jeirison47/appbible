@@ -235,11 +235,11 @@ admin.put(
       const body = await c.req.json();
       const { goal } = body;
 
-      if (!goal || typeof goal !== 'number' || goal < 1 || goal > 10) {
+      if (!goal || typeof goal !== 'number' || goal < 1) {
         return c.json(
           {
             success: false,
-            message: 'La meta debe ser un número entre 1 y 10',
+            message: 'La meta debe ser un número mayor o igual a 1',
           },
           400
         );

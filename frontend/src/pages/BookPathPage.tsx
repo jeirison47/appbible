@@ -90,7 +90,7 @@ export default function BookPathPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-28">
       {/* Simple Header - Only Logo and Profile */}
-      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
@@ -138,7 +138,7 @@ export default function BookPathPage() {
       ) : (
         <>
           {/* Fixed Header */}
-          <nav className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+          <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link

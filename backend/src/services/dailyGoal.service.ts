@@ -20,7 +20,7 @@ export interface DailyGoalStats {
   percentage: number;
   chaptersRemaining: number;
   xpEarned: number;
-  minutesRead: number;
+  minutesRead: number; // Almacenado en segundos en BD, convertir a minutos en frontend
 }
 
 export class DailyGoalService {
@@ -85,11 +85,12 @@ export class DailyGoalService {
 
   /**
    * Actualiza el progreso diario después de completar un capítulo
+   * @param secondsRead - Tiempo de lectura en segundos
    */
   static async updateProgress(
     userId: string,
     xpEarned: number,
-    minutesRead: number
+    secondsRead: number
   ): Promise<DailyGoalStats> {
     const today = startOfDay(new Date());
 
@@ -123,7 +124,7 @@ export class DailyGoalService {
           date: today,
           chaptersRead: 1,
           xpEarned,
-          timeReading: minutesRead,
+          timeReading: secondsRead,
         },
       });
     } else {
@@ -132,7 +133,7 @@ export class DailyGoalService {
         data: {
           chaptersRead: { increment: 1 },
           xpEarned: { increment: xpEarned },
-          timeReading: { increment: minutesRead },
+          timeReading: { increment: secondsRead },
         },
       });
     }
@@ -159,9 +160,9 @@ export class DailyGoalService {
    * Actualiza la meta diaria del usuario
    */
   static async updateDailyGoal(userId: string, newGoal: number): Promise<void> {
-    // Validar que la meta sea razonable (1-10 capítulos)
-    if (newGoal < 1 || newGoal > 10) {
-      throw new Error('La meta debe estar entre 1 y 10 capítulos');
+    // Validar que la meta sea al menos 1 capítulo
+    if (newGoal < 1) {
+      throw new Error('La meta debe ser al menos 1 capítulo');
     }
 
     // Actualizar la meta en UserSettings
@@ -261,5 +262,58 @@ export class DailyGoalService {
       totalDaysCompleted,
       currentWeekStreak,
     };
+  }
+
+  /**
+   * Registra tiempo de lectura (en segundos) para el día actual
+   * Nota: timeReading se guarda en SEGUNDOS en la BD
+   * El frontend se encarga de convertir a minutos/horas para mostrar
+   */
+  static async recordReadingTime(userId: string, seconds: number): Promise<void> {
+    if (seconds < 1) {
+      return; // No registrar si es menos de 1 segundo
+    }
+
+    const today = startOfDay(new Date());
+
+    // Buscar o crear el registro de progreso diario
+    const dailyProgress = await prisma.dailyProgress.findUnique({
+      where: {
+        userId_date: {
+          userId,
+          date: today,
+        },
+      },
+    });
+
+    if (dailyProgress) {
+      // Actualizar tiempo de lectura (acumular segundos)
+      const newTimeReading = dailyProgress.timeReading + seconds;
+
+      await prisma.dailyProgress.update({
+        where: {
+          userId_date: {
+            userId,
+            date: today,
+          },
+        },
+        data: {
+          timeReading: newTimeReading,
+        },
+      });
+    } else {
+      // Crear nuevo registro
+      await prisma.dailyProgress.create({
+        data: {
+          userId,
+          date: today,
+          chaptersRead: 0,
+          xpEarned: 0,
+          timeReading: seconds,
+          systemGoalCompleted: false,
+          personalGoalCompleted: false,
+        },
+      });
+    }
   }
 }

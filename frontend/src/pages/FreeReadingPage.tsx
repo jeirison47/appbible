@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { readingApi } from '../services/api';
+import { readingApi, progressApi } from '../services/api';
 import Navbar from '../components/Navbar';
-import { useReadingTimer } from '../hooks/useReadingTimer';
 
 interface Book {
   id: string;
@@ -18,13 +17,23 @@ export default function FreeReadingPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTestament, setSelectedTestament] = useState<'ALL' | 'OLD' | 'NEW'>('ALL');
-
-  // Timer de lectura
-  const { formattedTime, seconds } = useReadingTimer();
+  const [todayReadingTime, setTodayReadingTime] = useState(0); // Tiempo acumulado en segundos
 
   useEffect(() => {
     loadBooks();
+    loadTodayReadingTime();
   }, []);
+
+  const loadTodayReadingTime = async () => {
+    try {
+      const data = await progressApi.getProgress();
+      if (data.dailyGoal?.minutesRead) {
+        setTodayReadingTime(data.dailyGoal.minutesRead); // Viene en segundos
+      }
+    } catch (error) {
+      console.log('No se pudo cargar el tiempo de lectura');
+    }
+  };
 
   const loadBooks = async () => {
     try {
@@ -35,6 +44,13 @@ export default function FreeReadingPage() {
       console.error('Failed to load books:', error);
       setLoading(false);
     }
+  };
+
+  // Formatear tiempo acumulado
+  const formatTime = (totalSeconds: number) => {
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const filteredBooks = books.filter(book => {
@@ -92,24 +108,24 @@ export default function FreeReadingPage() {
               </div>
             </div>
             <div className="text-center sm:text-right">
-              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-600">{formattedTime}</p>
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-600">{formatTime(todayReadingTime)}</p>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                {seconds >= 600
-                  ? `${Math.floor(seconds / 600)} bloques completados (${Math.floor(seconds / 600) * 10} XP)`
+                {todayReadingTime >= 600
+                  ? `${Math.floor(todayReadingTime / 600)} bloques completados (${Math.floor(todayReadingTime / 600) * 10} XP)`
                   : 'Sigue leyendo para ganar XP'}
               </p>
             </div>
           </div>
-          {seconds >= 60 && seconds < 600 && (
+          {todayReadingTime >= 60 && todayReadingTime < 600 && (
             <div className="mt-4">
               <div className="flex justify-between text-xs text-gray-600 mb-1">
                 <span>Progreso al próximo bloque de 10 min</span>
-                <span>{Math.floor((seconds % 600) / 60)} / 10 minutos</span>
+                <span>{Math.floor((todayReadingTime % 600) / 60)} / 10 minutos</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className="bg-orange-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((seconds % 600) / 600) * 100}%` }}
+                  style={{ width: `${((todayReadingTime % 600) / 600) * 100}%` }}
                 ></div>
               </div>
             </div>

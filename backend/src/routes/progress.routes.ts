@@ -10,6 +10,9 @@ progress.use('/*', authMiddleware);
 // Completar capítulo
 progress.post('/complete-chapter', ProgressController.completeChapter);
 
+// Registrar visita a capítulo (modo FREE)
+progress.post('/track-visit', ProgressController.trackChapterVisit);
+
 // Obtener progreso del usuario
 progress.get('/me', ProgressController.getMyProgress);
 

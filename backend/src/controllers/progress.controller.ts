@@ -202,4 +202,82 @@ export class ProgressController {
       );
     }
   }
+
+  /**
+   * POST /api/progress/track-visit
+   * Registra la visita a un capítulo en modo FREE (sin otorgar XP ni recompensas)
+   */
+  static async trackChapterVisit(c: Context) {
+    try {
+      const userId = c.get('userId');
+      const body = await c.req.json();
+
+      const { chapterId } = body;
+
+      if (!chapterId) {
+        return c.json(
+          {
+            success: false,
+            message: 'chapterId es requerido',
+          },
+          400
+        );
+      }
+
+      await ProgressService.trackChapterVisit(userId, chapterId);
+
+      return c.json({
+        success: true,
+        message: 'Visita registrada',
+      });
+    } catch (error: any) {
+      console.error('Error tracking chapter visit:', error);
+      return c.json(
+        {
+          success: false,
+          message: error.message || 'Error al registrar visita',
+        },
+        400
+      );
+    }
+  }
+
+  /**
+   * POST /api/progress/reading-time
+   * Registra tiempo de lectura del usuario (para actualizar minutesRead del día)
+   */
+  static async recordReadingTime(c: Context) {
+    try {
+      const userId = c.get('userId');
+      const body = await c.req.json();
+
+      const { seconds } = body;
+
+      if (typeof seconds !== 'number' || seconds < 0) {
+        return c.json(
+          {
+            success: false,
+            message: 'seconds debe ser un número positivo',
+          },
+          400
+        );
+      }
+
+      await DailyGoalService.recordReadingTime(userId, seconds);
+
+      return c.json({
+        success: true,
+        message: 'Tiempo registrado',
+      });
+    } catch (error: any) {
+      console.error('Error recording reading time:', error);
+      return c.json(
+        {
+          success: false,
+          message: error.message || 'Error al registrar tiempo',
+        },
+        400
+      );
+    }
+  }
 }

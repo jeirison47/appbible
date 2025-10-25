@@ -118,12 +118,11 @@ export class ProgressService {
     // 2. Actualizar racha
     const streakResult = await StreakService.updateStreak(userId);
 
-    // 3. Actualizar meta diaria
-    const minutesRead = Math.floor(readingTimeSeconds / 60);
+    // 3. Actualizar meta diaria (enviar segundos directamente)
     const dailyGoalResult = await DailyGoalService.updateProgress(
       userId,
       xpCalculation.totalXp,
-      minutesRead
+      readingTimeSeconds
     );
 
     // 4. Marcar capítulo como leído
@@ -308,10 +307,11 @@ export class ProgressService {
       },
     });
 
-    // Obtener último capítulo leído en cualquier modo (Lectura Libre)
+    // Obtener último capítulo leído en modo FREE (Lectura Libre)
     const lastChapterFree = await prisma.chapterRead.findFirst({
       where: {
         userId,
+        readType: 'FREE',
       },
       orderBy: {
         readAt: 'desc',
@@ -496,5 +496,64 @@ export class ProgressService {
     }));
 
     return leaderboard;
+  }
+
+  /**
+   * Registra la visita a un capítulo en modo FREE (sin otorgar XP ni recompensas)
+   * Solo actualiza el último capítulo visitado
+   */
+  static async trackChapterVisit(userId: string, chapterId: string): Promise<void> {
+    // Obtener información del capítulo
+    const chapter = await prisma.chapter.findUnique({
+      where: { id: chapterId },
+      include: {
+        book: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!chapter) {
+      throw new Error('Capítulo no encontrado');
+    }
+
+    // Verificar si ya existe un registro de lectura para este capítulo
+    const existingRead = await prisma.chapterRead.findUnique({
+      where: {
+        userId_chapterId: {
+          userId,
+          chapterId,
+        },
+      },
+    });
+
+    if (!existingRead) {
+      // Crear registro de visita con readType: 'FREE'
+      await prisma.chapterRead.create({
+        data: {
+          userId,
+          chapterId,
+          readAt: new Date(),
+          readType: 'FREE',
+          timeSpent: 0, // No tracking de tiempo en modo FREE
+          xpEarned: 0, // No XP en modo FREE
+        },
+      });
+    } else {
+      // Actualizar fecha de última visita
+      await prisma.chapterRead.update({
+        where: {
+          userId_chapterId: {
+            userId,
+            chapterId,
+          },
+        },
+        data: {
+          readAt: new Date(),
+        },
+      });
+    }
   }
 }

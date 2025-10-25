@@ -31,7 +31,7 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar fijo arriba */}
-      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-7xl mx-auto">
           {/* Primera fila: Logo izquierda + Perfil derecha */}
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">

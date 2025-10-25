@@ -46,7 +46,7 @@ export default function FreeBookChaptersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Simple Header - Only Logo and Profile */}
-      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
@@ -76,14 +76,14 @@ export default function FreeBookChaptersPage() {
       </nav>
 
       {loading ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
             <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando capítulos...</p>
           </div>
         </div>
       ) : !book ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-center bg-white rounded-2xl shadow-xl p-8">
             <p className="text-gray-600 text-lg mb-4">No se pudo cargar el libro</p>
             <Link to="/lectura-libre" className="text-indigo-600 hover:underline font-semibold">
@@ -94,7 +94,7 @@ export default function FreeBookChaptersPage() {
       ) : (
         <>
       {/* Secondary Header */}
-      <nav className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+      <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <Link

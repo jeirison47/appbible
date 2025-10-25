@@ -49,6 +49,20 @@ export default function ChapterReaderPage() {
     }
   }, [bookSlug, chapterNumber, version]);
 
+  // Prevenir scroll en la página cuando el modal está abierto
+  useEffect(() => {
+    if (showRewards) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup al desmontar
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showRewards]);
+
   const loadChapter = async () => {
     try {
       const data = await readingApi.getChapter(bookSlug!, parseInt(chapterNumber!), version);
@@ -122,36 +136,40 @@ export default function ChapterReaderPage() {
   };
 
   // Rewards Modal - mostrar por encima de todo
-  if (showRewards && rewards && chapter) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto">
+  // Rewards Modal Overlay
+  const rewardsModal = showRewards && rewards && chapter && (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Backdrop difuminado */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleExit}></div>
+
+      {/* Modal content */}
+      <div className="relative bg-white rounded-2xl shadow-2xl p-3 sm:p-4 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
           <div className="text-center">
             {/* Celebration Icon */}
-            <div className="text-6xl sm:text-7xl mb-3">🎉</div>
+            <div className="text-4xl sm:text-5xl mb-1">🎉</div>
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-0.5">
               ¡Completado!
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2">
               {chapter.book.name} {chapter.chapter.number}
             </p>
 
-            {/* Rewards Grid */}
-            <div className="grid grid-cols-1 gap-3 mb-6">
-              {/* XP Reward */}
-              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-4">
-                <p className="text-xs text-gray-600 mb-1">Experiencia Ganada</p>
-                <p className="text-3xl font-bold text-indigo-600 mb-2">
+            {/* Rewards Grid - 3 cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+              {/* XP Reward - Full width on top */}
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-2.5 md:col-span-2">
+                <p className="text-xs text-gray-600 mb-0.5">Experiencia Ganada</p>
+                <p className="text-xl sm:text-2xl font-bold text-indigo-600 mb-1.5">
                   +{rewards.xp.totalXp} XP
                 </p>
                 {rewards.xp.leveledUp && (
-                  <div className="bg-yellow-400 text-yellow-900 py-2 px-4 rounded-lg font-bold">
+                  <div className="bg-yellow-400 text-yellow-900 py-1 px-2.5 rounded-lg font-bold text-xs">
                     🎊 ¡Subiste al Nivel {rewards.xp.newLevel}!
                   </div>
                 )}
                 {rewards.xp.bonuses.length > 0 && (
-                  <div className="mt-3 text-sm text-gray-600 space-y-1">
+                  <div className="mt-1.5 text-xs text-gray-600 space-y-0.5">
                     {rewards.xp.bonuses.map((bonus: string, idx: number) => (
                       <p key={idx}>✨ {bonus}</p>
                     ))}
@@ -159,78 +177,57 @@ export default function ChapterReaderPage() {
                 )}
               </div>
 
-              {/* Streak Reward */}
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4">
-                <p className="text-xs text-gray-600 mb-1">Racha</p>
-                <p className="text-3xl font-bold text-orange-600 mb-2">
-                  🔥 {rewards.streak.currentStreak} días
-                </p>
-                {rewards.streak.streakExtended && (
-                  <p className="text-xs text-green-600 font-semibold">
-                    ✓ Racha extendida
+              {/* Streak Progress Bar - Bottom left */}
+              {rewards.dailyGoal && (
+                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-2.5 flex flex-col justify-center text-center">
+                  <p className="text-xs text-gray-600 mb-1">Progreso de Racha de Hoy</p>
+                  <div className="w-full bg-white rounded-full h-1.5 mb-1">
+                    <div
+                      className="bg-gradient-to-r from-yellow-400 to-orange-500 h-1.5 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.min((rewards.xp.totalXp / 10) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    {rewards.xp.totalXp} / 10 XP para mantener racha
                   </p>
-                )}
-                {rewards.streak.streakStarted && !rewards.streak.streakExtended && (
-                  <p className="text-xs text-blue-600 font-semibold">
-                    ⚡ Nueva racha iniciada
-                  </p>
-                )}
-                <p className="text-xs text-gray-500 mt-2">
-                  Récord: {rewards.streak.longestStreak} días
-                </p>
-              </div>
-            </div>
+                </div>
+              )}
 
-            {/* Streak Progress Bar - New */}
-            {rewards.dailyGoal && (
-              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-4 mb-4">
-                <p className="text-xs text-gray-600 mb-2">Progreso de Racha de Hoy</p>
-                <div className="w-full bg-white rounded-full h-2.5 mb-2">
+              {/* Daily Goal Progress - Bottom right */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-2.5 flex flex-col justify-center text-center">
+                <p className="text-xs text-gray-600 mb-1">Meta Diaria</p>
+                <p className="text-sm sm:text-base font-bold text-green-600 mb-1">
+                  {rewards.dailyGoal.progress} / {rewards.dailyGoal.goal} capítulos
+                </p>
+                <div className="w-full bg-white rounded-full h-1.5 mb-1">
                   <div
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2.5 rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min((rewards.xp.totalXp / 10) * 100, 100)}%` }}
+                    className="bg-green-600 h-1.5 rounded-full transition-all duration-300"
+                    style={{ width: `${rewards.dailyGoal.percentage}%` }}
                   ></div>
                 </div>
-                <p className="text-xs text-gray-600">
-                  {rewards.xp.totalXp} / 10 XP para mantener racha
-                </p>
+                {rewards.dailyGoal.completed ? (
+                  <p className="text-green-700 font-semibold text-xs">
+                    ✓ ¡Meta diaria completada!
+                  </p>
+                ) : (
+                  <p className="text-gray-600 text-xs">
+                    {rewards.dailyGoal.chaptersRemaining} capítulos restantes
+                  </p>
+                )}
               </div>
-            )}
-
-            {/* Daily Goal Progress */}
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 mb-6">
-              <p className="text-xs text-gray-600 mb-2">Meta Diaria</p>
-              <p className="text-lg font-bold text-green-600 mb-2">
-                {rewards.dailyGoal.progress} / {rewards.dailyGoal.goal} capítulos
-              </p>
-              <div className="w-full bg-white rounded-full h-2.5 mb-2">
-                <div
-                  className="bg-green-600 h-2.5 rounded-full transition-all duration-300"
-                  style={{ width: `${rewards.dailyGoal.percentage}%` }}
-                ></div>
-              </div>
-              {rewards.dailyGoal.completed ? (
-                <p className="text-green-700 font-semibold text-xs">
-                  ✓ ¡Meta diaria completada!
-                </p>
-              ) : (
-                <p className="text-gray-600 text-xs">
-                  {rewards.dailyGoal.chaptersRemaining} capítulos restantes
-                </p>
-              )}
             </div>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={handleExit}
-                className="bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-300 transition"
+                className="bg-gray-200 text-gray-700 py-2 px-3 rounded-xl font-semibold hover:bg-gray-300 transition text-sm"
               >
                 Salir
               </button>
               <button
                 onClick={handleContinueToNext}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-3 rounded-xl font-semibold hover:shadow-lg transition text-sm"
               >
                 Continuar
               </button>
@@ -238,13 +235,14 @@ export default function ChapterReaderPage() {
           </div>
         </div>
       </div>
-    );
-  }
+  );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
+      {/* Render modal overlay if rewards are shown */}
+      {rewardsModal}
       {/* Simple Header - Only Logo and Profile - Siempre visible */}
-      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
@@ -290,7 +288,7 @@ export default function ChapterReaderPage() {
       ) : (
         <>
           {/* Secondary Header - Back Button, Title, Version Selector */}
-          <div className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+          <div className="fixed top-12 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
             <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <Link

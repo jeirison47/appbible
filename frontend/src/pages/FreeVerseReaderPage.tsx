@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { readingApi } from '../services/api';
+import { readingApi, progressApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
+import { useReadingTimer } from '../hooks/useReadingTimer';
 
 interface ChapterData {
   book: {
@@ -39,11 +40,38 @@ export default function FreeVerseReaderPage() {
   const [currentVerse, setCurrentVerse] = useState<number>(1);
   const [viewMode, setViewMode] = useState<'verse' | 'chapter'>('verse');
 
+  // Timer de lectura - inicia automáticamente cuando se carga la página
+  const { seconds, start } = useReadingTimer();
+  const lastRecordedSecondsRef = useRef(0);
+
   useEffect(() => {
     if (bookSlug && chapterNumber) {
       loadChapter();
+      // Iniciar timer cuando se carga el capítulo
+      start();
     }
   }, [bookSlug, chapterNumber, version]);
+
+  // Enviar tiempo de lectura al backend cada minuto
+  useEffect(() => {
+    if (seconds > 0 && seconds % 60 === 0 && seconds !== lastRecordedSecondsRef.current) {
+      lastRecordedSecondsRef.current = seconds;
+      progressApi.recordReadingTime(seconds).catch((error) => {
+        console.log('No se pudo registrar el tiempo de lectura');
+      });
+    }
+  }, [seconds]);
+
+  // Enviar tiempo cuando se desmonte el componente
+  useEffect(() => {
+    return () => {
+      if (seconds > 0) {
+        progressApi.recordReadingTime(seconds).catch((error) => {
+          console.log('No se pudo registrar el tiempo de lectura al salir');
+        });
+      }
+    };
+  }, [seconds]);
 
   useEffect(() => {
     if (verseNumber) {
@@ -61,6 +89,14 @@ export default function FreeVerseReaderPage() {
       setLoading(false);
       // Scroll to top after chapter is loaded
       window.scrollTo(0, 0);
+
+      // Registrar visita al capítulo en modo FREE (sin otorgar XP)
+      try {
+        await progressApi.trackChapterVisit(data.chapter.id);
+      } catch (error) {
+        // No mostrar error al usuario, solo logging
+        console.log('No se pudo registrar la visita al capítulo');
+      }
     } catch (error) {
       console.error('Failed to load chapter:', error);
       setLoading(false);
@@ -105,7 +141,7 @@ export default function FreeVerseReaderPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Simple Header - Only Logo and Profile */}
-      <nav className={`fixed top-0 left-0 right-0 shadow-md z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
@@ -133,14 +169,14 @@ export default function FreeVerseReaderPage() {
       </nav>
 
       {loading ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
             <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando capítulos...</p>
           </div>
         </div>
       ) : !chapter ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-center bg-white rounded-2xl shadow-xl p-8">
             <p className="text-gray-600 text-lg mb-4">No se pudo cargar el capítulo</p>
             <Link
@@ -154,7 +190,7 @@ export default function FreeVerseReaderPage() {
       ) : (
         <>
           {/* Secondary Header */}
-          <div className="fixed top-14 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+          <div className="fixed top-12 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
             <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <Link

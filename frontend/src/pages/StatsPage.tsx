@@ -61,10 +61,10 @@ export default function StatsPage() {
     loadProgress();
   }, []);
 
-  // Timer para el tiempo de lectura de hoy
+  // Timer para el tiempo de lectura de hoy (minutesRead viene en segundos desde el backend)
   useEffect(() => {
     if (progress?.dailyGoal.minutesRead) {
-      setSeconds(progress.dailyGoal.minutesRead * 60);
+      setSeconds(progress.dailyGoal.minutesRead);
     }
   }, [progress?.dailyGoal.minutesRead]);
 
@@ -204,7 +204,7 @@ export default function StatsPage() {
                 {formattedTime}
               </p>
               <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-                {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Acumulando tiempo...'}
+                {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Sigue leyendo para ganar XP'}
               </p>
             </div>
             <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 sm:p-5 lg:p-6">
@@ -237,58 +237,31 @@ export default function StatsPage() {
               Estado de tu Racha
             </h3>
             <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <div>
-                  <p className="text-xs sm:text-sm text-gray-600 font-medium mb-2">Progreso de XP Hoy</p>
-                  <div className="mb-2 sm:mb-3">
-                    <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-1">
-                      <span>{progress.streak.status.xpToday} XP</span>
-                      <span>{progress.streak.status.xpRequired} XP requeridos</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
-                      <div
-                        className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${
-                          progress.streak.status.goalMetToday ? 'bg-green-600' : 'bg-orange-500'
-                        }`}
-                        style={{ width: `${progress.streak.status.xpProgress}%` }}
-                      ></div>
-                    </div>
+              <div>
+                <p className="text-xs sm:text-sm text-gray-600 font-medium mb-2">Progreso de XP Hoy</p>
+                <div className="mb-2 sm:mb-3">
+                  <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-1">
+                    <span>{progress.streak.status.xpToday} XP</span>
+                    <span>{progress.streak.status.xpRequired} XP requeridos</span>
                   </div>
-                  {progress.streak.status.goalMetToday ? (
-                    <p className="text-xs sm:text-sm text-green-600 font-semibold">
-                      ✅ ¡Meta de XP completada hoy!
-                    </p>
-                  ) : (
-                    <p className="text-xs sm:text-sm text-gray-600">
-                      Te faltan {progress.streak.status.xpRequired - progress.streak.status.xpToday} XP para mantener la racha
-                    </p>
-                  )}
+                  <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+                    <div
+                      className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${
+                        progress.streak.status.goalMetToday ? 'bg-green-600' : 'bg-orange-500'
+                      }`}
+                      style={{ width: `${progress.streak.status.xpProgress}%` }}
+                    ></div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs sm:text-sm text-gray-600 font-medium mb-2">Estado</p>
-                  {progress.streak.status.isAtRisk ? (
-                    <div className="bg-red-100 border-l-4 border-red-500 p-3 sm:p-4 rounded">
-                      <p className="text-red-700 font-semibold text-sm sm:text-base">⚠️ ¡Racha en riesgo!</p>
-                      <p className="text-xs sm:text-sm text-red-600 mt-1">
-                        Lee pronto para no perder tu racha
-                      </p>
-                    </div>
-                  ) : progress.streak.status.goalMetToday ? (
-                    <div className="bg-green-100 border-l-4 border-green-500 p-3 sm:p-4 rounded">
-                      <p className="text-green-700 font-semibold text-sm sm:text-base">✅ Racha segura</p>
-                      <p className="text-xs sm:text-sm text-green-600 mt-1">
-                        Ya cumpliste tu objetivo de hoy
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="bg-yellow-100 border-l-4 border-yellow-500 p-3 sm:p-4 rounded">
-                      <p className="text-yellow-700 font-semibold text-sm sm:text-base">⏳ Pendiente</p>
-                      <p className="text-xs sm:text-sm text-yellow-600 mt-1">
-                        Aún no has completado tu objetivo de hoy
-                      </p>
-                    </div>
-                  )}
-                </div>
+                {progress.streak.status.goalMetToday ? (
+                  <p className="text-xs sm:text-sm text-green-600 font-semibold">
+                    ✅ ¡Meta de XP completada hoy!
+                  </p>
+                ) : (
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    Te faltan {progress.streak.status.xpRequired - progress.streak.status.xpToday} XP para mantener la racha
+                  </p>
+                )}
               </div>
             </div>
           </div>

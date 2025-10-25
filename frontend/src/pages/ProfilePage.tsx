@@ -305,34 +305,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Reading Stats Card */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6">
-          <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
-            <span className="text-xl sm:text-2xl">📚</span>
-            Estadísticas de Lectura
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Capítulos Leídos</p>
-              <p className="text-3xl sm:text-4xl font-bold text-blue-600">
-                {profile?.stats.totalChaptersRead || 0}
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Libros Completados</p>
-              <p className="text-3xl sm:text-4xl font-bold text-green-600">
-                {profile?.stats.booksCompleted || 0}
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Libros en Progreso</p>
-              <p className="text-3xl sm:text-4xl font-bold text-purple-600">
-                {profile?.stats.booksInProgress || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Daily Goal Section */}
         <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
           <h3 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2 px-1 sm:px-2">
@@ -373,18 +345,30 @@ export default function ProfilePage() {
 
                 {/* Controles para ajustar meta */}
                 <div className="space-y-3">
+                  {/* Input directo de número */}
                   <div className="flex items-center justify-center gap-3 sm:gap-4">
                     <button
                       onClick={() => setNewGoal(Math.max(1, newGoal - 1))}
-                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-lg sm:text-xl"
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-lg sm:text-xl disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={newGoal <= 1}
                     >
                       −
                     </button>
+                    <input
+                      type="number"
+                      min="1"
+                      value={newGoal}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (!isNaN(value) && value >= 1) {
+                          setNewGoal(value);
+                        }
+                      }}
+                      className="w-20 sm:w-24 text-center text-2xl sm:text-3xl font-bold border-2 border-gray-300 rounded-lg px-2 py-1 focus:border-green-500 focus:outline-none"
+                    />
                     <button
-                      onClick={() => setNewGoal(Math.min(10, newGoal + 1))}
+                      onClick={() => setNewGoal(newGoal + 1)}
                       className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full hover:bg-gray-300 transition font-bold text-lg sm:text-xl"
-                      disabled={newGoal >= 10}
                     >
                       +
                     </button>

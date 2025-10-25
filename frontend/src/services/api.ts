@@ -115,6 +115,18 @@ export const progressApi = {
       body: JSON.stringify(data),
     }),
 
+  trackChapterVisit: (chapterId: string) =>
+    fetchAPI('/progress/track-visit', {
+      method: 'POST',
+      body: JSON.stringify({ chapterId }),
+    }),
+
+  recordReadingTime: (seconds: number) =>
+    fetchAPI('/progress/reading-time', {
+      method: 'POST',
+      body: JSON.stringify({ seconds }),
+    }),
+
   getMyProgress: () => fetchAPI('/progress/me'),
 
   getBookProgress: (bookSlug: string) => fetchAPI(`/progress/book/${bookSlug}`),

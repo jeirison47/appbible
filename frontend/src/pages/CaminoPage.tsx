@@ -184,8 +184,7 @@ export default function CaminoPage() {
                             </div>
 
                             {/* Book Name */}
-                            <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">{book.name}</h3>
-                            <p className="text-xs sm:text-sm opacity-90 mb-4 text-center">{book.category}</p>
+                            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">{book.name}</h3>
 
                             {/* Total Chapters */}
                             <div className="bg-white/20 rounded-lg py-3 px-4 backdrop-blur mb-3">

@@ -33,7 +33,7 @@ interface ProgressData {
     completed: boolean;
     percentage: number;
     chaptersRemaining: number;
-    minutesRead: number;
+    minutesRead: number; // Viene en segundos desde el backend
   };
   stats: {
     totalChaptersRead: number;
@@ -91,10 +91,10 @@ export default function HomePage() {
 
   const isAdmin = roles.some((r) => r.name === 'admin');
 
-  // Actualizar seconds cuando cambie el progreso
+  // Actualizar seconds cuando cambie el progreso (minutesRead viene en segundos desde el backend)
   useEffect(() => {
     if (progress?.dailyGoal?.minutesRead) {
-      setSeconds(progress.dailyGoal.minutesRead * 60);
+      setSeconds(progress.dailyGoal.minutesRead);
     }
   }, [progress?.dailyGoal?.minutesRead]);
 
@@ -113,21 +113,27 @@ export default function HomePage() {
       loadSystemStats();
       loadUserStats();
     } else {
-      // Cargar progreso del usuario regular y versículo del día en paralelo
-      Promise.all([
-        progressApi.getMyProgress().then((data) => {
+      // Cargar progreso del usuario regular
+      progressApi
+        .getMyProgress()
+        .then((data) => {
           setProgress(data.data);
-        }).catch((err) => {
-          console.error('Failed to load progress:', err);
-        }),
-        readingApi.getVerseOfTheDay('RV1960').then((data) => {
-          setVerse(data.verse);
-        }).catch((err) => {
-          console.error('Failed to load verse of the day:', err);
         })
-      ]).finally(() => {
-        setLoading(false);
-      });
+        .catch((err) => {
+          console.error('Failed to load progress:', err);
+        });
+
+      // Cargar versículo del día
+      readingApi
+        .getVerseOfTheDay('RV1960')
+        .then((data) => {
+          setVerse(data.verse);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Failed to load verse of the day:', err);
+          setLoading(false);
+        });
     }
   }, [isAdmin]);
 
@@ -455,7 +461,7 @@ export default function HomePage() {
                   {formattedTime}
                 </p>
                 <p className="text-xs text-gray-500 mt-1 sm:mt-2">
-                  {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Acumulando...'}
+                  {seconds >= 600 ? `${Math.floor(seconds / 600)} bloques de 10 min` : 'Sigue leyendo para ganar XP'}
                 </p>
               </>
             )}
