@@ -43,6 +43,7 @@ export default function FreeVerseReaderPage() {
   // Timer de lectura - inicia automáticamente cuando se carga la página
   const { seconds, formattedTime, start, reset } = useReadingTimer();
   const lastRecordedSecondsRef = useRef(0);
+  const currentSecondsRef = useRef(0);
 
   useEffect(() => {
     if (bookSlug && chapterNumber) {
@@ -55,11 +56,17 @@ export default function FreeVerseReaderPage() {
     }
   }, [bookSlug, chapterNumber, version]);
 
+  // Actualizar ref con el valor actual de seconds
+  useEffect(() => {
+    currentSecondsRef.current = seconds;
+  }, [seconds]);
+
   // Enviar tiempo de lectura al backend cada minuto
   useEffect(() => {
     if (seconds > 0 && seconds % 60 === 0 && seconds !== lastRecordedSecondsRef.current) {
       const incrementalSeconds = seconds - lastRecordedSecondsRef.current;
       lastRecordedSecondsRef.current = seconds;
+      console.log(`📤 Enviando tiempo (cada 60s): ${incrementalSeconds}s`);
       progressApi.recordReadingTime(incrementalSeconds).catch((error) => {
         console.log('No se pudo registrar el tiempo de lectura');
       });
@@ -69,16 +76,15 @@ export default function FreeVerseReaderPage() {
   // Enviar tiempo cuando se desmonte el componente
   useEffect(() => {
     return () => {
-      if (seconds > 0) {
-        const incrementalSeconds = seconds - lastRecordedSecondsRef.current;
-        if (incrementalSeconds > 0) {
-          progressApi.recordReadingTime(incrementalSeconds).catch((error) => {
-            console.log('No se pudo registrar el tiempo de lectura al salir');
-          });
-        }
+      const incrementalSeconds = currentSecondsRef.current - lastRecordedSecondsRef.current;
+      if (incrementalSeconds > 0) {
+        console.log(`📤 Enviando tiempo (al salir): ${incrementalSeconds}s (total: ${currentSecondsRef.current}s, last: ${lastRecordedSecondsRef.current}s)`);
+        progressApi.recordReadingTime(incrementalSeconds).catch((error) => {
+          console.log('No se pudo registrar el tiempo de lectura al salir');
+        });
       }
     };
-  }, [seconds]);
+  }, []); // Sin dependencias - solo se ejecuta al desmontar el componente
 
   useEffect(() => {
     if (verseNumber) {
