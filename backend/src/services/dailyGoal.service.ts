@@ -348,6 +348,10 @@ export class DailyGoalService {
           xpPerMinute,
         },
       });
+
+      // Actualizar racha después de otorgar XP
+      const { StreakService } = await import('./streak.service');
+      await StreakService.updateStreak(userId);
     }
 
     return { xpAwarded: xpToAward };

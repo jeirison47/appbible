@@ -298,6 +298,7 @@ export class StreakService {
 
   /**
    * Obtiene estadísticas completas de racha del usuario
+   * También resetea la racha si pasó más de 1 día sin cumplir el objetivo
    */
   static async getStreakStats(userId: string) {
     const user = await prisma.user.findUnique({
@@ -311,6 +312,27 @@ export class StreakService {
 
     if (!user) {
       throw new Error('Usuario no encontrado');
+    }
+
+    // Verificar si debe resetear la racha
+    const today = startOfDay(new Date());
+    const lastRead = user.lastReadAt ? startOfDay(user.lastReadAt) : null;
+
+    if (lastRead && user.currentStreak > 0) {
+      const daysSinceLastRead = differenceInDays(today, lastRead);
+
+      // Si pasaron más de 1 día sin leer, resetear la racha
+      if (daysSinceLastRead > 1) {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            currentStreak: 0,
+          },
+        });
+
+        // Actualizar el objeto user para reflejar el cambio
+        user.currentStreak = 0;
+      }
     }
 
     const status = await this.checkStreakStatus(userId);
