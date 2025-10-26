@@ -116,15 +116,15 @@ export class ProgressService {
       },
     });
 
-    // 2. Actualizar racha
-    const streakResult = await StreakService.updateStreak(userId);
-
-    // 3. Actualizar meta diaria (enviar segundos directamente)
+    // 2. Actualizar meta diaria (enviar segundos directamente)
     const dailyGoalResult = await DailyGoalService.updateProgress(
       userId,
       xpCalculation.totalXp,
       readingTimeSeconds
     );
+
+    // 3. Actualizar racha (DESPUÉS de actualizar progreso diario)
+    const streakResult = await StreakService.updateStreak(userId);
 
     // 4. Marcar capítulo como leído
     await prisma.chapterRead.create({

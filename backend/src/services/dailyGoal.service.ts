@@ -300,7 +300,7 @@ export class DailyGoalService {
           date: today,
           chaptersRead: 0,
           xpEarned: 0,
-          timeReading: seconds,
+          timeReading: 0, // Iniciar en 0, se sumará después
           timeXpAwarded: 0,
           systemGoalCompleted: false,
           personalGoalCompleted: false,

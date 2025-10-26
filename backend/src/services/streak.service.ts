@@ -64,6 +64,15 @@ export class StreakService {
     const xpToday = todayProgress?.xpEarned || 0;
     const goalMet = xpToday >= xpRequired;
 
+    console.log('[STREAK DEBUG]', {
+      userId,
+      xpToday,
+      xpRequired,
+      goalMet,
+      currentStreak: user.currentStreak,
+      lastReadAt: user.lastReadAt
+    });
+
     let newCurrentStreak = user.currentStreak;
     let streakExtended = false;
     let streakStarted = false;
