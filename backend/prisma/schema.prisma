@@ -37,11 +37,12 @@ model User {
   lastStreakGoalCompleted  Int?      // Última meta completada (para validar progresión)
 
   // Relationships
-  userRoles     UserRole[]
-  settings      UserSettings?
-  bookProgress  BookProgress[]
-  chapterReads  ChapterRead[]
-  dailyProgress DailyProgress[]
+  userRoles         UserRole[]
+  settings          UserSettings?
+  bookProgress      BookProgress[]
+  chapterReads      ChapterRead[]
+  dailyProgress     DailyProgress[]
+  tutorialProgress  UserTutorialProgress[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -261,4 +262,25 @@ model DailyProgress {
   @@unique([userId, date])
   @@index([userId, date])
   @@map("daily_progress")
+}
+
+// ==================== TUTORIALS ====================
+
+model UserTutorialProgress {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tutorialId   String    // 'onboarding', 'streak', 'free-reading', 'path'
+  completed    Boolean   @default(false)
+  currentStep  Int       @default(0)
+  skipped      Boolean   @default(false) // Si el usuario saltó el tutorial
+
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([userId, tutorialId])
+  @@index([userId, tutorialId])
+  @@map("user_tutorial_progress")
 }

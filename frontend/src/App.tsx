@@ -20,6 +20,7 @@ import ScrollToTop from './components/ScrollToTop';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import { useAuthStore } from './stores/authStore';
 import { authApi } from './services/api';
+import { TutorialProvider } from './contexts/TutorialContext';
 
 const queryClient = new QueryClient();
 
@@ -64,10 +65,11 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ScrollToTop />
-        <ScrollToTopButton />
-        <Routes>
+      <TutorialProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <ScrollToTopButton />
+          <Routes>
           <Route
             path="/login"
             element={isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />}
@@ -175,6 +177,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      </TutorialProvider>
       <Toaster
         position="top-center"
         toastOptions={{
