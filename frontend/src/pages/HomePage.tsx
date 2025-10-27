@@ -8,6 +8,7 @@ import Navbar from '../components/Navbar';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useTutorial } from '../contexts/TutorialContext';
 import { OnboardingTour } from '../tutorials/OnboardingTour';
+import ConfirmModal from '../components/ConfirmModal';
 
 interface ProgressData {
   user: {
@@ -109,6 +110,11 @@ export default function HomePage() {
   // Admin state
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [userStats, setUserStats] = useState<UserStats[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showResetProgressModal, setShowResetProgressModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [newPassword, setNewPassword] = useState<string | null>(null);
 
   // Tutorial state
   const { onboarding, isLoading: tutorialLoading } = useTutorial();
@@ -195,6 +201,112 @@ export default function HomePage() {
     }
   };
 
+  const handleDeleteUser = async (userId: string) => {
+    setSelectedUserId(userId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!selectedUserId) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/admin/users/${selectedUserId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Usuario eliminado exitosamente');
+        setShowDeleteModal(false);
+        setSelectedUserId(null);
+        await loadUserStats(); // Recargar la tabla
+      } else {
+        toast.error(data.message || 'Error al eliminar usuario');
+      }
+    } catch (error) {
+      console.error('Delete user error:', error);
+      toast.error('Error al eliminar usuario');
+    }
+  };
+
+  const handleResetProgress = async (userId: string) => {
+    setSelectedUserId(userId);
+    setShowResetProgressModal(true);
+  };
+
+  const confirmResetProgress = async () => {
+    if (!selectedUserId) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/admin/users/${selectedUserId}/reset-progress`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Progreso reseteado exitosamente');
+        setShowResetProgressModal(false);
+        setSelectedUserId(null);
+        await loadUserStats(); // Recargar la tabla
+      } else {
+        toast.error(data.message || 'Error al resetear progreso');
+      }
+    } catch (error) {
+      console.error('Reset progress error:', error);
+      toast.error('Error al resetear progreso');
+    }
+  };
+
+  const handleResetPassword = async (userId: string) => {
+    setSelectedUserId(userId);
+    setShowResetPasswordModal(true);
+  };
+
+  const confirmResetPassword = async () => {
+    if (!selectedUserId) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/admin/users/${selectedUserId}/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setNewPassword(data.newPassword);
+        toast.success('Contraseña reseteada exitosamente');
+        // No cerrar el modal aún, mostrar la contraseña
+      } else {
+        toast.error(data.message || 'Error al resetear contraseña');
+        setShowResetPasswordModal(false);
+        setSelectedUserId(null);
+      }
+    } catch (error) {
+      console.error('Reset password error:', error);
+      toast.error('Error al resetear contraseña');
+    }
+  };
+
+  const closePasswordModal = () => {
+    setShowResetPasswordModal(false);
+    setSelectedUserId(null);
+    setNewPassword(null);
+  };
+
   // Vista de Admin
   if (isAdmin) {
     return (
@@ -272,6 +384,7 @@ export default function HomePage() {
                       <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Racha</th>
                       <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Capítulos</th>
                       <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Libros</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -301,6 +414,37 @@ export default function HomePage() {
                         <td className="px-4 py-4 text-center font-semibold text-blue-600">
                           {user.booksCompleted}
                         </td>
+                        <td className="px-4 py-4">
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => handleResetProgress(user.id)}
+                              className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
+                              title="Resetear Progreso"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleResetPassword(user.id)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Resetear Contraseña"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(user.id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Eliminar Usuario"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -309,6 +453,106 @@ export default function HomePage() {
             )}
           </div>
         </div>
+
+        {/* Modal de Confirmación: Eliminar Usuario */}
+        <ConfirmModal
+          isOpen={showDeleteModal}
+          title="Eliminar Usuario"
+          message="¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer y eliminará todos sus datos incluyendo progreso, capítulos leídos y estadísticas."
+          confirmText="Sí, eliminar"
+          cancelText="Cancelar"
+          onConfirm={confirmDeleteUser}
+          onCancel={() => {
+            setShowDeleteModal(false);
+            setSelectedUserId(null);
+          }}
+          type="danger"
+        />
+
+        {/* Modal de Confirmación: Resetear Progreso */}
+        <ConfirmModal
+          isOpen={showResetProgressModal}
+          title="Resetear Progreso"
+          message="¿Estás seguro de que deseas resetear todo el progreso de este usuario? Se eliminarán todos sus capítulos leídos, progreso de libros, XP, nivel y racha. Esta acción no se puede deshacer."
+          confirmText="Sí, resetear"
+          cancelText="Cancelar"
+          onConfirm={confirmResetProgress}
+          onCancel={() => {
+            setShowResetProgressModal(false);
+            setSelectedUserId(null);
+          }}
+          type="danger"
+        />
+
+        {/* Modal de Contraseña Reseteada */}
+        {showResetPasswordModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                {newPassword ? 'Contraseña Reseteada' : 'Resetear Contraseña'}
+              </h3>
+
+              {newPassword ? (
+                <div>
+                  <p className="text-gray-600 mb-4">
+                    La contraseña ha sido reseteada exitosamente. Copia esta contraseña temporal y compártela con el usuario:
+                  </p>
+                  <div className="bg-gray-100 p-4 rounded-lg mb-4">
+                    <p className="text-lg font-mono font-bold text-center text-indigo-600 select-all">
+                      {newPassword}
+                    </p>
+                  </div>
+                  <p className="text-sm text-red-600 mb-4">
+                    ⚠️ Esta contraseña solo se mostrará una vez. Asegúrate de copiarla antes de cerrar esta ventana.
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(newPassword);
+                        toast.success('Contraseña copiada al portapapeles');
+                      }}
+                      className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                    >
+                      Copiar Contraseña
+                    </button>
+                    <button
+                      onClick={closePasswordModal}
+                      className="flex-1 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-600 mb-4">
+                    ¿Estás seguro de que deseas resetear la contraseña de este usuario? Se generará una nueva contraseña temporal.
+                  </p>
+                  <p className="text-sm text-yellow-600 mb-4">
+                    ⚠️ Nota: Solo se puede resetear la contraseña de usuarios locales (no usuarios de Auth0).
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={confirmResetPassword}
+                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    >
+                      Sí, resetear
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowResetPasswordModal(false);
+                        setSelectedUserId(null);
+                      }}
+                      className="flex-1 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   }

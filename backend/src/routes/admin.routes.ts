@@ -438,4 +438,167 @@ admin.put('/config/:key', requirePermission('view:analytics'), ConfigController.
  */
 admin.delete('/config/:key', requirePermission('view:analytics'), ConfigController.deleteConfig);
 
+/**
+ * DELETE /users/:userId - Eliminar un usuario completamente
+ */
+admin.delete(
+  '/users/:userId',
+  requirePermission('manage:users'),
+  async (c) => {
+    try {
+      const { userId } = c.req.param();
+
+      // Verificar que el usuario existe
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return c.json(
+          { success: false, message: 'Usuario no encontrado' },
+          404
+        );
+      }
+
+      // Eliminar usuario (cascade eliminará sus relaciones)
+      await prisma.user.delete({
+        where: { id: userId },
+      });
+
+      return c.json({
+        success: true,
+        message: 'Usuario eliminado exitosamente',
+      });
+    } catch (error) {
+      console.error('Delete user error:', error);
+      return c.json({ error: 'Failed to delete user' }, 500);
+    }
+  }
+);
+
+/**
+ * POST /users/:userId/reset-progress - Resetear todo el progreso de un usuario
+ */
+admin.post(
+  '/users/:userId/reset-progress',
+  requirePermission('manage:users'),
+  async (c) => {
+    try {
+      const { userId } = c.req.param();
+
+      // Verificar que el usuario existe
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return c.json(
+          { success: false, message: 'Usuario no encontrado' },
+          404
+        );
+      }
+
+      // Resetear todos los datos de progreso en una transacción
+      await prisma.$transaction([
+        // Eliminar todos los capítulos leídos
+        prisma.chapterRead.deleteMany({
+          where: { userId },
+        }),
+        // Eliminar progreso de libros
+        prisma.bookProgress.deleteMany({
+          where: { userId },
+        }),
+        // Eliminar progreso diario
+        prisma.dailyProgress.deleteMany({
+          where: { userId },
+        }),
+        // Eliminar progreso de tutoriales
+        prisma.userTutorialProgress.deleteMany({
+          where: { userId },
+        }),
+        // Resetear estadísticas del usuario
+        prisma.user.update({
+          where: { id: userId },
+          data: {
+            totalXp: 0,
+            currentLevel: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+            lastStreakDate: null,
+            lastStreakGoalCompleted: null,
+          },
+        }),
+      ]);
+
+      return c.json({
+        success: true,
+        message: 'Progreso del usuario reseteado exitosamente',
+      });
+    } catch (error) {
+      console.error('Reset user progress error:', error);
+      return c.json({ error: 'Failed to reset user progress' }, 500);
+    }
+  }
+);
+
+/**
+ * POST /users/:userId/reset-password - Resetear contraseña de un usuario
+ */
+admin.post(
+  '/users/:userId/reset-password',
+  requirePermission('manage:users'),
+  async (c) => {
+    try {
+      const { userId } = c.req.param();
+
+      // Verificar que el usuario existe y es local (no Auth0)
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return c.json(
+          { success: false, message: 'Usuario no encontrado' },
+          404
+        );
+      }
+
+      // Verificar que el usuario no es de Auth0
+      if (user.auth0Id) {
+        return c.json(
+          { success: false, message: 'No se puede resetear la contraseña de usuarios Auth0' },
+          400
+        );
+      }
+
+      // Generar contraseña aleatoria de 12 caracteres
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+      let newPassword = '';
+      for (let i = 0; i < 12; i++) {
+        newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+
+      // Hashear la contraseña
+      const hashedPassword = await Bun.password.hash(newPassword);
+
+      // Actualizar contraseña en la base de datos
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          password: hashedPassword,
+        },
+      });
+
+      return c.json({
+        success: true,
+        message: 'Contraseña reseteada exitosamente',
+        newPassword, // Devolver la contraseña temporal
+      });
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return c.json({ error: 'Failed to reset password' }, 500);
+    }
+  }
+);
+
 export default admin;
