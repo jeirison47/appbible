@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { usePermission } from '../hooks/usePermission';
 import { progressApi, readingApi, adminApi } from '../services/api';
 import { toast } from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useTutorial } from '../contexts/TutorialContext';
+import { OnboardingTour } from '../tutorials/OnboardingTour';
 
 interface ProgressData {
   user: {
@@ -97,6 +99,7 @@ export default function HomePage() {
   const logoutLocal = useAuthStore((state) => state.logout);
   const { permissions } = usePermission();
   const { isAuthenticated, user: auth0User, logout } = useAuth0();
+  const location = useLocation();
 
   const [progress, setProgress] = useState<ProgressData | null>(null);
   const [verse, setVerse] = useState<any>(null);
@@ -106,6 +109,11 @@ export default function HomePage() {
   // Admin state
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [userStats, setUserStats] = useState<UserStats[]>([]);
+
+  // Tutorial state
+  const { onboarding, isLoading: tutorialLoading } = useTutorial();
+  const [runOnboardingTour, setRunOnboardingTour] = useState(false);
+  const [tutorialShownThisSession, setTutorialShownThisSession] = useState(false);
 
   const isAdmin = roles.some((r) => r.name === 'admin');
 
@@ -154,6 +162,18 @@ export default function HomePage() {
         });
     }
   }, [isAdmin]);
+
+  // Mostrar tutorial automáticamente a usuarios nuevos solo en la página de inicio
+  useEffect(() => {
+    if (!tutorialLoading && !isAdmin && !onboarding.completed && !onboarding.skipped && location.pathname === '/' && !tutorialShownThisSession) {
+      // Esperar un poco antes de mostrar el tutorial para que la página cargue
+      const timer = setTimeout(() => {
+        setRunOnboardingTour(true);
+        setTutorialShownThisSession(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [tutorialLoading, onboarding.completed, onboarding.skipped, isAdmin, location.pathname, tutorialShownThisSession]);
 
   const loadSystemStats = async () => {
     try {
@@ -566,6 +586,15 @@ export default function HomePage() {
           </details>
         )}
       </div>
+
+      {/* Tutorial de Bienvenida */}
+      <OnboardingTour
+        run={runOnboardingTour}
+        onComplete={() => {
+          setRunOnboardingTour(false);
+          setTutorialShownThisSession(true);
+        }}
+      />
     </div>
   );
 }

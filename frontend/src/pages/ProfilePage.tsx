@@ -7,6 +7,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useTutorial } from '../contexts/TutorialContext';
 
 interface ProfileData {
   user: {
@@ -76,6 +77,10 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [savingPassword, setSavingPassword] = useState(false);
+
+  // Tutoriales
+  const [showTutorialMenu, setShowTutorialMenu] = useState(false);
+  const { resetTutorial } = useTutorial();
 
   const isAdmin = roles.some((r) => r.name === 'admin');
   const { isInstallable, installApp } = useInstallPWA();
@@ -1108,16 +1113,6 @@ export default function ProfilePage() {
 
         {/* Actions */}
         <div className="space-y-3 sm:space-y-4">
-          <button
-            onClick={handleLogout}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
-          >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-            </svg>
-            Cerrar Sesión
-          </button>
-
           {/* Install PWA Button */}
           {isInstallable && (
             <button
@@ -1128,6 +1123,59 @@ export default function ProfilePage() {
               Instalar Aplicación
             </button>
           )}
+
+          {/* Tutorial Help Button */}
+          <button
+            onClick={() => setShowTutorialMenu(!showTutorialMenu)}
+            className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-purple-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
+          >
+            <span className="text-xl sm:text-2xl">❓</span>
+            Ayuda y Tutoriales
+          </button>
+
+          {/* Tutorial Menu */}
+          {showTutorialMenu && (
+            <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-2 border-purple-200 space-y-3">
+              <h3 className="font-bold text-lg text-purple-900 mb-3">Tutoriales Disponibles</h3>
+
+              <div className="w-full bg-purple-100 hover:bg-purple-200 text-purple-900 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 flex-1">
+                  <span className="text-2xl">🎉</span>
+                  <div>
+                    <div className="font-bold">Tutorial de Bienvenida</div>
+                    <div className="text-sm text-purple-700">Aprende lo básico de la app</div>
+                  </div>
+                </div>
+                <button
+                  onClick={async () => {
+                    await resetTutorial('onboarding');
+                    setShowTutorialMenu(false);
+                    navigate('/');
+                  }}
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-bold transition-colors shadow-md hover:shadow-lg flex items-center gap-2 whitespace-nowrap"
+                >
+                  Iniciar
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div className="text-center text-sm text-gray-500 mt-3 pt-3 border-t">
+                Más tutoriales próximamente...
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={handleLogout}
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+            </svg>
+            Cerrar Sesión
+          </button>
         </div>
       </div>
 
