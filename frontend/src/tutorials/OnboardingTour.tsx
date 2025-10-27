@@ -1,5 +1,5 @@
 import React from 'react';
-import Joyride, { STATUS } from 'react-joyride';
+import Joyride, { STATUS, Step } from 'react-joyride';
 import { useTutorial } from '../contexts/TutorialContext';
 
 interface OnboardingTourProps {
@@ -14,7 +14,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
   const isMobile = window.innerWidth < 768;
   const navSuffix = isMobile ? '-mobile' : '';
 
-  const steps = [
+  const steps: Step[] = [
     {
       target: 'body',
       content: (
@@ -30,7 +30,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'center',
+      placement: 'center' as const,
       disableBeacon: true,
     },
     {
@@ -46,7 +46,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: `[data-tutorial="nav-inicio${navSuffix}"]`,
@@ -61,7 +61,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '.border-indigo-500',
@@ -76,7 +76,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '.border-green-500',
@@ -91,7 +91,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '.border-orange-500',
@@ -106,7 +106,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '.border-purple-500',
@@ -121,7 +121,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: `[data-tutorial="nav-camino${navSuffix}"]`,
@@ -136,7 +136,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: `[data-tutorial="nav-lectura-libre${navSuffix}"]`,
@@ -151,7 +151,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: `[data-tutorial="nav-buscar${navSuffix}"]`,
@@ -166,7 +166,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: `[data-tutorial="nav-estadisticas${navSuffix}"]`,
@@ -181,7 +181,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: 'a[href="/perfil"]',
@@ -196,7 +196,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: 'body',
@@ -213,7 +213,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           </p>
         </div>
       ),
-      placement: 'center',
+      placement: 'center' as const,
     },
   ];
 
