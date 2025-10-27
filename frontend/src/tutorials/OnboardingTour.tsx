@@ -1,5 +1,6 @@
 import React from 'react';
-import Joyride, { STATUS, Step } from 'react-joyride';
+import Joyride, { STATUS } from 'react-joyride';
+import type { Step } from 'react-joyride';
 import { useTutorial } from '../contexts/TutorialContext';
 
 interface OnboardingTourProps {
