@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { ConfigService } from './config.service';
 
 const prisma = new PrismaClient();
 
@@ -30,33 +31,40 @@ interface XpCalculationResult {
 export class XpService {
   /**
    * Calcula el nivel basado en el XP total
-   * Fórmula: nivel = floor(sqrt(totalXP / 100))
-   * Ejemplos:
+   * Fórmula: nivel = floor(sqrt(totalXP / divisor))
+   * Ejemplos (con divisor = 100):
    * - 0 XP = Nivel 0
    * - 100 XP = Nivel 1
    * - 400 XP = Nivel 2
    * - 900 XP = Nivel 3
    * - 1600 XP = Nivel 4
    */
-  static calculateLevel(totalXp: number): number {
-    return Math.floor(Math.sqrt(totalXp / 100));
+  static async calculateLevel(totalXp: number): Promise<number> {
+    const divisorStr = await ConfigService.getConfigByKey('level_formula_divisor');
+    const divisor = divisorStr ? parseInt(divisorStr) : 100;
+    return Math.floor(Math.sqrt(totalXp / divisor));
   }
 
   /**
    * Calcula cuánto XP se necesita para el siguiente nivel
    */
-  static getXpForNextLevel(currentLevel: number): number {
+  static async getXpForNextLevel(currentLevel: number): Promise<number> {
+    const divisorStr = await ConfigService.getConfigByKey('level_formula_divisor');
+    const divisor = divisorStr ? parseInt(divisorStr) : 100;
     const nextLevel = currentLevel + 1;
-    return (nextLevel * nextLevel) * 100;
+    return (nextLevel * nextLevel) * divisor;
   }
 
   /**
    * Calcula cuánto XP falta para el siguiente nivel
    */
-  static getXpToNextLevel(totalXp: number): { current: number; required: number; remaining: number } {
-    const currentLevel = this.calculateLevel(totalXp);
-    const xpForCurrentLevel = (currentLevel * currentLevel) * 100;
-    const xpForNextLevel = this.getXpForNextLevel(currentLevel);
+  static async getXpToNextLevel(totalXp: number): Promise<{ current: number; required: number; remaining: number }> {
+    const divisorStr = await ConfigService.getConfigByKey('level_formula_divisor');
+    const divisor = divisorStr ? parseInt(divisorStr) : 100;
+
+    const currentLevel = await this.calculateLevel(totalXp);
+    const xpForCurrentLevel = (currentLevel * currentLevel) * divisor;
+    const xpForNextLevel = await this.getXpForNextLevel(currentLevel);
     const xpInCurrentLevel = totalXp - xpForCurrentLevel;
     const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel;
     const xpRemaining = xpNeededForNextLevel - xpInCurrentLevel;
@@ -85,26 +93,41 @@ export class XpService {
       throw new Error('Usuario no encontrado');
     }
 
-    let baseXp = 10;
+    // Obtener configuraciones
+    const baseXpStr = await ConfigService.getConfigByKey('base_xp_per_chapter');
+    const streakBonusStr = await ConfigService.getConfigByKey('streak_active_bonus_xp');
+    const speedBonusStr = await ConfigService.getConfigByKey('speed_reading_bonus_xp');
+    const speedThresholdStr = await ConfigService.getConfigByKey('speed_reading_threshold_seconds');
+    const longStreakBonusStr = await ConfigService.getConfigByKey('long_streak_bonus_xp');
+    const longStreakThresholdStr = await ConfigService.getConfigByKey('long_streak_threshold_days');
+
+    // Valores por defecto si no existen las configuraciones
+    const baseXp = baseXpStr ? parseInt(baseXpStr) : 10;
+    const streakBonus = streakBonusStr ? parseInt(streakBonusStr) : 5;
+    const speedBonus = speedBonusStr ? parseInt(speedBonusStr) : 3;
+    const speedThreshold = speedThresholdStr ? parseInt(speedThresholdStr) : 300;
+    const longStreakBonus = longStreakBonusStr ? parseInt(longStreakBonusStr) : 5;
+    const longStreakThreshold = longStreakThresholdStr ? parseInt(longStreakThresholdStr) : 7;
+
     let bonusXp = 0;
     const bonuses: string[] = [];
 
     // Bonus por racha activa
     if (user.currentStreak > 0) {
-      bonusXp += 5;
-      bonuses.push(`+5 XP por racha de ${user.currentStreak} días`);
+      bonusXp += streakBonus;
+      bonuses.push(`+${streakBonus} XP por racha de ${user.currentStreak} días`);
     }
 
-    // Bonus por lectura rápida (menos de 5 minutos)
-    if (readingTimeSeconds < 300) {
-      bonusXp += 3;
-      bonuses.push('+3 XP por lectura rápida');
+    // Bonus por lectura rápida (menos de umbral configurado)
+    if (readingTimeSeconds < speedThreshold) {
+      bonusXp += speedBonus;
+      bonuses.push(`+${speedBonus} XP por lectura rápida`);
     }
 
-    // Bonus por racha larga (7+ días)
-    if (user.currentStreak >= 7) {
-      bonusXp += 5;
-      bonuses.push('+5 XP por racha de 7+ días');
+    // Bonus por racha larga (umbral configurado o más días)
+    if (user.currentStreak >= longStreakThreshold) {
+      bonusXp += longStreakBonus;
+      bonuses.push(`+${longStreakBonus} XP por racha de ${longStreakThreshold}+ días`);
     }
 
     return {
@@ -129,7 +152,7 @@ export class XpService {
     }
 
     const newTotalXp = user.totalXp + amount;
-    const newLevel = this.calculateLevel(newTotalXp);
+    const newLevel = await this.calculateLevel(newTotalXp);
     const leveledUp = newLevel > user.currentLevel;
 
     // Actualizar usuario
@@ -149,7 +172,7 @@ export class XpService {
     });
 
     // Calcular progreso al siguiente nivel
-    const nextLevelProgress = this.getXpToNextLevel(newTotalXp);
+    const nextLevelProgress = await this.getXpToNextLevel(newTotalXp);
 
     return {
       user: updatedUser,
@@ -179,8 +202,8 @@ export class XpService {
       throw new Error('Usuario no encontrado');
     }
 
-    const nextLevelProgress = this.getXpToNextLevel(user.totalXp);
-    const xpForNextLevel = this.getXpForNextLevel(user.currentLevel);
+    const nextLevelProgress = await this.getXpToNextLevel(user.totalXp);
+    const xpForNextLevel = await this.getXpForNextLevel(user.currentLevel);
 
     return {
       totalXp: user.totalXp,

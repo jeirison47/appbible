@@ -7,15 +7,20 @@ interface AppConfig {
   app_name: string;
   app_short_name: string;
   app_description: string;
-  theme_color: string;
-  background_color: string;
   default_bible_version: string;
   default_daily_goal: string;
   streak_xp_required: string;
-  xp_per_chapter: string;
   xp_per_minute_reading: string;
   bonus_streak_multiplier: string;
   streak_goal_xp_per_day: string;
+  // Nuevos parámetros de prioridad alta
+  base_xp_per_chapter: string;
+  streak_active_bonus_xp: string;
+  speed_reading_bonus_xp: string;
+  speed_reading_threshold_seconds: string;
+  long_streak_bonus_xp: string;
+  long_streak_threshold_days: string;
+  level_formula_divisor: string;
 }
 
 export default function AppConfigPage() {
@@ -23,15 +28,20 @@ export default function AppConfigPage() {
     app_name: '',
     app_short_name: '',
     app_description: '',
-    theme_color: '#4F46E5',
-    background_color: '#ffffff',
     default_bible_version: 'RV1960',
     default_daily_goal: '1',
     streak_xp_required: '100',
-    xp_per_chapter: '100',
     xp_per_minute_reading: '10',
     bonus_streak_multiplier: '1.5',
     streak_goal_xp_per_day: '50',
+    // Nuevos parámetros de prioridad alta
+    base_xp_per_chapter: '10',
+    streak_active_bonus_xp: '5',
+    speed_reading_bonus_xp: '3',
+    speed_reading_threshold_seconds: '300',
+    long_streak_bonus_xp: '5',
+    long_streak_threshold_days: '7',
+    level_formula_divisor: '100',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -64,7 +74,14 @@ export default function AppConfigPage() {
       const configArray = Object.entries(config).map(([key, value]) => ({
         key,
         value: value.toString(),
-        type: key.includes('xp_') || key.includes('multiplier') || key.includes('goal') || key.includes('required') || key.includes('_per_') ? 'number' : 'string',
+        type: key.includes('xp_') ||
+              key.includes('multiplier') ||
+              key.includes('goal') ||
+              key.includes('required') ||
+              key.includes('_per_') ||
+              key.includes('bonus') ||
+              key.includes('threshold') ||
+              key.includes('divisor') ? 'number' : 'string',
       }));
 
       await configApi.updateMultipleConfig(configArray);
@@ -96,7 +113,7 @@ export default function AppConfigPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8 pt-24">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-6 border-l-4 border-orange-600">
           <h2 className="text-4xl font-bold text-gray-800 mb-2">
@@ -110,9 +127,22 @@ export default function AppConfigPage() {
         {/* Branding Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
           <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <span>🎨</span>
-            Identidad de Marca
+            <span>📱</span>
+            Identidad de la App
           </h3>
+
+          <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-2">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <p className="text-sm font-bold text-yellow-800 mb-1">Nota Importante</p>
+                <p className="text-xs text-yellow-700">
+                  Estos valores se guardan en la base de datos pero requieren un nuevo build para aplicarse en la PWA.
+                  Modifica también manualmente en <code className="bg-yellow-100 px-1 rounded">frontend/vite.config.ts</code> para cambios inmediatos.
+                </p>
+              </div>
+            </div>
+          </div>
 
           <div className="space-y-6">
             {/* App Name */}
@@ -169,66 +199,6 @@ export default function AppConfigPage() {
           </div>
         </div>
 
-        {/* Colors Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <span>🎨</span>
-            Colores
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Theme Color */}
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                Color Principal (Theme)
-              </label>
-              <div className="flex gap-3">
-                <input
-                  type="color"
-                  value={config.theme_color}
-                  onChange={(e) => handleChange('theme_color', e.target.value)}
-                  className="w-20 h-12 rounded-lg cursor-pointer border-2 border-gray-300"
-                />
-                <input
-                  type="text"
-                  value={config.theme_color}
-                  onChange={(e) => handleChange('theme_color', e.target.value)}
-                  className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono"
-                  placeholder="#4F46E5"
-                />
-              </div>
-              <p className="text-sm text-gray-500 mt-1">
-                Color principal de la app (usado en PWA y UI)
-              </p>
-            </div>
-
-            {/* Background Color */}
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                Color de Fondo
-              </label>
-              <div className="flex gap-3">
-                <input
-                  type="color"
-                  value={config.background_color}
-                  onChange={(e) => handleChange('background_color', e.target.value)}
-                  className="w-20 h-12 rounded-lg cursor-pointer border-2 border-gray-300"
-                />
-                <input
-                  type="text"
-                  value={config.background_color}
-                  onChange={(e) => handleChange('background_color', e.target.value)}
-                  className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono"
-                  placeholder="#ffffff"
-                />
-              </div>
-              <p className="text-sm text-gray-500 mt-1">
-                Color de fondo del PWA y splash screen
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* XP & Gamification Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
           <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
@@ -274,24 +244,7 @@ export default function AppConfigPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* XP per Chapter */}
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                XP por Capítulo
-              </label>
-              <input
-                type="number"
-                value={config.xp_per_chapter}
-                onChange={(e) => handleChange('xp_per_chapter', e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-2xl font-bold"
-                min="1"
-              />
-              <p className="text-sm text-gray-500 mt-1 text-center">
-                XP base por completar un capítulo
-              </p>
-            </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* XP per Minute Reading */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
@@ -355,6 +308,162 @@ export default function AppConfigPage() {
               <strong>Ejemplo:</strong> Si el usuario establece una meta de 10 días y este valor es 50,
               ganará <strong>500 XP</strong> (10 × 50) al completar la meta.
             </p>
+          </div>
+
+          {/* Advanced XP Configuration */}
+          <div className="mt-6 bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-3xl">⚡</span>
+              <div>
+                <h4 className="text-xl font-bold text-gray-800">Configuración Avanzada de XP</h4>
+                <p className="text-sm text-gray-600">
+                  Parámetros detallados del sistema de experiencia y bonificaciones
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Base XP per Chapter */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  XP Base por Capítulo
+                </label>
+                <input
+                  type="number"
+                  value={config.base_xp_per_chapter}
+                  onChange={(e) => handleChange('base_xp_per_chapter', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="1"
+                  step="1"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  XP fundamental otorgado al completar cualquier capítulo (sin bonos)
+                </p>
+              </div>
+
+              {/* Streak Active Bonus */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Bonus XP por Racha Activa
+                </label>
+                <input
+                  type="number"
+                  value={config.streak_active_bonus_xp}
+                  onChange={(e) => handleChange('streak_active_bonus_xp', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="0"
+                  step="1"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  XP adicional cuando el usuario tiene una racha activa (currentStreak &gt; 0)
+                </p>
+              </div>
+
+              {/* Speed Reading Bonus */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Bonus XP por Lectura Rápida
+                </label>
+                <input
+                  type="number"
+                  value={config.speed_reading_bonus_xp}
+                  onChange={(e) => handleChange('speed_reading_bonus_xp', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="0"
+                  step="1"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  XP adicional por leer rápido (menos del umbral de segundos)
+                </p>
+              </div>
+
+              {/* Speed Reading Threshold */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Umbral de Lectura Rápida (segundos)
+                </label>
+                <input
+                  type="number"
+                  value={config.speed_reading_threshold_seconds}
+                  onChange={(e) => handleChange('speed_reading_threshold_seconds', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="60"
+                  step="30"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Tiempo máximo para obtener bonus de lectura rápida (300 seg = 5 min)
+                </p>
+              </div>
+
+              {/* Long Streak Bonus */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Bonus XP por Racha Larga
+                </label>
+                <input
+                  type="number"
+                  value={config.long_streak_bonus_xp}
+                  onChange={(e) => handleChange('long_streak_bonus_xp', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="0"
+                  step="1"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  XP adicional cuando la racha supera el umbral de días largos
+                </p>
+              </div>
+
+              {/* Long Streak Threshold */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Umbral de Racha Larga (días)
+                </label>
+                <input
+                  type="number"
+                  value={config.long_streak_threshold_days}
+                  onChange={(e) => handleChange('long_streak_threshold_days', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="1"
+                  step="1"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Días mínimos de racha para obtener bonus de racha larga (ej: 7 días)
+                </p>
+              </div>
+
+              {/* Level Formula Divisor */}
+              <div className="bg-white rounded-lg p-4 border-2 border-purple-200 md:col-span-2">
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Divisor de Fórmula de Nivel
+                </label>
+                <input
+                  type="number"
+                  value={config.level_formula_divisor}
+                  onChange={(e) => handleChange('level_formula_divisor', e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center text-2xl font-bold"
+                  min="10"
+                  step="10"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  <strong>Fórmula:</strong> nivel = floor(sqrt(totalXP / divisor)).
+                  <strong> Ejemplos con divisor = 100:</strong> 0 XP = nivel 0, 100 XP = nivel 1, 400 XP = nivel 2, 900 XP = nivel 3.
+                  <strong> Aumentar el divisor hace que los niveles sean más difíciles de alcanzar.</strong>
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-xl">⚠️</span>
+                <div>
+                  <p className="text-sm font-bold text-yellow-800 mb-1">Advertencia</p>
+                  <p className="text-xs text-yellow-700">
+                    Cambiar estos valores afecta directamente el balance del juego.
+                    Se recomienda probar en un ambiente de desarrollo antes de aplicar en producción.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
