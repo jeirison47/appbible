@@ -33,13 +33,13 @@ export default function LandingPage() {
               </button>
               <Link
                 to="/login"
-                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium text-sm sm:text-base transition"
+                className="hidden sm:block text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium text-sm sm:text-base transition"
               >
                 Iniciar Sesión
               </Link>
               <Link
                 to="/register"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:from-indigo-700 hover:to-purple-700 transition shadow-lg hover:shadow-xl"
+                className="hidden sm:block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base hover:from-indigo-700 hover:to-purple-700 transition shadow-lg hover:shadow-xl"
               >
                 Comenzar Gratis
               </Link>
