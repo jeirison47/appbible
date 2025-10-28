@@ -202,7 +202,7 @@ export default function FreeVerseReaderPage() {
               to={`/lectura-libre/${bookSlug}`}
               className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"
             >
-              ← Volver al libro
+              ← <span className="hidden sm:inline">Volver al libro</span>
             </Link>
           </div>
         </div>

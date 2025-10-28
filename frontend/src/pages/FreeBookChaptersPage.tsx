@@ -91,7 +91,7 @@ export default function FreeBookChaptersPage() {
           <div className="text-center bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
             <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">No se pudo cargar el libro</p>
             <Link to="/lectura-libre" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
-              ← Volver a Lectura Libre
+              ← <span className="hidden sm:inline">Volver a Lectura Libre</span>
             </Link>
           </div>
         </div>

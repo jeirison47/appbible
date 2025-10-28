@@ -131,7 +131,7 @@ export default function BookPathPage() {
           <div className="text-center bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
             <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">No se pudo cargar el libro</p>
             <Link to="/camino" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
-              ← Volver al Camino
+              ← <span className="hidden sm:inline">Volver al Camino</span>
             </Link>
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function BookPathPage() {
               className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:text-indigo-400 transition font-semibold"
             >
               <span className="text-2xl">←</span>
-              <span>Volver</span>
+              <span className="hidden sm:inline">Volver</span>
             </Link>
             <div className="text-center">
               <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">{data.book.name}</h1>
