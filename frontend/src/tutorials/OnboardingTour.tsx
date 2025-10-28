@@ -70,10 +70,12 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
         <div>
           <h3 className="font-bold mb-1">Puntos de Experiencia (XP) ⭐</h3>
           <p className="text-sm text-gray-700">
-            Ganas XP al leer capítulos de la Biblia.
+            Ganas XP completando capítulos y por cada minuto que pasas leyendo.
           </p>
           <p className="text-sm text-gray-700 mt-1">
-            Cada 10 minutos de lectura = XP adicional. ¡Sube de nivel acumulando XP!
+            ¡Sube de nivel acumulando XP y mantén tu racha activa!
+                        Cada 10 minutos de lectura = XP adicional. ¡Sube de nivel acumulando XP!
+
           </p>
         </div>
       ),
@@ -85,10 +87,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
         <div>
           <h3 className="font-bold mb-1">Metas Diarias 🎯</h3>
           <p className="text-sm text-gray-700">
-            Tu objetivo de XP para hoy. Completa tu meta para mantener tu racha.
+            Tu objetivo personal de capítulos para leer hoy.
           </p>
           <p className="text-sm text-gray-700 mt-1">
-            Puedes personalizar tu meta en tu perfil.
+            Puedes personalizar tu meta en tu perfil. Es una meta personal que no afecta tu racha.
           </p>
         </div>
       ),

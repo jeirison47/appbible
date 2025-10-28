@@ -310,18 +310,18 @@ export default function HomePage() {
   // Vista de Admin
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 pt-32">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 dark:from-orange-950 dark:via-yellow-950 dark:to-red-950 pt-32">
         {/* Navbar */}
         <Navbar />
 
         {/* Content */}
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           {/* Welcome Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-orange-600">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-orange-600">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-1 sm:mb-2">
               Panel de Administrador
             </h2>
-            <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg">
               Gestiona el sistema y supervisa el progreso de los usuarios
             </p>
           </div>
@@ -330,47 +330,47 @@ export default function HomePage() {
           {systemStats && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
               {/* Total Users */}
-              <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-blue-500">
+              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-blue-500">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs sm:text-sm text-gray-600 font-medium">Usuarios Totales</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Usuarios Totales</p>
                   <span className="text-xl sm:text-2xl">👥</span>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-blue-600">{systemStats.totalUsers}</p>
-                <p className="text-xs text-gray-500 mt-1 sm:mt-2">
+                <p className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">{systemStats.totalUsers}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
                   {systemStats.activeUsers} activos
                 </p>
               </div>
 
               {/* Total Chapters Read */}
-              <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
+              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs sm:text-sm text-gray-600 font-medium">Capítulos Leídos</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Capítulos Leídos</p>
                   <span className="text-xl sm:text-2xl">📖</span>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-green-600">{systemStats.totalChaptersRead}</p>
-                <p className="text-xs text-gray-500 mt-1 sm:mt-2">En total</p>
+                <p className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">{systemStats.totalChaptersRead}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">En total</p>
               </div>
 
               {/* Total XP */}
-              <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-purple-500 col-span-2 md:col-span-1">
+              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-purple-500 col-span-2 md:col-span-1">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs sm:text-sm text-gray-600 font-medium">XP Total</p>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">XP Total</p>
                   <span className="text-xl sm:text-2xl">⭐</span>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-purple-600">{systemStats.totalXpEarned}</p>
-                <p className="text-xs text-gray-500 mt-1 sm:mt-2">Entre todos los usuarios</p>
+                <p className="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">{systemStats.totalXpEarned}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Entre todos los usuarios</p>
               </div>
             </div>
           )}
 
           {/* User Statistics Table */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Estadísticas de Usuarios</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6">Estadísticas de Usuarios</h3>
 
             {loading ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-                <p className="text-gray-600 mt-4">Cargando estadísticas...</p>
+                <p className="text-gray-600 dark:text-gray-300 mt-4">Cargando estadísticas...</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -391,27 +391,27 @@ export default function HomePage() {
                     {userStats.map((user) => (
                       <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="px-4 py-4">
-                          <div className="font-medium text-gray-800">{user.displayName}</div>
+                          <div className="font-medium text-gray-800 dark:text-gray-100">{user.displayName}</div>
                         </td>
-                        <td className="px-4 py-4 text-gray-600 text-sm">{user.email}</td>
+                        <td className="px-4 py-4 text-gray-600 dark:text-gray-300 text-sm">{user.email}</td>
                         <td className="px-4 py-4 text-center">
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
                             Nivel {user.currentLevel}
                           </span>
                         </td>
-                        <td className="px-4 py-4 text-center font-semibold text-indigo-600">
+                        <td className="px-4 py-4 text-center font-semibold text-indigo-600 dark:text-indigo-400">
                           {user.totalXp} XP
                         </td>
                         <td className="px-4 py-4 text-center">
                           <span className="inline-flex items-center gap-1">
                             <span>🔥</span>
-                            <span className="font-semibold text-orange-600">{user.currentStreak}</span>
+                            <span className="font-semibold text-orange-600 dark:text-orange-400">{user.currentStreak}</span>
                           </span>
                         </td>
-                        <td className="px-4 py-4 text-center font-semibold text-green-600">
+                        <td className="px-4 py-4 text-center font-semibold text-green-600 dark:text-green-400">
                           {user.totalChaptersRead}
                         </td>
-                        <td className="px-4 py-4 text-center font-semibold text-blue-600">
+                        <td className="px-4 py-4 text-center font-semibold text-blue-600 dark:text-blue-400">
                           {user.booksCompleted}
                         </td>
                         <td className="px-4 py-4">
@@ -427,7 +427,7 @@ export default function HomePage() {
                             </button>
                             <button
                               onClick={() => handleResetPassword(user.id)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Resetear Contraseña"
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,7 +436,7 @@ export default function HomePage() {
                             </button>
                             <button
                               onClick={() => handleDeleteUser(user.id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 rounded-lg transition-colors"
                               title="Eliminar Usuario"
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -487,22 +487,22 @@ export default function HomePage() {
         {/* Modal de Contraseña Reseteada */}
         {showResetPasswordModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
                 {newPassword ? 'Contraseña Reseteada' : 'Resetear Contraseña'}
               </h3>
 
               {newPassword ? (
                 <div>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
                     La contraseña ha sido reseteada exitosamente. Copia esta contraseña temporal y compártela con el usuario:
                   </p>
-                  <div className="bg-gray-100 p-4 rounded-lg mb-4">
-                    <p className="text-lg font-mono font-bold text-center text-indigo-600 select-all">
+                  <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-4">
+                    <p className="text-lg font-mono font-bold text-center text-indigo-600 dark:text-indigo-400 select-all">
                       {newPassword}
                     </p>
                   </div>
-                  <p className="text-sm text-red-600 mb-4">
+                  <p className="text-sm text-red-600 dark:text-red-400 mb-4">
                     ⚠️ Esta contraseña solo se mostrará una vez. Asegúrate de copiarla antes de cerrar esta ventana.
                   </p>
                   <div className="flex gap-2">
@@ -517,7 +517,7 @@ export default function HomePage() {
                     </button>
                     <button
                       onClick={closePasswordModal}
-                      className="flex-1 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                      className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                     >
                       Cerrar
                     </button>
@@ -525,7 +525,7 @@ export default function HomePage() {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
                     ¿Estás seguro de que deseas resetear la contraseña de este usuario? Se generará una nueva contraseña temporal.
                   </p>
                   <p className="text-sm text-yellow-600 mb-4">
@@ -543,7 +543,7 @@ export default function HomePage() {
                         setShowResetPasswordModal(false);
                         setSelectedUserId(null);
                       }}
-                      className="flex-1 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                      className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                     >
                       Cancelar
                     </button>
@@ -559,91 +559,91 @@ export default function HomePage() {
 
   // Vista de Usuario Regular
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pt-32">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950 pt-32">
       {/* Navbar */}
       <Navbar />
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Welcome Card */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-indigo-600">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">
+        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-indigo-600">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-1 sm:mb-2">
             ¡Hola {user?.displayName}!
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
+          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg">
             Bienvenido de vuelta a tu aventura bíblica
           </p>
         </div>
 
         {/* Verse of the Day */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2">
             <span className="text-xl sm:text-2xl">📖</span>
             Versículo del Día
           </h3>
 
           {loading || !verse ? (
-            <div className="animate-pulse bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-6">
+            <div className="animate-pulse bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-900/50 rounded-lg sm:rounded-xl p-4 sm:p-6">
               <div className="space-y-3">
-                <div className="h-4 bg-indigo-200 rounded w-full"></div>
-                <div className="h-4 bg-indigo-200 rounded w-5/6"></div>
-                <div className="h-4 bg-indigo-200 rounded w-4/6"></div>
-                <div className="h-3 bg-indigo-200 rounded w-32 mt-4"></div>
+                <div className="h-4 bg-indigo-200 dark:bg-indigo-700 rounded w-full"></div>
+                <div className="h-4 bg-indigo-200 dark:bg-indigo-700 rounded w-5/6"></div>
+                <div className="h-4 bg-indigo-200 dark:bg-indigo-700 rounded w-4/6"></div>
+                <div className="h-3 bg-indigo-200 dark:bg-indigo-700 rounded w-32 mt-4"></div>
               </div>
             </div>
           ) : verse ? (
             <Link
               to={`/lectura-libre/${verse.reference.bookSlug}/${verse.reference.chapter}/${verse.reference.verse}`}
-              className="block bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:from-indigo-100 hover:to-purple-100 transition-all transform hover:scale-[1.02] cursor-pointer"
+              className="block bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-900/50 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-800/60 dark:hover:to-purple-800/60 transition-all transform hover:scale-[1.02] cursor-pointer"
             >
-              <p className="text-base sm:text-lg lg:text-xl text-gray-700 leading-relaxed mb-3 sm:mb-4">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-700 dark:text-gray-200 leading-relaxed mb-3 sm:mb-4">
                 "{verse.text}"
               </p>
               <div className="flex items-center justify-between">
-                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-semibold">
                   {verse.reference.fullReference} ({verse.version})
                 </p>
-                <span className="text-xs sm:text-sm text-indigo-600 font-semibold flex items-center gap-1">
+                <span className="text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 dark:text-indigo-400 font-semibold flex items-center gap-1">
                   Leer más →
                 </span>
               </div>
             </Link>
           ) : (
-            <p className="text-gray-600 text-sm sm:text-base">No se pudo cargar el versículo</p>
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">No se pudo cargar el versículo</p>
           )}
         </div>
 
         {/* Stats Grid - Estadísticas principales */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
           {/* XP Card */}
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-indigo-500">
+          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-indigo-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium">XP Total</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">XP Total</p>
               <span className="text-xl sm:text-2xl">⭐</span>
             </div>
             {loading || !progress ? (
               <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 rounded w-20 mb-2 sm:mb-3"></div>
-                <div className="h-3 bg-gray-200 rounded w-full mb-1"></div>
-                <div className="h-2 bg-gray-200 rounded w-full"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4 mt-1"></div>
+                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-2 sm:mb-3"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1"></div>
+                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mt-1"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-indigo-600">{progress.user.totalXp}</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-indigo-600 dark:text-indigo-400">{progress.user.totalXp}</p>
                 {progress.xp && (
                   <div className="mt-2 sm:mt-3">
-                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                    <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
                       <span>Nivel {progress.xp.currentLevel}</span>
                       <span>{progress.xp.progress.percentage}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2">
                       <div
                         className="bg-indigo-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
                         style={{ width: `${progress.xp.progress.percentage}%` }}
                       ></div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {progress.xp.progress.remaining} XP para nivel {progress.xp.currentLevel + 1}
                     </p>
                   </div>
@@ -653,31 +653,31 @@ export default function HomePage() {
           </div>
 
           {/* Meta Diaria */}
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
+          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium">Meta Diaria</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Meta Diaria</p>
               <span className="text-xl sm:text-2xl">📊</span>
             </div>
             {loading || !progress ? (
               <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 rounded w-16 mb-2 sm:mb-3"></div>
-                <div className="h-2 bg-gray-200 rounded w-full"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4 mt-1"></div>
+                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-16 mb-2 sm:mb-3"></div>
+                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mt-1"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 dark:text-green-400">
                   {progress.dailyGoal.progress}/{progress.dailyGoal.goal}
                 </p>
                 {progress.dailyGoal && (
                   <div className="mt-2 sm:mt-3">
-                    <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2">
                       <div
                         className="bg-green-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
                         style={{ width: `${progress.dailyGoal.percentage}%` }}
                       ></div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {progress.dailyGoal.completed
                         ? '¡Meta completada! 🎉'
                         : `${progress.dailyGoal.chaptersRemaining} ${progress.dailyGoal.chaptersRemaining === 1 ? 'cap. restante' : 'caps. restantes'}`}
@@ -689,29 +689,29 @@ export default function HomePage() {
           </div>
 
           {/* Racha */}
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-orange-500">
+          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-orange-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium">Racha</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Racha</p>
               <span className="text-xl sm:text-2xl">🔥</span>
             </div>
             {loading || !progress ? (
               <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 rounded w-12 mb-2 sm:mb-3"></div>
-                <div className="h-2 bg-gray-200 rounded w-full"></div>
-                <div className="h-3 bg-gray-200 rounded w-2/3 mt-1"></div>
+                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-12 mb-2 sm:mb-3"></div>
+                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mt-1"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600 dark:text-orange-400">
                   {progress.user.currentStreak} días
                 </p>
                 {progress.streak?.status && (
                   <div className="mt-2 sm:mt-3">
-                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                    <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
                       <span>{progress.streak.status.xpToday} XP</span>
                       <span>{Math.floor(progress.streak.status.xpProgress)}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2">
                       <div
                         className="bg-orange-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
                         style={{
@@ -719,7 +719,7 @@ export default function HomePage() {
                         }}
                       ></div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {progress.streak.status.goalMetToday
                         ? '¡Meta del día cumplida! ✨'
                         : `${progress.streak.status.xpRequired - progress.streak.status.xpToday} XP para mantener racha`}
@@ -731,22 +731,22 @@ export default function HomePage() {
           </div>
 
           {/* Tiempo de Lectura Hoy */}
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-purple-500">
+          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-purple-500">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 font-medium">Tiempo Hoy</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Tiempo Hoy</p>
               <span className="text-xl sm:text-2xl">⏱️</span>
             </div>
             {loading || !progress ? (
               <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 rounded w-20 mb-1 sm:mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-1 sm:mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600">
+                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600 dark:text-purple-400">
                   {formattedTime}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 sm:mt-2">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
                   Sigue leyendo para ganar XP
                 </p>
               </>
@@ -813,8 +813,8 @@ export default function HomePage() {
 
         {/* Debug: Permissions - Solo para Admin */}
         {isAdmin && (
-          <details className="mt-6 bg-white rounded-lg shadow p-4">
-            <summary className="cursor-pointer font-semibold text-gray-700">
+          <details className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <summary className="cursor-pointer font-semibold text-gray-700 dark:text-gray-200">
               Ver Permisos del Sistema
             </summary>
             <div className="mt-4 flex flex-wrap gap-2">

@@ -67,7 +67,7 @@ export default function FreeReadingPage() {
   }, {} as Record<string, Book[]>);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-32">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 pt-32">
       {/* Navbar */}
       <Navbar />
 
@@ -75,7 +75,7 @@ export default function FreeReadingPage() {
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando biblioteca...</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">Cargando biblioteca...</p>
           </div>
         </div>
       ) : (
@@ -102,7 +102,7 @@ export default function FreeReadingPage() {
             className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all ${
               selectedTestament === 'ALL'
                 ? 'bg-indigo-600 text-white shadow-lg scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             Todos ({books.length})
@@ -112,7 +112,7 @@ export default function FreeReadingPage() {
             className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all ${
               selectedTestament === 'OLD'
                 ? 'bg-blue-600 text-white shadow-lg scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             📜 Antiguo Testamento ({books.filter(b => b.testament === 'OLD').length})
@@ -122,7 +122,7 @@ export default function FreeReadingPage() {
             className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all ${
               selectedTestament === 'NEW'
                 ? 'bg-purple-600 text-white shadow-lg scale-105'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             ✝️ Nuevo Testamento ({books.filter(b => b.testament === 'NEW').length})
@@ -133,10 +133,10 @@ export default function FreeReadingPage() {
         <div className="space-y-6 sm:space-y-8">
           {Object.entries(groupedBooks).map(([category, categoryBooks]) => (
             <div key={category}>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                 <span className="w-1.5 sm:w-2 h-6 sm:h-8 bg-indigo-600 rounded"></span>
                 {category}
-                <span className="text-xs sm:text-sm font-normal text-gray-500">
+                <span className="text-xs sm:text-sm font-normal text-gray-500 dark:text-gray-400">
                   ({categoryBooks.length} {categoryBooks.length === 1 ? 'libro' : 'libros'})
                 </span>
               </h3>
@@ -148,13 +148,13 @@ export default function FreeReadingPage() {
                     to={`/lectura-libre/${book.slug}`}
                     className="group"
                   >
-                    <div className="bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 p-4 sm:p-6 h-full transform group-hover:scale-105 group-hover:-translate-y-1">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 p-4 sm:p-6 h-full transform group-hover:scale-105 group-hover:-translate-y-1">
                       <div className="flex items-start justify-between mb-2 sm:mb-3">
                         <div className="flex-1">
-                          <h4 className="font-bold text-base sm:text-lg text-gray-800 group-hover:text-indigo-600 transition">
+                          <h4 className="font-bold text-base sm:text-lg text-gray-800 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
                             {book.name}
                           </h4>
-                          <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
                             {book.totalChapters} {book.totalChapters === 1 ? 'capítulo' : 'capítulos'}
                           </p>
                         </div>
@@ -167,7 +167,7 @@ export default function FreeReadingPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center text-xs sm:text-sm text-indigo-600 font-semibold mt-3 sm:mt-4">
+                      <div className="flex items-center text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 font-semibold mt-3 sm:mt-4">
                         <span>Abrir libro</span>
                         <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                       </div>

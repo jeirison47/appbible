@@ -9,6 +9,28 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  @apply bg-white text-gray-900 transition-colors duration-200;
+}
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* Forzar modo claro en páginas de autenticación */
+.light {
+  color-scheme: light !important;
+}
+
+.light,
+.light * {
+  color: initial !important;
+}
+
+.light input,
+.light textarea,
+.light select {
+  background-color: white !important;
+  color: #1f2937 !important;
 }
 
 code {

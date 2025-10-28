@@ -57,7 +57,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-32">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 pt-32">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
@@ -75,7 +75,7 @@ export default function SearchPage() {
         </div>
 
         {/* Search Form */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 lg:mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 lg:mb-8">
           <form onSubmit={handleSearch}>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <input
@@ -83,7 +83,7 @@ export default function SearchPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder='Ej: "Juan 3:16" o "amor"'
-                className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border-2 border-gray-300 rounded-lg sm:rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg"
+                className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg sm:rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg"
               />
               <button
                 type="submit"
@@ -104,30 +104,30 @@ export default function SearchPage() {
           </form>
 
           {/* Examples */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-600 font-semibold mb-3">Ejemplos de búsqueda:</p>
+          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold mb-3">Ejemplos de búsqueda:</p>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setQuery('Juan 3:16')}
-                className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition"
+                className="px-4 py-2 bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/60 transition"
               >
                 Juan 3:16
               </button>
               <button
                 onClick={() => setQuery('Salmos 23')}
-                className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition"
+                className="px-4 py-2 bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/60 transition"
               >
                 Salmos 23
               </button>
               <button
                 onClick={() => setQuery('amor')}
-                className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition"
+                className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-800/60 transition"
               >
                 amor
               </button>
               <button
                 onClick={() => setQuery('fe')}
-                className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition"
+                className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-medium hover:bg-indigo-100 dark:hover:bg-indigo-800/60 transition"
               >
                 fe
               </button>
@@ -137,18 +137,18 @@ export default function SearchPage() {
 
         {/* Results */}
         {hasSearched && (
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">
                 Resultados
                 {results.length > 0 && (
-                  <span className="ml-2 sm:ml-3 text-base sm:text-lg text-gray-500 font-normal">
+                  <span className="ml-2 sm:ml-3 text-base sm:text-lg text-gray-500 dark:text-gray-400 font-normal">
                     ({results.length} encontrado{results.length > 1 ? 's' : ''})
                   </span>
                 )}
               </h3>
               {searchType && (
-                <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-100 text-blue-700 rounded-lg text-xs sm:text-sm font-semibold w-fit">
+                <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-lg text-xs sm:text-sm font-semibold w-fit">
                   {searchType === 'reference' ? '📖 Referencia' : '🔎 Palabra clave'}
                 </span>
               )}
@@ -157,8 +157,8 @@ export default function SearchPage() {
             {results.length === 0 ? (
               <div className="text-center py-8 sm:py-12">
                 <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">📭</div>
-                <p className="text-lg sm:text-xl text-gray-600 font-semibold mb-2">No se encontraron resultados</p>
-                <p className="text-sm sm:text-base text-gray-500">Intenta con otra búsqueda</p>
+                <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 font-semibold mb-2">No se encontraron resultados</p>
+                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">Intenta con otra búsqueda</p>
               </div>
             ) : (
               <div className="space-y-3 sm:space-y-4">
@@ -168,17 +168,17 @@ export default function SearchPage() {
                     to={`/lectura-libre/${result.bookSlug}/${result.chapter}`}
                     className="block group"
                   >
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6 hover:shadow-lg transition-all hover:scale-[1.02] border-l-4 border-blue-500">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/50 dark:to-indigo-900/50 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6 hover:shadow-lg transition-all hover:scale-[1.02] border-l-4 border-blue-500">
                       <div className="flex items-start justify-between mb-2 sm:mb-3">
-                        <h4 className="text-base sm:text-lg font-bold text-blue-700 group-hover:text-blue-800 transition">
+                        <h4 className="text-base sm:text-lg font-bold text-blue-700 dark:text-blue-300 group-hover:text-blue-800 dark:group-hover:text-blue-200 transition">
                           {result.reference}
                         </h4>
                         <span className="text-xl sm:text-2xl">📖</span>
                       </div>
-                      <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+                      <p className="text-gray-700 dark:text-gray-200 leading-relaxed text-sm sm:text-base lg:text-lg">
                         {result.text}
                       </p>
-                      <div className="mt-3 sm:mt-4 flex items-center gap-2 text-xs sm:text-sm text-blue-600 font-semibold">
+                      <div className="mt-3 sm:mt-4 flex items-center gap-2 text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-semibold">
                         <span>Ir al capítulo completo</span>
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </div>
@@ -192,17 +192,17 @@ export default function SearchPage() {
 
         {/* Instructions (when no search has been made) */}
         {!hasSearched && (
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">¿Cómo buscar?</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">¿Cómo buscar?</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Reference Search */}
-              <div className="border-2 border-blue-200 rounded-xl p-6 bg-blue-50">
+              <div className="border-2 border-blue-200 dark:border-blue-800 rounded-xl p-6 bg-blue-50 dark:bg-blue-900/30">
                 <div className="text-4xl mb-3">📖</div>
-                <h4 className="text-xl font-bold text-blue-800 mb-3">Búsqueda por Referencia</h4>
-                <p className="text-gray-700 mb-4">
+                <h4 className="text-xl font-bold text-blue-800 dark:text-blue-300 mb-3">Búsqueda por Referencia</h4>
+                <p className="text-gray-700 dark:text-gray-200 mb-4">
                   Escribe el nombre del libro, capítulo y versículo:
                 </p>
-                <ul className="space-y-2 text-gray-600">
+                <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold">•</span>
                     <span><strong>Juan 3:16</strong> - Un versículo específico</span>
@@ -219,13 +219,13 @@ export default function SearchPage() {
               </div>
 
               {/* Keyword Search */}
-              <div className="border-2 border-indigo-200 rounded-xl p-6 bg-indigo-50">
+              <div className="border-2 border-indigo-200 dark:border-indigo-800 rounded-xl p-6 bg-indigo-50 dark:bg-indigo-900/30">
                 <div className="text-4xl mb-3">🔎</div>
-                <h4 className="text-xl font-bold text-indigo-800 mb-3">Búsqueda por Palabra</h4>
-                <p className="text-gray-700 mb-4">
+                <h4 className="text-xl font-bold text-indigo-800 dark:text-indigo-300 mb-3">Búsqueda por Palabra</h4>
+                <p className="text-gray-700 dark:text-gray-200 mb-4">
                   Escribe una palabra o frase para encontrar versículos:
                 </p>
-                <ul className="space-y-2 text-gray-600">
+                <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-start gap-2">
                     <span className="text-indigo-600 font-bold">•</span>
                     <span><strong>amor</strong> - Encuentra versículos sobre el amor</span>

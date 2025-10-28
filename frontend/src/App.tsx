@@ -21,6 +21,8 @@ import ScrollToTopButton from './components/ScrollToTopButton';
 import { useAuthStore } from './stores/authStore';
 import { authApi } from './services/api';
 import { TutorialProvider } from './contexts/TutorialContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { ColorProvider } from './contexts/ColorContext';
 
 const queryClient = new QueryClient();
 
@@ -65,8 +67,10 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TutorialProvider>
-        <BrowserRouter>
+      <ThemeProvider>
+        <ColorProvider>
+          <TutorialProvider>
+            <BrowserRouter>
           <ScrollToTop />
           <ScrollToTopButton />
           <Routes>
@@ -178,6 +182,8 @@ function App() {
         </Routes>
       </BrowserRouter>
       </TutorialProvider>
+      </ColorProvider>
+      </ThemeProvider>
       <Toaster
         position="top-center"
         toastOptions={{

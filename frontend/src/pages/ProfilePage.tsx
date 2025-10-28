@@ -250,14 +250,14 @@ export default function ProfilePage() {
   // Vista de Admin
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 pt-32">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 dark:from-orange-950 dark:via-yellow-950 dark:to-red-950 pt-32">
         <Navbar />
 
         {loading ? (
           <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-orange-600 mx-auto"></div>
-              <p className="text-gray-600 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
+              <p className="text-gray-600 dark:text-gray-300 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
             </div>
           </div>
         ) : (
@@ -265,7 +265,7 @@ export default function ProfilePage() {
 
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           {/* Profile Header Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
               {/* Avatar */}
               {user?.avatarUrl ? (
@@ -282,10 +282,10 @@ export default function ProfilePage() {
 
               {/* User Info */}
               <div className="flex-1 text-center sm:text-left">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                   {user?.displayName}
                 </h2>
-                <p className="text-sm sm:text-base text-gray-600 mb-2">{user?.email}</p>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-2">{user?.email}</p>
                 <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   {roles.map((role) => (
                     <span
@@ -301,7 +301,7 @@ export default function ProfilePage() {
 
             {/* Member Since */}
             <div className="border-t border-gray-200 pt-3 sm:pt-4">
-              <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
                 Administrador desde {formatDate(user?.createdAt || new Date().toISOString())}
               </p>
             </div>
@@ -337,7 +337,7 @@ export default function ProfilePage() {
 
             <Link
               to="/"
-              className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
+              className="block w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 dark:text-gray-100 py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-gray-200 hover:to-gray-300 transition-all shadow-md hover:shadow-lg text-center"
             >
               Volver al Panel
             </Link>
@@ -373,14 +373,14 @@ export default function ProfilePage() {
 
   // Vista de Usuario Regular
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 pt-32">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950 pt-32">
       <Navbar />
 
       {loading ? (
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-4 text-base sm:text-lg font-semibold">Cargando perfil...</p>
           </div>
         </div>
       ) : (
@@ -388,12 +388,12 @@ export default function ProfilePage() {
 
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         {/* Profile Header Card */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 relative">
+        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 mb-4 sm:mb-6 relative">
           {!editingProfile ? (
             <>
               {/* Header con botón editar */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
+                <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
                   <span className="text-xl sm:text-2xl">👤</span>
                   Información Personal
                 </h3>
@@ -429,25 +429,25 @@ export default function ProfilePage() {
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Nombre */}
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Nombre</p>
-                    <p className="text-lg sm:text-xl font-bold text-gray-800">{user?.displayName}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">Nombre</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{user?.displayName}</p>
                   </div>
 
                   {/* Nickname */}
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Nickname</p>
-                    <p className="text-lg sm:text-xl font-bold text-indigo-600">@{user?.nickname || 'sin_nickname'}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">Nickname</p>
+                    <p className="text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400">@{user?.nickname || 'sin_nickname'}</p>
                   </div>
 
                   {/* Email */}
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Email</p>
-                    <p className="text-sm sm:text-base text-gray-700">{user?.email}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">Email</p>
+                    <p className="text-sm sm:text-base text-gray-700 dark:text-gray-200">{user?.email}</p>
                   </div>
 
                   {/* Rol */}
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Rol</p>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">Rol</p>
                     <div className="flex flex-wrap gap-2">
                       {roles.map((role) => (
                         <span
@@ -465,7 +465,7 @@ export default function ProfilePage() {
               {/* Footer con fecha */}
               {profile?.user?.createdAt && (
                 <div className="mt-6 pt-4 border-t border-gray-200">
-                  <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
                     Miembro desde {formatDate(profile.user.createdAt)}
                   </p>
                 </div>
@@ -475,12 +475,12 @@ export default function ProfilePage() {
             <>
               {/* Vista de edición */}
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Editar Perfil</h3>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Editar Perfil</h3>
 
                 {/* Nombre (solo si es local) */}
                 {user?.authProvider === 'local' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                       Nombre Completo
                     </label>
                     <input
@@ -503,7 +503,7 @@ export default function ProfilePage() {
 
                 {/* Nickname (todos) */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                     Nickname
                   </label>
                   <input
@@ -514,7 +514,7 @@ export default function ProfilePage() {
                     placeholder="tu_nickname"
                     maxLength={20}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     3-20 caracteres. Solo letras, números, guiones (-) y guiones bajos (_)
                   </p>
                 </div>
@@ -523,7 +523,7 @@ export default function ProfilePage() {
                 <div className="flex gap-3 pt-3">
                   <button
                     onClick={handleCancelProfileEdit}
-                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold"
+                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition font-semibold"
                     disabled={savingProfile}
                   >
                     Cancelar
@@ -544,21 +544,21 @@ export default function ProfilePage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
           {/* XP & Level Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6">
-            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2">
               <span className="text-xl sm:text-2xl">⭐</span>
               Experiencia y Nivel
             </h3>
             <div className="space-y-3 sm:space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm sm:text-base text-gray-600">Nivel Actual</span>
-                <span className="text-xl sm:text-2xl font-bold text-purple-600">
+                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Nivel Actual</span>
+                <span className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
                   {profile?.user.currentLevel || 0}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm sm:text-base text-gray-600">Experiencia Total</span>
-                <span className="text-xl sm:text-2xl font-bold text-indigo-600">
+                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Experiencia Total</span>
+                <span className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                   {profile?.user.totalXp || 0} XP
                 </span>
               </div>
@@ -566,21 +566,21 @@ export default function ProfilePage() {
           </div>
 
           {/* Streaks Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6">
-            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2">
               <span className="text-xl sm:text-2xl">🔥</span>
               Rachas de Lectura
             </h3>
             <div className="space-y-3 sm:space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm sm:text-base text-gray-600">Racha Actual</span>
-                <span className="text-xl sm:text-2xl font-bold text-orange-600">
+                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Racha Actual</span>
+                <span className="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400">
                   {profile?.user.currentStreak || 0} días
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm sm:text-base text-gray-600">Racha Más Larga</span>
-                <span className="text-xl sm:text-2xl font-bold text-red-600">
+                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Racha Más Larga</span>
+                <span className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400">
                   {profile?.user.longestStreak || 0} días
                 </span>
               </div>
@@ -589,25 +589,25 @@ export default function ProfilePage() {
         </div>
 
         {/* Reading Timer Card */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6 border-t-4 border-purple-500">
+        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6 border-t-4 border-purple-500">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-800">Tiempo de Lectura Hoy</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Acumula tiempo y gana XP cada 10 minutos</p>
+              <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100">Tiempo de Lectura Hoy</h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Acumula tiempo y gana XP cada 10 minutos</p>
             </div>
             <span className="text-3xl sm:text-4xl">⏱️</span>
           </div>
-          <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-600 text-center">
+          <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-purple-600 dark:text-purple-400 text-center">
             {formattedTime}
           </p>
-          <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">
             Sigue leyendo para ganar más XP
           </p>
         </div>
 
         {/* Goals Section */}
         <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2 px-1 sm:px-2">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2 px-1 sm:px-2">
             <span className="text-xl sm:text-2xl">🎯</span>
             Metas
           </h3>
@@ -615,9 +615,9 @@ export default function ProfilePage() {
           {/* Goals Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Meta Diaria Card */}
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-green-200">
+            <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-green-200">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
+                <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
                   <span>⭐</span>
                   Meta Diaria
                 </h4>
@@ -640,10 +640,10 @@ export default function ProfilePage() {
               {editingGoal ? (
                 <div className="space-y-3 sm:space-y-4">
                   <div className="text-center mb-3 sm:mb-4">
-                    <div className="text-4xl sm:text-5xl font-bold text-green-600 mb-1">
+                    <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-1">
                       {newGoal}
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                       {newGoal === 1 ? 'capítulo' : 'capítulos'} por día
                     </p>
                   </div>
@@ -688,7 +688,7 @@ export default function ProfilePage() {
                           className={`py-2 px-2 sm:px-3 rounded-lg font-semibold text-sm sm:text-base transition ${
                             newGoal === goal
                               ? 'bg-green-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              : 'bg-gray-100 text-gray-700 dark:text-gray-200 hover:bg-gray-200'
                           }`}
                         >
                           {goal}
@@ -701,7 +701,7 @@ export default function ProfilePage() {
                   <div className="flex gap-2 sm:gap-3 pt-2 sm:pt-3">
                     <button
                       onClick={handleCancelEdit}
-                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold text-sm sm:text-base"
+                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition font-semibold text-sm sm:text-base"
                       disabled={savingGoal}
                     >
                       Cancelar
@@ -730,17 +730,17 @@ export default function ProfilePage() {
               ) : (
                 <>
                   <div className="text-center mb-4">
-                    <div className="text-4xl sm:text-5xl font-bold text-green-600 mb-2">
+                    <div className="text-4xl sm:text-5xl font-bold text-green-600 dark:text-green-400 mb-2">
                       {profile?.user.dailyGoal} {profile?.user.dailyGoal === 1 ? 'Capítulo' : 'Capítulos'}
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                       Meta diaria en progreso
                     </p>
                   </div>
 
                   {/* Barra de progreso */}
                   <div className="mb-4">
-                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                    <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
                       <span>{profile?.dailyGoal?.progress || 0} {(profile?.dailyGoal?.progress || 0) === 1 ? 'capítulo' : 'capítulos'}</span>
                       <span>{Math.floor(((profile?.dailyGoal?.progress || 0) / (profile?.user.dailyGoal || 1)) * 100)}%</span>
                     </div>
@@ -752,7 +752,7 @@ export default function ProfilePage() {
                         }}
                       ></div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2 text-center">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
                       {profile?.dailyGoal?.completed
                         ? '¡Meta del día cumplida! ✨'
                         : `Te faltan ${(profile?.user.dailyGoal || 1) - (profile?.dailyGoal?.progress || 0)} ${((profile?.user.dailyGoal || 1) - (profile?.dailyGoal?.progress || 0)) === 1 ? 'capítulo' : 'capítulos'} para completar tu meta`}
@@ -772,29 +772,29 @@ export default function ProfilePage() {
             </div>
 
             {/* Meta de Racha Card */}
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-orange-200">
+            <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-orange-200">
               {profile?.streakGoal?.current && !profile.streakGoal.canSetNew ? (
                 // Vista de meta activa
                 <>
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
                       <span>🔥</span>
                       Meta Activa
                     </h4>
                   </div>
 
                   <div className="text-center mb-4">
-                    <div className="text-4xl sm:text-5xl font-bold text-orange-600 mb-2">
+                    <div className="text-4xl sm:text-5xl font-bold text-orange-600 dark:text-orange-400 mb-2">
                       {profile.streakGoal.current} días
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                       Meta de racha en progreso
                     </p>
                   </div>
 
                   {/* Barra de progreso */}
                   <div className="mb-4">
-                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                    <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
                       <span>{profile.user.currentStreak} días</span>
                       <span>{profile.streakGoal.progress}%</span>
                     </div>
@@ -806,7 +806,7 @@ export default function ProfilePage() {
                         }}
                       ></div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2 text-center">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
                       {profile.user.currentStreak >= profile.streakGoal.current
                         ? '¡Meta cumplida! 🎉 Puedes establecer una nueva meta.'
                         : `Te faltan ${profile.streakGoal.current - profile.user.currentStreak} días para completar tu meta`}
@@ -826,7 +826,7 @@ export default function ProfilePage() {
                 // Vista de establecer nueva meta
                 <>
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
                       <span>🎯</span>
                       Meta de Racha
                     </h4>
@@ -866,13 +866,13 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="text-center mb-3 sm:mb-4">
-                        <div className="text-4xl sm:text-5xl font-bold text-orange-600 mb-1">
+                        <div className="text-4xl sm:text-5xl font-bold text-orange-600 dark:text-orange-400 mb-1">
                           {newStreakGoal}
                         </div>
-                        <p className="text-xs sm:text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                           días de racha
                         </p>
-                        <p className="text-xs text-green-600 font-semibold mt-1">
+                        <p className="text-xs text-green-600 dark:text-green-400 font-semibold mt-1">
                           Recompensa: {newStreakGoal * (profile?.streakGoal?.xpPerDay || 50)} XP
                         </p>
                       </div>
@@ -923,7 +923,7 @@ export default function ProfilePage() {
                               className={`py-2 px-2 sm:px-3 rounded-lg font-semibold text-sm sm:text-base transition ${
                                 newStreakGoal === goal
                                   ? 'bg-orange-600 text-white'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  : 'bg-gray-100 text-gray-700 dark:text-gray-200 hover:bg-gray-200'
                               }`}
                             >
                               {goal}
@@ -936,7 +936,7 @@ export default function ProfilePage() {
                       <div className="flex gap-2 sm:gap-3 pt-2 sm:pt-3">
                         <button
                           onClick={() => setEditingStreakGoal(false)}
-                          className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold text-sm sm:text-base"
+                          className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition font-semibold text-sm sm:text-base"
                           disabled={savingStreakGoal}
                         >
                           Cancelar
@@ -979,20 +979,20 @@ export default function ProfilePage() {
                       {profile?.streakGoal?.lastCompleted ? (
                         <>
                           <div className="text-2xl mb-2">🎉</div>
-                          <p className="text-sm text-gray-700 font-semibold mb-1">
+                          <p className="text-sm text-gray-700 dark:text-gray-200 font-semibold mb-1">
                             ¡Última meta completada: {profile.streakGoal.lastCompleted} días!
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-gray-600 dark:text-gray-300">
                             Click en "Establecer" para crear una nueva meta mayor.
                           </p>
                         </>
                       ) : (
                         <>
                           <div className="text-3xl mb-2">🎯</div>
-                          <p className="text-sm text-gray-700 font-semibold mb-1">
+                          <p className="text-sm text-gray-700 dark:text-gray-200 font-semibold mb-1">
                             No tienes una meta de racha activa
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-xs text-gray-600 dark:text-gray-300">
                             Establece una meta de días consecutivos y gana XP al completarla.
                           </p>
                         </>
@@ -1008,21 +1008,21 @@ export default function ProfilePage() {
         {/* Change Password Section - Solo para usuarios locales */}
         {user?.authProvider === 'local' && (
           <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-            <h3 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2 px-1 sm:px-2">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2 px-1 sm:px-2">
               <span className="text-xl sm:text-2xl">🔒</span>
               Seguridad
             </h3>
 
             {/* Change Password Card */}
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-red-200">
+            <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-red-200">
               {!changingPassword ? (
                 <>
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100">
                         Contraseña
                       </h4>
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                         Cambia tu contraseña de acceso
                       </p>
                     </div>
@@ -1039,13 +1039,13 @@ export default function ProfilePage() {
                 </>
               ) : (
                 <div className="space-y-4">
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800 mb-3">
+                  <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-3">
                     Cambiar Contraseña
                   </h4>
 
                   {/* Contraseña Actual */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                       Contraseña Actual
                     </label>
                     <input
@@ -1059,7 +1059,7 @@ export default function ProfilePage() {
 
                   {/* Nueva Contraseña */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                       Nueva Contraseña
                     </label>
                     <input
@@ -1069,14 +1069,14 @@ export default function ProfilePage() {
                       className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-red-500 focus:outline-none"
                       placeholder="••••••••"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Mínimo 6 caracteres
                     </p>
                   </div>
 
                   {/* Confirmar Nueva Contraseña */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                       Confirmar Nueva Contraseña
                     </label>
                     <input
@@ -1092,7 +1092,7 @@ export default function ProfilePage() {
                   <div className="flex gap-3 pt-3">
                     <button
                       onClick={handleCancelPasswordChange}
-                      className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold"
+                      className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 transition font-semibold"
                       disabled={savingPassword}
                     >
                       Cancelar
@@ -1135,15 +1135,15 @@ export default function ProfilePage() {
 
           {/* Tutorial Menu */}
           {showTutorialMenu && (
-            <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-2 border-purple-200 space-y-3">
-              <h3 className="font-bold text-lg text-purple-900 mb-3">Tutoriales Disponibles</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-2 border-purple-200 dark:border-purple-700 space-y-3">
+              <h3 className="font-bold text-lg text-purple-900 dark:text-purple-300 mb-3">Tutoriales Disponibles</h3>
 
-              <div className="w-full bg-purple-100 hover:bg-purple-200 text-purple-900 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-between gap-3">
+              <div className="w-full bg-purple-100 dark:bg-purple-900/50 hover:bg-purple-200 dark:hover:bg-purple-800/60 text-purple-900 dark:text-purple-100 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 flex-1">
                   <span className="text-2xl">🎉</span>
                   <div>
                     <div className="font-bold">Tutorial de Bienvenida</div>
-                    <div className="text-sm text-purple-700">Aprende lo básico de la app</div>
+                    <div className="text-sm text-purple-700 dark:text-purple-300">Aprende lo básico de la app</div>
                   </div>
                 </div>
                 <button
@@ -1161,7 +1161,7 @@ export default function ProfilePage() {
                 </button>
               </div>
 
-              <div className="text-center text-sm text-gray-500 mt-3 pt-3 border-t">
+              <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-3 pt-3 border-t">
                 Más tutoriales próximamente...
               </div>
             </div>

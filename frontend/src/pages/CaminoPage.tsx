@@ -67,7 +67,7 @@ export default function CaminoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pt-32 pb-28 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 dark:from-purple-950 dark:via-blue-950 dark:to-green-950 pt-32 pb-28 overflow-x-hidden">
       {/* Navbar */}
       <Navbar />
 
@@ -75,23 +75,23 @@ export default function CaminoPage() {
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando tu camino...</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">Cargando tu camino...</p>
           </div>
         </div>
       ) : (
         <>
       {/* Progress Bar - Fixed Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 border-t-4 border-indigo-500">
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-40 border-t-4 border-indigo-500">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Título */}
-            <h1 className="text-base sm:text-xl font-bold text-gray-800 whitespace-nowrap">
+            <h1 className="text-base sm:text-xl font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">
               Tu Camino Bíblico
             </h1>
 
             {/* Barra de progreso con porcentaje dentro */}
             <div className="flex-1 relative">
-              <div className="w-full bg-gray-200 rounded-full h-6 sm:h-8 overflow-hidden">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 sm:h-8 overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out relative flex items-center justify-center"
                   style={{ width: `${totalProgress.percentage}%`, minWidth: '50px' }}
@@ -105,7 +105,7 @@ export default function CaminoPage() {
             </div>
 
             {/* Libros completados */}
-            <div className="text-sm sm:text-base font-bold text-gray-700 whitespace-nowrap">
+            <div className="text-sm sm:text-base font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">
               {totalProgress.completed} / {totalProgress.total}
             </div>
           </div>
@@ -143,7 +143,7 @@ export default function CaminoPage() {
             <div key={category} className="mb-8">
               {/* Category Header */}
               <div className="text-center mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 mb-2">{category}</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 dark:text-indigo-300 mb-2">{category}</h2>
                 <div className="w-24 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 mx-auto rounded-full"></div>
               </div>
 

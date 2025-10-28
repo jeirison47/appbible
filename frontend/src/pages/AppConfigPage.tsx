@@ -21,6 +21,16 @@ interface AppConfig {
   long_streak_bonus_xp: string;
   long_streak_threshold_days: string;
   level_formula_divisor: string;
+  // Colores modo claro
+  color_light_primary: string;
+  color_light_secondary: string;
+  color_light_background: string;
+  color_light_accent: string;
+  // Colores modo oscuro
+  color_dark_primary: string;
+  color_dark_secondary: string;
+  color_dark_background: string;
+  color_dark_accent: string;
 }
 
 export default function AppConfigPage() {
@@ -42,6 +52,16 @@ export default function AppConfigPage() {
     long_streak_bonus_xp: '5',
     long_streak_threshold_days: '7',
     level_formula_divisor: '100',
+    // Colores modo claro
+    color_light_primary: '#4F46E5',
+    color_light_secondary: '#9333EA',
+    color_light_background: '#ffffff',
+    color_light_accent: '#EA580C',
+    // Colores modo oscuro
+    color_dark_primary: '#6366F1',
+    color_dark_secondary: '#A78BFA',
+    color_dark_background: '#111827',
+    color_dark_accent: '#F97316',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -489,6 +509,91 @@ export default function AppConfigPage() {
             <p className="text-sm text-gray-500 mt-1">
               Versión de la Biblia que se muestra por defecto
             </p>
+          </div>
+        </div>
+
+        {/* Colors Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <h3 className="text-2xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <span>🎨</span>
+            Colores de la Aplicación
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Personaliza los colores para modo claro y oscuro
+          </p>
+
+          {/* Modo Claro */}
+          <div className="mb-8">
+            <h4 className="text-lg font-bold text-gray-700 mb-4 flex items-center gap-2">
+              ☀️ Modo Claro
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color Principal</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_light_primary} onChange={(e) => handleChange('color_light_primary', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_light_primary} onChange={(e) => handleChange('color_light_primary', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color Secundario</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_light_secondary} onChange={(e) => handleChange('color_light_secondary', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_light_secondary} onChange={(e) => handleChange('color_light_secondary', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color de Fondo</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_light_background} onChange={(e) => handleChange('color_light_background', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_light_background} onChange={(e) => handleChange('color_light_background', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color de Énfasis</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_light_accent} onChange={(e) => handleChange('color_light_accent', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_light_accent} onChange={(e) => handleChange('color_light_accent', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Modo Oscuro */}
+          <div>
+            <h4 className="text-lg font-bold text-gray-700 mb-4 flex items-center gap-2">
+              🌙 Modo Oscuro
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color Principal</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_dark_primary} onChange={(e) => handleChange('color_dark_primary', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_dark_primary} onChange={(e) => handleChange('color_dark_primary', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color Secundario</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_dark_secondary} onChange={(e) => handleChange('color_dark_secondary', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_dark_secondary} onChange={(e) => handleChange('color_dark_secondary', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color de Fondo</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_dark_background} onChange={(e) => handleChange('color_dark_background', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_dark_background} onChange={(e) => handleChange('color_dark_background', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Color de Énfasis</label>
+                <div className="flex gap-2">
+                  <input type="color" value={config.color_dark_accent} onChange={(e) => handleChange('color_dark_accent', e.target.value)} className="w-16 h-10 rounded cursor-pointer" />
+                  <input type="text" value={config.color_dark_accent} onChange={(e) => handleChange('color_dark_accent', e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

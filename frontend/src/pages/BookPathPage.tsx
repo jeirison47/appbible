@@ -88,7 +88,7 @@ export default function BookPathPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 pb-28">
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 dark:from-purple-950 dark:via-blue-950 dark:to-green-950 pb-28">
       {/* Simple Header - Only Logo and Profile */}
       <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-6xl mx-auto">
@@ -123,14 +123,14 @@ export default function BookPathPage() {
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando camino...</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">Cargando camino...</p>
           </div>
         </div>
       ) : !data ? (
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
-          <div className="text-center bg-white rounded-2xl shadow-xl p-8">
-            <p className="text-gray-600 text-lg mb-4">No se pudo cargar el libro</p>
-            <Link to="/camino" className="text-indigo-600 hover:underline font-semibold">
+          <div className="text-center bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">No se pudo cargar el libro</p>
+            <Link to="/camino" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
               ← Volver al Camino
             </Link>
           </div>
@@ -138,38 +138,38 @@ export default function BookPathPage() {
       ) : (
         <>
           {/* Fixed Header */}
-          <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+          <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white dark:bg-gray-800 shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
               to="/camino"
-              className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition font-semibold"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:text-indigo-400 transition font-semibold"
             >
               <span className="text-2xl">←</span>
               <span>Volver</span>
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-800">{data.book.name}</h1>
+              <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">{data.book.name}</h1>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-500">{data.book.category}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{data.book.category}</p>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Progress Bar - Fixed Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 border-t-4 border-indigo-500">
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-50 border-t-4 border-indigo-500">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Título del libro */}
-            <h2 className="text-sm sm:text-base font-bold text-gray-800 whitespace-nowrap">
+            <h2 className="text-sm sm:text-base font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">
               {data.book.name}
             </h2>
 
             {/* Barra de progreso con porcentaje dentro */}
             <div className="flex-1 relative">
-              <div className="w-full bg-gray-200 rounded-full h-6 sm:h-8 overflow-hidden">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 sm:h-8 overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out relative flex items-center justify-center"
                   style={{ width: `${data.progress.percentage}%`, minWidth: '50px' }}
@@ -183,7 +183,7 @@ export default function BookPathPage() {
             </div>
 
             {/* Capítulos completados */}
-            <div className="text-sm sm:text-base font-bold text-gray-700 whitespace-nowrap">
+            <div className="text-sm sm:text-base font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">
               {data.progress.chaptersCompleted} / {data.progress.totalChapters}
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function BookPathPage() {
       <div className="max-w-6xl mx-auto px-4 pt-36 sm:pt-40 pb-12 relative">
         {/* Title Section */}
         <div className="text-center mb-16">
-          <p className="text-gray-600 text-lg font-semibold">
+          <p className="text-gray-600 dark:text-gray-300 text-lg font-semibold">
             {data.book.totalChapters} capítulos en tu camino
           </p>
         </div>
@@ -237,7 +237,7 @@ export default function BookPathPage() {
                             : isNext
                             ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-xl ring-4 ring-yellow-300 animate-bounce'
                             : isLocked
-                            ? 'bg-gray-300 text-gray-500 shadow'
+                            ? 'bg-gray-300 text-gray-500 dark:text-gray-400 shadow'
                             : 'bg-gradient-to-br from-indigo-400 to-indigo-600 text-white shadow-lg'
                         }`}
                       >
@@ -269,14 +269,14 @@ export default function BookPathPage() {
                       {/* Chapter Info */}
                       <div className="mt-3 text-center">
                         <p className={`font-bold text-sm ${
-                          isCompleted ? 'text-green-700' : isNext ? 'text-orange-700' : 'text-gray-700'
+                          isCompleted ? 'text-green-700 dark:text-green-400' : isNext ? 'text-orange-700 dark:text-orange-400' : 'text-gray-700 dark:text-gray-200'
                         }`}>
                           Cap. {chapter.number}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
                           {chapter.title}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {chapter.verseCount} vs
                         </p>
                       </div>
@@ -317,7 +317,7 @@ export default function BookPathPage() {
                                 : isNext
                                 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-xl ring-4 ring-yellow-300 animate-bounce'
                                 : isLocked
-                                ? 'bg-gray-300 text-gray-500 shadow'
+                                ? 'bg-gray-300 text-gray-500 dark:text-gray-400 shadow'
                                 : 'bg-gradient-to-br from-indigo-400 to-indigo-600 text-white shadow-lg'
                             }`}
                           >
@@ -349,14 +349,14 @@ export default function BookPathPage() {
                           {/* Chapter Info */}
                           <div className="mt-3 text-center">
                             <p className={`font-bold text-sm ${
-                              isCompleted ? 'text-green-700' : isNext ? 'text-orange-700' : 'text-gray-700'
+                              isCompleted ? 'text-green-700 dark:text-green-400' : isNext ? 'text-orange-700 dark:text-orange-400' : 'text-gray-700 dark:text-gray-200'
                             }`}>
                               Cap. {chapter.number}
                             </p>
-                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
                               {chapter.title}
                             </p>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               {chapter.verseCount} vs
                             </p>
                           </div>
@@ -397,7 +397,7 @@ export default function BookPathPage() {
                                 : isNext
                                 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-xl ring-4 ring-yellow-300 animate-bounce'
                                 : isLocked
-                                ? 'bg-gray-300 text-gray-500 shadow'
+                                ? 'bg-gray-300 text-gray-500 dark:text-gray-400 shadow'
                                 : 'bg-gradient-to-br from-indigo-400 to-indigo-600 text-white shadow-lg'
                             }`}
                           >
@@ -429,14 +429,14 @@ export default function BookPathPage() {
                           {/* Chapter Info */}
                           <div className="mt-3 text-center">
                             <p className={`font-bold text-sm ${
-                              isCompleted ? 'text-green-700' : isNext ? 'text-orange-700' : 'text-gray-700'
+                              isCompleted ? 'text-green-700 dark:text-green-400' : isNext ? 'text-orange-700 dark:text-orange-400' : 'text-gray-700 dark:text-gray-200'
                             }`}>
                               Cap. {chapter.number}
                             </p>
-                            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
                               {chapter.title}
                             </p>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               {chapter.verseCount} vs
                             </p>
                           </div>

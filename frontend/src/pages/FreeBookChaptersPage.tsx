@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { readingApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
+import ThemeToggle from '../components/ThemeToggle';
 
 interface Chapter {
   number: number;
@@ -44,7 +45,7 @@ export default function FreeBookChaptersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950">
       {/* Simple Header - Only Logo and Profile */}
       <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
         <div className="max-w-6xl mx-auto">
@@ -61,16 +62,19 @@ export default function FreeBookChaptersPage() {
               </h1>
             </Link>
 
-            {/* Botón Perfil */}
-            <Link
-              to="/perfil"
-              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-              </svg>
-              <span className="hidden sm:inline font-medium">Perfil</span>
-            </Link>
+            {/* Botones de Tema y Perfil */}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Link
+                to="/perfil"
+                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
+              >
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+                <span className="hidden sm:inline font-medium">Perfil</span>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -79,14 +83,14 @@ export default function FreeBookChaptersPage() {
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando capítulos...</p>
+            <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">Cargando capítulos...</p>
           </div>
         </div>
       ) : !book ? (
         <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center bg-white rounded-2xl shadow-xl p-8">
-            <p className="text-gray-600 text-lg mb-4">No se pudo cargar el libro</p>
-            <Link to="/lectura-libre" className="text-indigo-600 hover:underline font-semibold">
+          <div className="text-center bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+            <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">No se pudo cargar el libro</p>
+            <Link to="/lectura-libre" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
               ← Volver a Lectura Libre
             </Link>
           </div>
@@ -94,23 +98,23 @@ export default function FreeBookChaptersPage() {
       ) : (
         <>
       {/* Secondary Header */}
-      <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white shadow-md z-40 border-b-4 border-indigo-500">
+      <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white dark:bg-gray-800 shadow-md z-40 border-b-4 border-indigo-500">
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <Link
               to="/lectura-libre"
-              className="flex items-center gap-1 sm:gap-2 text-gray-600 hover:text-indigo-600 transition font-semibold text-sm sm:text-base"
+              className="flex items-center gap-1 sm:gap-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition font-semibold text-sm sm:text-base"
             >
               <span className="text-xl sm:text-2xl">←</span>
               <span className="hidden sm:inline">Biblioteca</span>
             </Link>
             <div className="text-center">
-              <p className="text-xs sm:text-sm text-gray-500">{book.category}</p>
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">{book.name}</h1>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{book.category}</p>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">{book.name}</h1>
             </div>
             <div className="text-right">
-              <p className="text-xs sm:text-sm text-gray-500">Capítulos</p>
-              <p className="text-lg sm:text-xl font-bold text-indigo-600">{book.totalChapters}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Capítulos</p>
+              <p className="text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400">{book.totalChapters}</p>
             </div>
           </div>
         </div>
@@ -126,11 +130,11 @@ export default function FreeBookChaptersPage() {
               to={`/lectura-libre/${book.slug}/${chapter.number}`}
               className="group"
             >
-              <div className="bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 p-3 sm:p-4 text-center transform group-hover:scale-110 group-hover:-translate-y-2 h-24 sm:h-28 md:h-32 flex flex-col justify-center items-center gap-1 sm:gap-2">
-                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 group-hover:scale-125 transition-transform">
+              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 p-3 sm:p-4 text-center transform group-hover:scale-110 group-hover:-translate-y-2 h-24 sm:h-28 md:h-32 flex flex-col justify-center items-center gap-1 sm:gap-2">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 dark:text-indigo-400 group-hover:scale-125 transition-transform">
                   {chapter.number}
                 </div>
-                <p className="text-xs sm:text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                   {chapter.verseCount} vs
                 </p>
               </div>
