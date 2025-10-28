@@ -159,7 +159,7 @@ export default function FreeVerseReaderPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3">
+            <Link to="/inicio" className="flex items-center gap-2 sm:gap-3">
               <img
                 src="/logo-header-manah.png"
                 alt="Manah Logo"

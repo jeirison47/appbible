@@ -9,8 +9,8 @@ export default function Navbar() {
   const isAdmin = roles.some((r) => r.name === 'admin');
 
   const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === '/inicio') {
+      return location.pathname === '/inicio';
     }
     return location.pathname.startsWith(path);
   };
@@ -67,7 +67,7 @@ export default function Navbar() {
           <div className="border-t border-white/10">
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center justify-center gap-2 px-4 py-2">
-              <Link to="/" className={navLinkClass('/')} data-tutorial="nav-inicio">
+              <Link to="/inicio" className={navLinkClass('/inicio')} data-tutorial="nav-inicio">
                 <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                 </svg>
@@ -117,7 +117,7 @@ export default function Navbar() {
             <div className="md:hidden" id="mobile-navigation">
               {!isAdmin ? (
                 <div className="flex items-center justify-around px-2 py-2">
-                  <Link to="/" className={mobileNavLinkClass('/')} data-tutorial="nav-inicio-mobile">
+                  <Link to="/inicio" className={mobileNavLinkClass('/inicio')} data-tutorial="nav-inicio-mobile">
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                     </svg>
@@ -150,7 +150,7 @@ export default function Navbar() {
                 </div>
               ) : (
                 <div className="flex items-center justify-around px-2 py-2">
-                  <Link to="/" className={mobileNavLinkClass('/')}>
+                  <Link to="/inicio" className={mobileNavLinkClass('/inicio')}>
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                     </svg>

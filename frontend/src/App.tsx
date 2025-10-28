@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
@@ -23,6 +24,19 @@ import { authApi } from './services/api';
 import { TutorialProvider } from './contexts/TutorialContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ColorProvider } from './contexts/ColorContext';
+
+// Componente que decide si mostrar Landing o redirigir a /inicio
+function LandingOrApp() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  // Si ya está autenticado, redirigir directo a la app
+  if (isAuthenticated) {
+    return <Navigate to="/inicio" replace />;
+  }
+
+  // Si no, mostrar landing
+  return <LandingPage />;
+}
 
 const queryClient = new QueryClient();
 
@@ -74,16 +88,22 @@ function App() {
           <ScrollToTop />
           <ScrollToTopButton />
           <Routes>
+          {/* Ruta pública: Landing Page o redirect a /inicio si está autenticado */}
+          <Route path="/" element={<LandingOrApp />} />
+
+          {/* Rutas de autenticación */}
           <Route
             path="/login"
-            element={isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />}
+            element={isAuthenticated ? <Navigate to="/inicio" replace /> : <LoginPage />}
           />
           <Route
             path="/register"
-            element={isAuthenticated ? <Navigate to="/" replace /> : <RegisterPage />}
+            element={isAuthenticated ? <Navigate to="/inicio" replace /> : <RegisterPage />}
           />
+
+          {/* Ruta protegida: HomePage (Dashboard) */}
           <Route
-            path="/"
+            path="/inicio"
             element={
               <ProtectedRoute>
                 <HomePage />
@@ -178,7 +198,11 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Catch-all: redirigir a /inicio si está autenticado, sino a / */}
+          <Route
+            path="*"
+            element={<Navigate to={isAuthenticated ? "/inicio" : "/"} replace />}
+          />
         </Routes>
       </BrowserRouter>
       </TutorialProvider>

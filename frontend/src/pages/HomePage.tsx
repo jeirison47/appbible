@@ -811,6 +811,77 @@ export default function HomePage() {
           </Link>
         </div>
 
+        {/* Progress Summary Card */}
+        {progress && (
+          <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 mb-4 sm:mb-6 text-white">
+            <div className="mb-4">
+              <h3 className="text-xl sm:text-2xl font-bold mb-1">Mi Camino Bíblico</h3>
+              <p className="text-xs sm:text-sm opacity-90">Resumen de tu progreso espiritual</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Libros Completados */}
+              <div className="bg-white/20 backdrop-blur rounded-lg p-3 sm:p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs sm:text-sm font-semibold">Libros Completados</span>
+                  <span className="text-lg sm:text-xl">📚</span>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold mb-1">
+                    {progress.stats.booksCompleted || 0}
+                  </div>
+                  <div className="text-xs opacity-80">de 66 libros</div>
+                  <div className="w-full bg-white/20 rounded-full h-1.5 mt-2 overflow-hidden">
+                    <div
+                      className="bg-white h-full rounded-full transition-all duration-500"
+                      style={{ width: `${Math.round(((progress.stats.booksCompleted || 0) / 66) * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Capítulos Leídos */}
+              <div className="bg-white/20 backdrop-blur rounded-lg p-3 sm:p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs sm:text-sm font-semibold">Capítulos Leídos</span>
+                  <span className="text-lg sm:text-xl">📖</span>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold mb-1">
+                    {progress.stats.totalChaptersRead || 0}
+                  </div>
+                  <div className="text-xs opacity-80">de 1,189 capítulos</div>
+                  <div className="w-full bg-white/20 rounded-full h-1.5 mt-2 overflow-hidden">
+                    <div
+                      className="bg-white h-full rounded-full transition-all duration-500"
+                      style={{ width: `${Math.round(((progress.stats.totalChaptersRead || 0) / 1189) * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Racha Actual */}
+              <div className="bg-white/20 backdrop-blur rounded-lg p-3 sm:p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs sm:text-sm font-semibold">Racha Actual</span>
+                  <span className="text-lg sm:text-xl">🔥</span>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold mb-1">
+                    {progress.user.currentStreak || 0}
+                  </div>
+                  <div className="text-xs opacity-80">días consecutivos</div>
+                  {progress.user.longestStreak && progress.user.longestStreak > 0 && (
+                    <div className="text-xs opacity-70 mt-1">
+                      Récord: {progress.user.longestStreak} días
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Debug: Permissions - Solo para Admin */}
         {isAdmin && (
           <details className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
