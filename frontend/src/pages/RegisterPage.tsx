@@ -48,7 +48,7 @@ export default function RegisterPage() {
           toast.success(`¡Bienvenido, ${data.user.displayName}!`);
 
           // Redirigir a home
-          navigate('/');
+          navigate('/inicio');
         } catch (error: any) {
           console.error('Error syncing Auth0:', error);
           toast.error('Error al sincronizar con el servidor');
@@ -81,7 +81,7 @@ export default function RegisterPage() {
       const data = await authApi.register({ email, password, displayName });
       setAuth(data.user, data.roles, data.permissions, data.token);
       toast.success('¡Registro exitoso! Bienvenido a Manah');
-      navigate('/');
+      navigate('/inicio');
     } catch (err: any) {
       setError(err.message || 'Error al registrarse');
       toast.error(err.message || 'Error al registrarse');

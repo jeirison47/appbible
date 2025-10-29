@@ -48,7 +48,7 @@ export default function LoginPage() {
           toast.success(`¡Bienvenido, ${data.user.displayName}!`);
 
           // Redirigir a home
-          navigate('/');
+          navigate('/inicio');
         } catch (error: any) {
           console.error('Error syncing Auth0:', error);
           toast.error('Error al sincronizar con el servidor');
@@ -69,7 +69,7 @@ export default function LoginPage() {
       const data = await authApi.login({ email, password });
       setAuth(data.user, data.roles, data.permissions, data.token);
       toast.success(`¡Bienvenido de vuelta, ${data.user.displayName}!`);
-      navigate('/');
+      navigate('/inicio');
     } catch (err: any) {
       setError(err.message || 'Autenticación fallida');
       toast.error(err.message || 'Error al iniciar sesión');
