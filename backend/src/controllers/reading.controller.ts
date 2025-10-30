@@ -225,7 +225,7 @@ export class ReadingController {
 
   /**
    * Obtener el versículo del día
-   * Selecciona un versículo diferente cada día basado en la fecha
+   * Selecciona un versículo diferente cada día sin repetirse
    */
   static async getVerseOfTheDay(c: Context) {
     try {
@@ -237,68 +237,158 @@ export class ReadingController {
         return c.json({ error: 'Invalid Bible version' }, 400);
       }
 
-      // Obtener fecha actual (YYYY-MM-DD)
+      // Obtener fecha actual (solo fecha, sin hora)
       const today = new Date();
-      const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      today.setHours(0, 0, 0, 0);
 
-      // Crear un número pseudo-aleatorio basado en la fecha
-      // Esto garantiza que el mismo día siempre retorne el mismo versículo
-      let hash = 0;
-      for (let i = 0; i < dateStr.length; i++) {
-        hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
-        hash = hash & hash; // Convert to 32bit integer
+      // Verificar si ya existe un versículo para hoy
+      const existingDailyVerse = await prisma.dailyVerse.findUnique({
+        where: { date: today },
+      });
+
+      if (existingDailyVerse) {
+        // Ya existe un versículo para hoy, devolverlo
+        const textMap: Record<string, string> = {
+          RV1960: existingDailyVerse.textRV1960,
+          KJV: existingDailyVerse.textKJV,
+        };
+
+        return c.json({
+          verse: {
+            text: textMap[version],
+            reference: {
+              book: existingDailyVerse.bookName,
+              bookSlug: existingDailyVerse.bookSlug,
+              chapter: existingDailyVerse.chapterNumber,
+              verse: existingDailyVerse.verseNumber,
+              fullReference: `${existingDailyVerse.bookName} ${existingDailyVerse.chapterNumber}:${existingDailyVerse.verseNumber}`,
+            },
+            version,
+            date: today.toISOString().split('T')[0],
+          },
+        });
       }
-      const seed = Math.abs(hash);
 
-      // Obtener el total de capítulos para seleccionar uno al azar
+      // No existe versículo para hoy, seleccionar uno nuevo
+      // Contar total de versículos mostrados
+      const shownVersesCount = await prisma.dailyVerse.count();
+
+      // Obtener todos los capítulos para calcular versículos totales aproximados
       const totalChapters = await prisma.chapter.count();
-      const selectedChapterIndex = seed % totalChapters;
+      const avgVersesPerChapter = 26; // Promedio aproximado de versículos por capítulo
+      const estimatedTotalVerses = totalChapters * avgVersesPerChapter;
 
-      // Obtener el capítulo seleccionado
-      const chapter = await prisma.chapter.findMany({
-        take: 1,
-        skip: selectedChapterIndex,
-        include: {
-          book: {
-            select: {
-              name: true,
-              slug: true,
-              testament: true,
+      // Si ya mostramos todos los versículos (o cerca), reiniciar
+      if (shownVersesCount >= estimatedTotalVerses * 0.95) {
+        // Eliminar versículos antiguos para reiniciar el ciclo (mantener últimos 30 días)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        await prisma.dailyVerse.deleteMany({
+          where: {
+            date: {
+              lt: thirtyDaysAgo,
             },
           },
+        });
+      }
+
+      // Obtener versículos ya mostrados (últimos 365 días para no repetir recientes)
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      const shownVerses = await prisma.dailyVerse.findMany({
+        where: {
+          date: {
+            gte: oneYearAgo,
+          },
+        },
+        select: {
+          chapterId: true,
+          verseNumber: true,
         },
       });
 
-      if (!chapter || chapter.length === 0) {
-        return c.json({ error: 'No chapter found' }, 404);
+      // Seleccionar un capítulo aleatorio
+      let attempts = 0;
+      let selectedVerse = null;
+
+      while (!selectedVerse && attempts < 50) {
+        attempts++;
+
+        // Seleccionar capítulo aleatorio
+        const randomSkip = Math.floor(Math.random() * totalChapters);
+        const randomChapter = await prisma.chapter.findMany({
+          take: 1,
+          skip: randomSkip,
+          include: {
+            book: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        });
+
+        if (!randomChapter || randomChapter.length === 0) {
+          continue;
+        }
+
+        const chapter = randomChapter[0];
+
+        // Seleccionar versículo aleatorio del capítulo
+        const randomVerseNumber = Math.floor(Math.random() * chapter.verseCount) + 1;
+
+        // Verificar si este versículo ya fue mostrado
+        const alreadyShown = shownVerses.some(
+          (sv) => sv.chapterId === chapter.id && sv.verseNumber === randomVerseNumber
+        );
+
+        if (!alreadyShown) {
+          const versesRV1960: Record<string, string> = chapter.versesRV1960 as any;
+          const versesKJV: Record<string, string> = chapter.versesKJV as any;
+
+          const textRV1960 = versesRV1960[randomVerseNumber.toString()] || '';
+          const textKJV = versesKJV[randomVerseNumber.toString()] || '';
+
+          // Guardar el versículo del día en la base de datos
+          const dailyVerse = await prisma.dailyVerse.create({
+            data: {
+              date: today,
+              chapterId: chapter.id,
+              verseNumber: randomVerseNumber,
+              bookName: chapter.book.name,
+              bookSlug: chapter.book.slug,
+              chapterNumber: chapter.number,
+              textRV1960,
+              textKJV,
+            },
+          });
+
+          selectedVerse = dailyVerse;
+        }
       }
 
-      const selectedChapter = chapter[0];
+      if (!selectedVerse) {
+        return c.json({ error: 'Failed to select a verse' }, 500);
+      }
 
-      // Seleccionar un versículo aleatorio del capítulo
-      const verseIndex = (seed * 7) % selectedChapter.verseCount; // Multiplicar por un primo para más variación
-      const verseNumber = verseIndex + 1;
-
-      const versesMap: Record<string, any> = {
-        RV1960: selectedChapter.versesRV1960,
-        KJV: selectedChapter.versesKJV,
+      const textMap: Record<string, string> = {
+        RV1960: selectedVerse.textRV1960,
+        KJV: selectedVerse.textKJV,
       };
-
-      const verses = versesMap[version];
-      const verseText = verses[verseNumber.toString()];
 
       return c.json({
         verse: {
-          text: verseText,
+          text: textMap[version],
           reference: {
-            book: selectedChapter.book.name,
-            bookSlug: selectedChapter.book.slug,
-            chapter: selectedChapter.number,
-            verse: verseNumber,
-            fullReference: `${selectedChapter.book.name} ${selectedChapter.number}:${verseNumber}`,
+            book: selectedVerse.bookName,
+            bookSlug: selectedVerse.bookSlug,
+            chapter: selectedVerse.chapterNumber,
+            verse: selectedVerse.verseNumber,
+            fullReference: `${selectedVerse.bookName} ${selectedVerse.chapterNumber}:${selectedVerse.verseNumber}`,
           },
           version,
-          date: dateStr,
+          date: today.toISOString().split('T')[0],
         },
       });
     } catch (error) {

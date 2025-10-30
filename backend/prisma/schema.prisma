@@ -284,3 +284,22 @@ model UserTutorialProgress {
   @@index([userId, tutorialId])
   @@map("user_tutorial_progress")
 }
+
+// ==================== DAILY VERSE ====================
+
+model DailyVerse {
+  id           String   @id @default(cuid())
+  date         DateTime @db.Date @unique
+  chapterId    String
+  verseNumber  Int
+  bookName     String
+  bookSlug     String
+  chapterNumber Int
+  textRV1960   String   @db.Text
+  textKJV      String   @db.Text
+
+  createdAt    DateTime @default(now())
+
+  @@index([date])
+  @@map("daily_verses")
+}
