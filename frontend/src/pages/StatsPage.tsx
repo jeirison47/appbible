@@ -148,7 +148,7 @@ export default function StatsPage() {
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Racha Récord</p>
               <span className="text-xl sm:text-2xl">⭐</span>
             </div>
-            <p className="text-3xl sm:text-4xl font-bold text-red-600">
+            <p className="text-3xl sm:text-4xl font-bold text-red-600 dark:text-red-400">
               {progress?.user.longestStreak || 0} días
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
@@ -164,21 +164,21 @@ export default function StatsPage() {
             Progreso de Libros
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg p-4 sm:p-5 lg:p-6">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium mb-2">En Progreso</p>
-              <p className="text-3xl sm:text-4xl font-bold text-blue-600">
+              <p className="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400">
                 {progress?.stats.booksInProgress || 0}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Libros que estás leyendo</p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg p-4 sm:p-5 lg:p-6">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium mb-2">Completados</p>
               <p className="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-400">
                 {progress?.stats.booksCompleted || 0}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Libros finalizados</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg p-4 sm:p-5 lg:p-6">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium mb-2">Capítulos Totales</p>
               <p className="text-3xl sm:text-4xl font-bold text-purple-600 dark:text-purple-400">
                 {progress?.stats.totalChaptersRead || 0}
@@ -195,7 +195,7 @@ export default function StatsPage() {
             Actividad de Hoy
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 rounded-lg p-4 sm:p-5 lg:p-6">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium mb-2 flex items-center gap-1">
                 <span>⏱️</span>
                 Tiempo de Lectura Hoy
@@ -207,7 +207,7 @@ export default function StatsPage() {
                 Sigue leyendo para ganar XP
               </p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg p-4 sm:p-5 lg:p-6">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium mb-2">Meta Diaria</p>
               <p className="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-400">
                 {progress?.dailyGoal.progress || 0}/{progress?.dailyGoal.goal || 1}
@@ -215,7 +215,7 @@ export default function StatsPage() {
               <div className="mt-2 sm:mt-3">
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3">
                   <div
-                    className="bg-green-600 h-2 sm:h-3 rounded-full transition-all duration-300"
+                    className="bg-green-600 dark:bg-green-500 h-2 sm:h-3 rounded-full transition-all duration-300"
                     style={{ width: `${progress?.dailyGoal.percentage || 0}%` }}
                   ></div>
                 </div>
@@ -236,7 +236,7 @@ export default function StatsPage() {
               <span className="text-xl sm:text-2xl">🔥</span>
               Estado de tu Racha
             </h3>
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900 dark:to-red-900 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6">
               <div>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium mb-2">Progreso de XP Hoy</p>
                 <div className="mb-2 sm:mb-3">
@@ -247,7 +247,7 @@ export default function StatsPage() {
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 sm:h-3">
                     <div
                       className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${
-                        progress.streak.status.goalMetToday ? 'bg-green-600' : 'bg-orange-500'
+                        progress.streak.status.goalMetToday ? 'bg-green-600 dark:bg-green-500' : 'bg-orange-500 dark:bg-orange-400'
                       }`}
                       style={{ width: `${progress.streak.status.xpProgress}%` }}
                     ></div>
@@ -274,7 +274,7 @@ export default function StatsPage() {
               <span className="text-xl sm:text-2xl">⭐</span>
               Progreso de Experiencia
             </h3>
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6">
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900 dark:to-purple-900 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6">
               <div className="flex justify-between items-end mb-2 sm:mb-3">
                 <div>
                   <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">XP Total</p>
@@ -293,7 +293,7 @@ export default function StatsPage() {
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 sm:h-4">
                   <div
-                    className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 sm:h-4 rounded-full transition-all duration-300"
+                    className="bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400 h-3 sm:h-4 rounded-full transition-all duration-300"
                     style={{ width: `${progress.xp.progress.percentage}%` }}
                   ></div>
                 </div>
