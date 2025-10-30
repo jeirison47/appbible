@@ -1147,10 +1147,9 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <button
-                  onClick={async () => {
-                    await resetTutorial('onboarding');
+                  onClick={() => {
                     setShowTutorialMenu(false);
-                    navigate('/inicio');
+                    navigate('/inicio', { state: { showTutorial: true } });
                   }}
                   className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-bold transition-colors shadow-md hover:shadow-lg flex items-center gap-2 whitespace-nowrap"
                 >

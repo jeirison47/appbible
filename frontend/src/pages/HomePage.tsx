@@ -171,15 +171,25 @@ export default function HomePage() {
 
   // Mostrar tutorial automáticamente a usuarios nuevos solo en la página de inicio
   useEffect(() => {
-    if (!tutorialLoading && !isAdmin && !onboarding.completed && !onboarding.skipped && location.pathname === '/inicio' && !tutorialShownThisSession) {
-      // Esperar un poco antes de mostrar el tutorial para que la página cargue
-      const timer = setTimeout(() => {
-        setRunOnboardingTour(true);
-        setTutorialShownThisSession(true);
-      }, 1000);
-      return () => clearTimeout(timer);
+    // Verificar si viene desde ProfilePage con la opción de mostrar tutorial
+    const locationState = location.state as { showTutorial?: boolean } | null;
+    const shouldShowManually = locationState?.showTutorial;
+
+    if (!tutorialLoading && !isAdmin && location.pathname === '/inicio') {
+      // Mostrar manualmente (desde perfil) o automáticamente (usuario nuevo sin haberlo visto en esta sesión)
+      const shouldShowAuto = !tutorialShownThisSession && !onboarding.completed && !onboarding.skipped;
+      const shouldShow = shouldShowManually || shouldShowAuto;
+
+      if (shouldShow) {
+        // Esperar un poco antes de mostrar el tutorial para que la página cargue
+        const timer = setTimeout(() => {
+          setRunOnboardingTour(true);
+          setTutorialShownThisSession(true);
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [tutorialLoading, onboarding.completed, onboarding.skipped, isAdmin, location.pathname, tutorialShownThisSession]);
+  }, [tutorialLoading, onboarding.completed, onboarding.skipped, isAdmin, location.pathname, location.state, tutorialShownThisSession]);
 
   const loadSystemStats = async () => {
     try {
