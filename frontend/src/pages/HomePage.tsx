@@ -119,7 +119,15 @@ export default function HomePage() {
   // Tutorial state
   const { onboarding, isLoading: tutorialLoading } = useTutorial();
   const [runOnboardingTour, setRunOnboardingTour] = useState(false);
-  const [tutorialShownThisSession, setTutorialShownThisSession] = useState(false);
+
+  // Usar sessionStorage para persistir si el tutorial ya fue mostrado en esta sesión
+  const getTutorialShownThisSession = () => {
+    return sessionStorage.getItem('tutorialShownThisSession') === 'true';
+  };
+
+  const setTutorialShownThisSession = (shown: boolean) => {
+    sessionStorage.setItem('tutorialShownThisSession', shown.toString());
+  };
 
   const isAdmin = roles.some((r) => r.name === 'admin');
 
@@ -177,7 +185,8 @@ export default function HomePage() {
 
     if (!tutorialLoading && !isAdmin && location.pathname === '/inicio') {
       // Mostrar manualmente (desde perfil) o automáticamente (usuario nuevo sin haberlo visto en esta sesión)
-      const shouldShowAuto = !tutorialShownThisSession && !onboarding.completed && !onboarding.skipped;
+      const tutorialShown = getTutorialShownThisSession();
+      const shouldShowAuto = !tutorialShown && !onboarding.completed && !onboarding.skipped;
       const shouldShow = shouldShowManually || shouldShowAuto;
 
       if (shouldShow) {
@@ -189,7 +198,7 @@ export default function HomePage() {
         return () => clearTimeout(timer);
       }
     }
-  }, [tutorialLoading, onboarding.completed, onboarding.skipped, isAdmin, location.pathname, location.state, tutorialShownThisSession]);
+  }, [tutorialLoading, onboarding.completed, onboarding.skipped, isAdmin, location.pathname, location.state]);
 
   const loadSystemStats = async () => {
     try {
