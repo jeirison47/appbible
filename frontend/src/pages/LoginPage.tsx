@@ -47,8 +47,10 @@ export default function LoginPage() {
           setAuth(data.user, data.roles, data.permissions, data.token);
           toast.success(`¡Bienvenido, ${data.user.displayName}!`);
 
-          // Redirigir a home
-          navigate('/inicio');
+          // Redirigir a home con replace para evitar problemas de navegación
+          setTimeout(() => {
+            navigate('/inicio', { replace: true });
+          }, 100);
         } catch (error: any) {
           console.error('Error syncing Auth0:', error);
           toast.error('Error al sincronizar con el servidor');
