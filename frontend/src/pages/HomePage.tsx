@@ -171,7 +171,7 @@ export default function HomePage() {
 
   // Mostrar tutorial automáticamente a usuarios nuevos solo en la página de inicio
   useEffect(() => {
-    if (!tutorialLoading && !isAdmin && !onboarding.completed && !onboarding.skipped && location.pathname === '/' && !tutorialShownThisSession) {
+    if (!tutorialLoading && !isAdmin && !onboarding.completed && !onboarding.skipped && location.pathname === '/inicio' && !tutorialShownThisSession) {
       // Esperar un poco antes de mostrar el tutorial para que la página cargue
       const timer = setTimeout(() => {
         setRunOnboardingTour(true);
