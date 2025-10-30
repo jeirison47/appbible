@@ -37,7 +37,7 @@ export default function Navbar() {
           {/* Primera fila: Logo izquierda + Perfil derecha */}
           <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
             {/* Logo */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <Link to="/inicio" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
               <img
                 src="/logo-header-manah.png"
                 alt="Manah Logo"
@@ -46,7 +46,7 @@ export default function Navbar() {
               <h1 className="text-base sm:text-lg md:text-xl font-bold text-white" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
                 manah {isAdmin && 'Admin'}
               </h1>
-            </div>
+            </Link>
 
             {/* Botones de Tema y Perfil */}
             <div className="flex items-center gap-2">
