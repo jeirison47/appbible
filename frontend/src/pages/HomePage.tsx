@@ -120,15 +120,6 @@ export default function HomePage() {
   const { onboarding, isLoading: tutorialLoading } = useTutorial();
   const [runOnboardingTour, setRunOnboardingTour] = useState(false);
 
-  // Usar sessionStorage para persistir si el tutorial ya fue mostrado en esta sesión
-  const getTutorialShownThisSession = () => {
-    return sessionStorage.getItem('tutorialShownThisSession') === 'true';
-  };
-
-  const setTutorialShownThisSession = (shown: boolean) => {
-    sessionStorage.setItem('tutorialShownThisSession', shown.toString());
-  };
-
   const isAdmin = roles.some((r) => r.name === 'admin');
 
   // Actualizar seconds cuando cambie el progreso (minutesRead viene en segundos desde el backend)
@@ -177,23 +168,22 @@ export default function HomePage() {
     }
   }, [isAdmin]);
 
-  // Mostrar tutorial automáticamente a usuarios nuevos solo en la página de inicio
+  // Mostrar tutorial automáticamente a usuarios nuevos SOLO en su primer login
   useEffect(() => {
-    // Verificar si viene desde ProfilePage con la opción de mostrar tutorial
+    // Verificar si viene desde ProfilePage con la opción de mostrar tutorial manualmente
     const locationState = location.state as { showTutorial?: boolean } | null;
     const shouldShowManually = locationState?.showTutorial;
 
     if (!tutorialLoading && !isAdmin && location.pathname === '/inicio') {
-      // Mostrar manualmente (desde perfil) o automáticamente (usuario nuevo sin haberlo visto en esta sesión)
-      const tutorialShown = getTutorialShownThisSession();
-      const shouldShowAuto = !tutorialShown && !onboarding.completed && !onboarding.skipped;
-      const shouldShow = shouldShowManually || shouldShowAuto;
+      // Mostrar automáticamente solo si el usuario nunca ha completado ni saltado el tutorial
+      // (esto solo sucede en el primer login de un usuario nuevo)
+      const isFirstTime = !onboarding.completed && !onboarding.skipped;
+      const shouldShow = shouldShowManually || isFirstTime;
 
       if (shouldShow) {
         // Esperar un poco antes de mostrar el tutorial para que la página cargue
         const timer = setTimeout(() => {
           setRunOnboardingTour(true);
-          setTutorialShownThisSession(true);
         }, 1000);
         return () => clearTimeout(timer);
       }

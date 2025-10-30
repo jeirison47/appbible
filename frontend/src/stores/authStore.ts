@@ -49,15 +49,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   setAuth: (user, roles, permissions, token) => {
     localStorage.setItem('token', token);
-    // Limpiar sessionStorage al iniciar sesión para empezar con estado limpio
-    sessionStorage.removeItem('tutorialShownThisSession');
     set({ user, roles, permissions, token, isAuthenticated: true });
   },
 
   logout: () => {
     localStorage.removeItem('token');
-    // Limpiar también sessionStorage para resetear flags de tutorial
-    sessionStorage.removeItem('tutorialShownThisSession');
     set({ user: null, roles: [], permissions: [], token: null, isAuthenticated: false });
   },
 
