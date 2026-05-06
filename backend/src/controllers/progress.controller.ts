@@ -1,9 +1,7 @@
 import { Context } from 'hono';
 import { ProgressService } from '../services/progress.service';
 import { DailyGoalService } from '../services/dailyGoal.service';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 export class ProgressController {
   /**
@@ -15,7 +13,7 @@ export class ProgressController {
       const userId = c.get('userId');
       const body = await c.req.json();
 
-      const { chapterId, readingTimeSeconds, version = 'RV1960', readingMode = 'FREE' } = body;
+      const { chapterId, readingTimeSeconds, version = 'RVR1960', readingMode = 'FREE' } = body;
 
       if (!chapterId || !readingTimeSeconds) {
         return c.json(

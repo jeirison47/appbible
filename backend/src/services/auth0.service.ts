@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 /**
  * Genera un nickname único a partir de un email

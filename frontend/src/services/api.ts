@@ -48,6 +48,12 @@ export const authApi = {
       body: JSON.stringify(data),
     }),
 
+  updateSettings: (data: { bibleVersion?: string }) =>
+    fetchAPI('/auth/settings', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
   changePassword: (data: { currentPassword: string; newPassword: string }) =>
     fetchAPI('/auth/password', {
       method: 'PUT',
@@ -61,17 +67,19 @@ export const authApi = {
 export const readingApi = {
   getBooks: () => fetchAPI('/reading/books'),
 
+  getBibleVersions: () => fetchAPI('/reading/versions'),
+
   getBooksWithCompletion: () => fetchAPI('/reading/books/with-completion'),
 
   getBook: (bookSlug: string) => fetchAPI(`/reading/books/${bookSlug}`),
 
-  getChapter: (bookSlug: string, chapterNumber: number, version: string = 'RV1960') =>
+  getChapter: (bookSlug: string, chapterNumber: number, version: string = 'RVR1960') =>
     fetchAPI(`/reading/books/${bookSlug}/${chapterNumber}?version=${version}`),
 
-  getVerseOfTheDay: (version: string = 'RV1960') =>
+  getVerseOfTheDay: (version: string = 'RVR1960') =>
     fetchAPI(`/reading/verse-of-the-day?version=${version}`),
 
-  searchVerses: (query: string, version: string = 'RV1960', limit: number = 50) =>
+  searchVerses: (query: string, version: string = 'RVR1960', limit: number = 50) =>
     fetchAPI(`/reading/search?q=${encodeURIComponent(query)}&version=${version}&limit=${limit}`),
 };
 

@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { ConfigService } from './config.service';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 /**
  * Sistema de XP y Niveles inspirado en Duolingo

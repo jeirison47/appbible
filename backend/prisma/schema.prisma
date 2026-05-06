@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -163,23 +165,14 @@ model Book {
 }
 
 model Chapter {
-  id      String @id @default(cuid())
-  bookId  String
-  book    Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  number  Int
-  title   String?
-
-  // Contenido en 2 versiones (Español e Inglés)
-  contentRV1960 String @db.Text  // Reina Valera 1960 (Español)
-  contentKJV    String @db.Text @default("")  // King James Version (Inglés)
-
-  // Versículos parseados (JSON)
-  versesRV1960 Json  // Español
-  versesKJV    Json @default("{}")  // Inglés
-
+  id         String @id @default(cuid())
+  bookId     String
+  book       Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  number     Int
   verseCount Int
 
-  reads ChapterRead[]
+  reads           ChapterRead[]
+  chapterVersions ChapterVersion[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -187,6 +180,34 @@ model Chapter {
   @@unique([bookId, number])
   @@index([bookId])
   @@map("chapters")
+}
+
+// ==================== BIBLE VERSIONS ====================
+
+model BibleVersion {
+  code     String @id
+  name     String
+  language String
+
+  chapterVersions ChapterVersion[]
+
+  @@map("bible_versions")
+}
+
+model ChapterVersion {
+  id          String @id @default(cuid())
+  chapterId   String
+  versionCode String
+  content     String @db.Text
+  verses      Json
+
+  chapter Chapter     @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  version BibleVersion @relation(fields: [versionCode], references: [code], onDelete: Cascade)
+
+  @@unique([chapterId, versionCode])
+  @@index([chapterId])
+  @@index([versionCode])
+  @@map("chapter_versions")
 }
 
 // ==================== APP CONFIGURATION ====================
@@ -288,17 +309,16 @@ model UserTutorialProgress {
 // ==================== DAILY VERSE ====================
 
 model DailyVerse {
-  id           String   @id @default(cuid())
-  date         DateTime @db.Date @unique
-  chapterId    String
-  verseNumber  Int
-  bookName     String
-  bookSlug     String
+  id            String   @id @default(cuid())
+  date          DateTime @db.Date @unique
+  chapterId     String
+  verseNumber   Int
+  bookName      String
+  bookSlug      String
   chapterNumber Int
-  textRV1960   String   @db.Text
-  textKJV      String   @db.Text
+  versions      Json
 
-  createdAt    DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([date])
   @@map("daily_verses")

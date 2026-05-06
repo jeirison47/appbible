@@ -15,6 +15,13 @@ reading.get(
   ReadingController.getBooksWithCompletion
 );
 
+// GET /versions - Listar versiones de la Biblia disponibles
+reading.get(
+  '/versions',
+  requirePermission('read:chapters'),
+  ReadingController.getBibleVersions
+);
+
 // GET /books - Listar todos los libros
 reading.get(
   '/books',

@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { XpService } from './xp.service';
 import { StreakService } from './streak.service';
 import { DailyGoalService } from './dailyGoal.service';
 import { ConfigService } from './config.service';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 /**
  * Servicio de Progreso de Lectura
@@ -190,7 +188,7 @@ export class ProgressService {
         nextChapter = {
           id: nextChapterData.id,
           number: nextChapterData.number,
-          title: nextChapterData.title || '',
+          title: '',
           unlocked: true, // En el Camino, se desbloquea automáticamente
         };
       }
@@ -202,7 +200,7 @@ export class ProgressService {
         id: chapter.id,
         bookName: chapter.book.name,
         chapterNumber: chapter.number,
-        chapterTitle: chapter.title || '',
+        chapterTitle: '',
       },
       rewards: {
         xp: {
@@ -302,7 +300,6 @@ export class ProgressService {
           select: {
             id: true,
             number: true,
-            title: true,
             book: {
               select: {
                 id: true,
@@ -329,7 +326,6 @@ export class ProgressService {
           select: {
             id: true,
             number: true,
-            title: true,
             book: {
               select: {
                 id: true,
@@ -383,7 +379,7 @@ export class ProgressService {
               bookName: lastChapterInPath.chapter.book.name,
               bookSlug: lastChapterInPath.chapter.book.slug,
               chapterNumber: lastChapterInPath.chapter.number,
-              chapterTitle: lastChapterInPath.chapter.title,
+              chapterTitle: '',
             }
           : null,
         libre: lastChapterFree
@@ -391,7 +387,7 @@ export class ProgressService {
               bookName: lastChapterFree.chapter.book.name,
               bookSlug: lastChapterFree.chapter.book.slug,
               chapterNumber: lastChapterFree.chapter.number,
-              chapterTitle: lastChapterFree.chapter.title,
+              chapterTitle: '',
             }
           : null,
       },
@@ -410,7 +406,6 @@ export class ProgressService {
           select: {
             id: true,
             number: true,
-            title: true,
             verseCount: true,
           },
         },

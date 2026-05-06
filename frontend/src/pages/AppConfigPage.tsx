@@ -38,7 +38,7 @@ export default function AppConfigPage() {
     app_name: '',
     app_short_name: '',
     app_description: '',
-    default_bible_version: 'RV1960',
+    default_bible_version: 'RVR1960',
     default_daily_goal: '1',
     streak_xp_required: '100',
     xp_per_minute_reading: '10',

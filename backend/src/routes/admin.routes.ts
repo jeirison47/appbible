@@ -1,10 +1,8 @@
 import { Hono } from 'hono';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { requirePermission } from '../middleware/permission.middleware';
-import { PrismaClient } from '@prisma/client';
 import { ConfigController } from '../controllers/config.controller';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 const admin = new Hono();
 
 // Todas las rutas requieren autenticación

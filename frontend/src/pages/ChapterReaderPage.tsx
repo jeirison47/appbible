@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { readingApi, progressApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
+import { BIBLE_VERSIONS, normalizeVersion, DEFAULT_VERSION } from '../utils/bibleVersions';
 
 interface ChapterData {
   book: {
@@ -16,9 +17,8 @@ interface ChapterData {
   chapter: {
     id: string;
     number: number;
-    title: string;
     content: string;
-    verses: Record<string, string>;
+    verses: Array<{ number: number; text: string }>;
     verseCount: number;
   };
   version: string;
@@ -32,11 +32,12 @@ interface ChapterData {
 export default function ChapterReaderPage() {
   const { bookSlug, chapterNumber } = useParams<{ bookSlug: string; chapterNumber: string }>();
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
   const isAdmin = roles.some((r) => r.name === 'admin');
 
   const [chapter, setChapter] = useState<ChapterData | null>(null);
-  const [version, setVersion] = useState<'RV1960' | 'KJV'>('RV1960');
+  const [version, setVersion] = useState<string>(normalizeVersion(user?.settings?.bibleVersion || DEFAULT_VERSION));
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(false);
   const [startTime] = useState(Date.now());
@@ -312,11 +313,12 @@ export default function ChapterReaderPage() {
                 <div className="text-right">
                   <select
                     value={version}
-                    onChange={(e) => setVersion(e.target.value as any)}
+                    onChange={(e) => setVersion(e.target.value)}
                     className="px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-xs sm:text-sm font-semibold"
                   >
-                    <option value="RV1960">ES RV1960</option>
-                    <option value="KJV">EN KJV</option>
+                    {BIBLE_VERSIONS.map((v) => (
+                      <option key={v.code} value={v.code}>{v.label} ({v.lang})</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -328,13 +330,13 @@ export default function ChapterReaderPage() {
 
         {/* Verses */}
         <div className="space-y-6 mb-16">
-          {Object.entries(chapter.chapter.verses).map(([verseNum, verseText]) => (
-            <div key={verseNum} className="flex gap-4 group">
+          {chapter.chapter.verses.map((v) => (
+            <div key={v.number} className="flex gap-4 group">
               <span className="flex-shrink-0 w-10 text-right text-base font-bold text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 transition">
-                {verseNum}
+                {v.number}
               </span>
               <p className="flex-1 text-lg text-gray-800 dark:text-gray-100 leading-relaxed">
-                {verseText}
+                {v.text}
               </p>
             </div>
           ))}

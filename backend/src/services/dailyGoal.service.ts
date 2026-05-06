@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { startOfDay, endOfDay } from 'date-fns';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 /**
  * Sistema de Metas Diarias inspirado en Duolingo

@@ -12,6 +12,7 @@ auth.post('/auth0-login', AuthController.auth0Login);
 // Rutas protegidas
 auth.get('/me', authMiddleware, AuthController.me);
 auth.put('/profile', authMiddleware, AuthController.updateProfile);
+auth.put('/settings', authMiddleware, AuthController.updateSettings);
 auth.put('/password', authMiddleware, AuthController.changePassword);
 
 export default auth;

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { readingApi, progressApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
+import { BIBLE_VERSIONS, normalizeVersion, DEFAULT_VERSION } from '../utils/bibleVersions';
 import { useReadingTimer } from '../hooks/useReadingTimer';
 import ThemeToggle from '../components/ThemeToggle';
 
@@ -17,9 +18,8 @@ interface ChapterData {
   chapter: {
     id: string;
     number: number;
-    title: string;
     content: string;
-    verses: Record<string, string>;
+    verses: Array<{ number: number; text: string }>;
     verseCount: number;
   };
   version: string;
@@ -32,11 +32,12 @@ export default function FreeVerseReaderPage() {
     verseNumber?: string;
   }>();
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
   const isAdmin = roles.some((r) => r.name === 'admin');
 
   const [chapter, setChapter] = useState<ChapterData | null>(null);
-  const [version, setVersion] = useState<'RV1960' | 'KJV'>('RV1960');
+  const [version, setVersion] = useState<string>(normalizeVersion(user?.settings?.bibleVersion || DEFAULT_VERSION));
   const [loading, setLoading] = useState(true);
   const [currentVerse, setCurrentVerse] = useState<number>(1);
   const [viewMode, setViewMode] = useState<'verse' | 'chapter'>('verse');
@@ -117,25 +118,39 @@ export default function FreeVerseReaderPage() {
     }
   };
 
+  const verses = chapter ? chapter.chapter.verses : [];
+
+  // Si el versículo de la URL no existe en el array, redirigir al primero disponible
+  useEffect(() => {
+    if (chapter && viewMode === 'verse' && verses.length > 0) {
+      const exists = verses.some((v) => v.number === currentVerse);
+      if (!exists) {
+        const firstVerse = verses[0].number;
+        setCurrentVerse(firstVerse);
+        navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${firstVerse}`, { replace: true });
+      }
+    }
+  }, [chapter]);
+
   const goToPreviousVerse = () => {
-    if (currentVerse > 1) {
-      const newVerse = currentVerse - 1;
+    const idx = verses.findIndex((v) => v.number === currentVerse);
+    if (idx > 0) {
+      const newVerse = verses[idx - 1].number;
       setCurrentVerse(newVerse);
       navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${newVerse}`, { replace: true });
     } else if (chapter && parseInt(chapterNumber!) > 1) {
-      // Ir al último versículo del capítulo anterior
       navigate(`/lectura-libre/${bookSlug}/${parseInt(chapterNumber!) - 1}`);
     }
   };
 
   const goToNextVerse = () => {
-    if (chapter && currentVerse < chapter.chapter.verseCount) {
-      const newVerse = currentVerse + 1;
+    const idx = verses.findIndex((v) => v.number === currentVerse);
+    if (idx >= 0 && idx < verses.length - 1) {
+      const newVerse = verses[idx + 1].number;
       setCurrentVerse(newVerse);
       navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${newVerse}`, { replace: true });
     } else if (chapter && parseInt(chapterNumber!) < chapter.book.totalChapters) {
-      // Ir al primer versículo del siguiente capítulo
-      navigate(`/lectura-libre/${bookSlug}/${parseInt(chapterNumber!) + 1}/1`);
+      navigate(`/lectura-libre/${bookSlug}/${parseInt(chapterNumber!) + 1}`);
     }
   };
 
@@ -145,12 +160,15 @@ export default function FreeVerseReaderPage() {
       navigate(`/lectura-libre/${bookSlug}/${chapterNumber}`, { replace: true });
     } else {
       setViewMode('verse');
-      navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/1`, { replace: true });
+      const firstVerse = verses[0]?.number ?? 1;
+      navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${firstVerse}`, { replace: true });
     }
   };
 
-  const verses = chapter ? Object.entries(chapter.chapter.verses) : [];
-  const currentVerseText = chapter ? chapter.chapter.verses[currentVerse.toString()] : '';
+  const currentVerseText = chapter
+    ? (verses.find((v) => v.number === currentVerse)?.text ?? '')
+    : '';
+  const currentVerseIndex = verses.findIndex((v) => v.number === currentVerse);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -229,11 +247,12 @@ export default function FreeVerseReaderPage() {
                 <div className="text-right">
                   <select
                     value={version}
-                    onChange={(e) => setVersion(e.target.value as any)}
+                    onChange={(e) => setVersion(e.target.value)}
                     className="px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md sm:rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-xs sm:text-sm font-semibold"
                   >
-                    <option value="RV1960">ES RV1960</option>
-                    <option value="KJV">EN KJV</option>
+                    {BIBLE_VERSIONS.map((v) => (
+                      <option key={v.code} value={v.code}>{v.label} ({v.lang})</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -270,11 +289,6 @@ export default function FreeVerseReaderPage() {
                   "{currentVerseText}"
                 </p>
 
-                <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  {chapter.chapter.title && (
-                    <p className="italic">{chapter.chapter.title}</p>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -282,7 +296,7 @@ export default function FreeVerseReaderPage() {
             <div className="flex items-center justify-between gap-2 sm:gap-3 lg:gap-4 mb-6 sm:mb-8">
               <button
                 onClick={goToPreviousVerse}
-                disabled={currentVerse === 1 && parseInt(chapterNumber!) === 1}
+                disabled={currentVerseIndex <= 0 && parseInt(chapterNumber!) === 1}
                 className="flex-1 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-gray-800 py-2.5 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base lg:text-lg transition-all transform hover:scale-105 disabled:hover:scale-100 shadow-md"
               >
                 <div className="flex items-center justify-center gap-1 sm:gap-2">
@@ -292,13 +306,13 @@ export default function FreeVerseReaderPage() {
               </button>
 
               <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-lg font-bold text-xs sm:text-sm whitespace-nowrap">
-                {currentVerse} / {chapter.chapter.verseCount}
+                {currentVerseIndex + 1} / {verses.length}
               </div>
 
               <button
                 onClick={goToNextVerse}
                 disabled={
-                  currentVerse === chapter.chapter.verseCount &&
+                  currentVerseIndex === verses.length - 1 &&
                   parseInt(chapterNumber!) === chapter.book.totalChapters
                 }
                 className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2.5 sm:py-3 lg:py-4 px-3 sm:px-4 lg:px-6 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base lg:text-lg transition-all transform hover:scale-105 disabled:hover:scale-100 shadow-md"
@@ -316,23 +330,22 @@ export default function FreeVerseReaderPage() {
                 Saltar a versículo:
               </p>
               <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-1.5 sm:gap-2">
-                {verses.map(([verseNum]) => (
+                {verses.map((v) => (
                   <button
-                    key={verseNum}
+                    key={v.number}
                     onClick={() => {
-                      const num = parseInt(verseNum);
-                      setCurrentVerse(num);
-                      navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${num}`, {
+                      setCurrentVerse(v.number);
+                      navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${v.number}`, {
                         replace: true,
                       });
                     }}
                     className={`py-1.5 sm:py-2 px-2 sm:px-3 rounded-md sm:rounded-lg font-semibold text-xs sm:text-sm transition-all ${
-                      parseInt(verseNum) === currentVerse
+                      v.number === currentVerse
                         ? 'bg-indigo-600 text-white shadow-lg scale-110'
                         : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-indigo-900 hover:text-indigo-600 dark:hover:text-indigo-400'
                     }`}
                   >
-                    {verseNum}
+                    {v.number}
                   </button>
                 ))}
               </div>
@@ -342,23 +355,22 @@ export default function FreeVerseReaderPage() {
           <>
             {/* Verses */}
             <div className="space-y-6 mb-16">
-              {verses.map(([verseNum, verseText]) => (
+              {verses.map((v) => (
                 <div
-                  key={verseNum}
+                  key={v.number}
                   className="flex gap-4 group cursor-pointer hover:bg-indigo-50 dark:hover:bg-indigo-900/30 p-2 rounded-lg transition"
                   onClick={() => {
-                    const num = parseInt(verseNum);
-                    setCurrentVerse(num);
+                    setCurrentVerse(v.number);
                     setViewMode('verse');
-                    navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${num}`, {
+                    navigate(`/lectura-libre/${bookSlug}/${chapterNumber}/${v.number}`, {
                       replace: true,
                     });
                   }}
                 >
                   <span className="flex-shrink-0 w-10 text-right text-base font-bold text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition">
-                    {verseNum}
+                    {v.number}
                   </span>
-                  <p className="flex-1 text-lg text-gray-800 dark:text-gray-100 leading-relaxed">{verseText}</p>
+                  <p className="flex-1 text-lg text-gray-800 dark:text-gray-100 leading-relaxed">{v.text}</p>
                 </div>
               ))}
             </div>

@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import { startOfDay, differenceInDays, subDays } from 'date-fns';
 import { ConfigService } from './config.service';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 /**
  * Sistema de Rachas (Streaks) inspirado en Duolingo

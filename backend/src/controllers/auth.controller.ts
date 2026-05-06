@@ -1,11 +1,9 @@
 import { Context } from 'hono';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
 import { RBACService } from '../services/rbac.service';
 import { Auth0Service } from '../services/auth0.service';
-
-const prisma = new PrismaClient();
+import prisma from '../config/database';
 
 /**
  * Genera un nickname único a partir de un email
@@ -310,6 +308,32 @@ export class AuthController {
     } catch (error: any) {
       console.error('Update profile error:', error);
       return c.json({ error: 'Failed to update profile' }, 500);
+    }
+  }
+
+  /**
+   * Actualizar configuraciones del usuario (bibleVersion, etc.)
+   */
+  static async updateSettings(c: Context) {
+    try {
+      const userId = c.get('userId');
+      const { bibleVersion } = await c.req.json();
+
+      const VALID_VERSIONS = ['RVR1960', 'RV1960', 'NVI', 'NTV', 'TLA', 'KJV', 'NIV', 'NLT', 'ESV'];
+
+      if (bibleVersion !== undefined && !VALID_VERSIONS.includes(bibleVersion)) {
+        return c.json({ error: 'Versión bíblica inválida' }, 400);
+      }
+
+      await prisma.userSettings.update({
+        where: { userId },
+        data: { ...(bibleVersion !== undefined && { bibleVersion }) },
+      });
+
+      return c.json({ success: true });
+    } catch (error) {
+      console.error('Update settings error:', error);
+      return c.json({ error: 'Failed to update settings' }, 500);
     }
   }
 

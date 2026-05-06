@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { progressApi, authApi } from '../services/api';
+import { BIBLE_VERSIONS, normalizeVersion, DEFAULT_VERSION } from '../utils/bibleVersions';
 import { useInstallPWA } from '../hooks/useInstallPWA';
 import ConfirmModal from '../components/ConfirmModal';
 import toast from 'react-hot-toast';
@@ -77,6 +78,11 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [savingPassword, setSavingPassword] = useState(false);
+
+  // Versión bíblica
+  const rawBibleVersion = normalizeVersion(user?.settings?.bibleVersion || DEFAULT_VERSION);
+  const [selectedBibleVersion, setSelectedBibleVersion] = useState(rawBibleVersion);
+  const [savingBibleVersion, setSavingBibleVersion] = useState(false);
 
   // Tutoriales
   const [showTutorialMenu, setShowTutorialMenu] = useState(false);
@@ -235,6 +241,19 @@ export default function ProfilePage() {
       toast.error(error.message || 'Error al cambiar contraseña');
     } finally {
       setSavingPassword(false);
+    }
+  };
+
+  const handleSaveBibleVersion = async () => {
+    setSavingBibleVersion(true);
+    try {
+      await authApi.updateSettings({ bibleVersion: selectedBibleVersion });
+      updateUser({ settings: { ...(user?.settings as any), bibleVersion: selectedBibleVersion } });
+      toast.success('Versión bíblica actualizada');
+    } catch (error: any) {
+      toast.error(error.message || 'Error al guardar la versión');
+    } finally {
+      setSavingBibleVersion(false);
     }
   };
 
@@ -1110,6 +1129,48 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+
+        {/* Preferencias de Lectura */}
+        <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2 px-1 sm:px-2">
+            <span className="text-xl sm:text-2xl">📖</span>
+            Preferencias de Lectura
+          </h3>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 border-2 border-indigo-200">
+            <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
+              Versión Bíblica por Defecto
+            </h4>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-4">
+              La versión que se usará al abrir un capítulo por primera vez
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+              {BIBLE_VERSIONS.map((v) => (
+                <button
+                  key={v.code}
+                  onClick={() => setSelectedBibleVersion(v.code)}
+                  className={`py-2 px-3 rounded-lg border-2 font-semibold text-sm transition-all ${
+                    selectedBibleVersion === v.code
+                      ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+                      : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-indigo-300 dark:hover:border-indigo-500'
+                  }`}
+                >
+                  <div className="font-bold">{v.label}</div>
+                  <div className="text-xs font-normal opacity-70">{v.lang}</div>
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={handleSaveBibleVersion}
+              disabled={savingBibleVersion || selectedBibleVersion === rawBibleVersion}
+              className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {savingBibleVersion ? 'Guardando...' : 'Guardar Preferencia'}
+            </button>
+          </div>
+        </div>
 
         {/* Actions */}
         <div className="space-y-3 sm:space-y-4">
