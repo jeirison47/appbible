@@ -385,20 +385,20 @@ export default function HomePage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b-2 border-gray-200">
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Usuario</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Nivel</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">XP Total</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Racha</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Capítulos</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Libros</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Acciones</th>
+                    <tr className="border-b-2 border-gray-200 dark:border-gray-700">
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Usuario</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Email</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Nivel</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">XP Total</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Racha</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Capítulos</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Libros</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     {userStats.map((user) => (
-                      <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <tr key={user.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
                         <td className="px-4 py-4">
                           <div className="font-medium text-gray-800 dark:text-gray-100">{user.displayName}</div>
                         </td>

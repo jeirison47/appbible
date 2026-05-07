@@ -48,25 +48,25 @@ export default function ConfirmModal({
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
+        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
           {/* Icon */}
-          <div className="flex items-center justify-center w-16 h-16 mx-auto bg-gradient-to-br from-red-100 to-orange-100 rounded-full mb-4">
+          <div className="flex items-center justify-center w-16 h-16 mx-auto bg-gradient-to-br from-red-100 to-orange-100 dark:from-red-900/40 dark:to-orange-900/40 rounded-full mb-4">
             <span className="text-4xl">{styles.icon}</span>
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-bold text-gray-900 text-center mb-2">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 text-center mb-2">
             {title}
           </h3>
 
           {/* Message */}
-          <p className="text-gray-600 text-center mb-6">{message}</p>
+          <p className="text-gray-600 dark:text-gray-300 text-center mb-6">{message}</p>
 
           {/* Buttons */}
           <div className="flex gap-3">
             <button
               onClick={onCancel}
-              className="flex-1 px-4 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold"
+              className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-semibold"
             >
               {cancelText}
             </button>

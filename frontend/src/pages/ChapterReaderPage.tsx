@@ -161,7 +161,7 @@ export default function ChapterReaderPage() {
             {/* Rewards Grid - 3 cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
               {/* XP Reward - Full width on top */}
-              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-2.5 md:col-span-2">
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/40 dark:to-indigo-800/40 rounded-xl p-2.5 md:col-span-2">
                 <p className="text-xs text-gray-600 dark:text-gray-300 mb-0.5">Experiencia Ganada</p>
                 <p className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-1.5">
                   +{rewards.xp.totalXp} XP
@@ -182,7 +182,7 @@ export default function ChapterReaderPage() {
 
               {/* Streak Progress Bar - Bottom left */}
               {rewards.streak && (
-                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-2.5 flex flex-col justify-center text-center">
+                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/40 dark:to-yellow-800/40 rounded-xl p-2.5 flex flex-col justify-center text-center">
                   <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">Progreso de Racha de Hoy</p>
                   <div className="w-full bg-white dark:bg-gray-800 rounded-full h-1.5 mb-1">
                     <div
@@ -197,7 +197,7 @@ export default function ChapterReaderPage() {
               )}
 
               {/* Daily Goal Progress - Bottom right */}
-              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-2.5 flex flex-col justify-center text-center">
+              <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/40 dark:to-green-800/40 rounded-xl p-2.5 flex flex-col justify-center text-center">
                 <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">Meta Diaria</p>
                 <p className="text-sm sm:text-base font-bold text-green-600 dark:text-green-400 mb-1">
                   {rewards.dailyGoal.progress} / {rewards.dailyGoal.goal} capítulos
@@ -224,7 +224,7 @@ export default function ChapterReaderPage() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={handleExit}
-                className="bg-gray-200 text-gray-700 dark:text-gray-200 py-2 px-3 rounded-xl font-semibold hover:bg-gray-300 transition text-sm"
+                className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 py-2 px-3 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition text-sm"
               >
                 Salir
               </button>
