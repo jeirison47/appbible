@@ -630,7 +630,20 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 text-center">
+          <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 text-center space-y-3">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <Link to="/legal" className="text-xs text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                Política de Privacidad
+              </Link>
+              <span className="text-gray-300 dark:text-gray-600">·</span>
+              <Link to="/legal" className="text-xs text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                Términos de Uso
+              </Link>
+              <span className="text-gray-300 dark:text-gray-600">·</span>
+              <Link to="/legal" className="text-xs text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                Atribución Bíblica
+              </Link>
+            </div>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
               © {new Date().getFullYear()} Manah. Hecho con ❤️ para la gloria de Dios.
             </p>
