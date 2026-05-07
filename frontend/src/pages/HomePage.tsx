@@ -916,7 +916,6 @@ export default function HomePage() {
         run={runOnboardingTour}
         onComplete={() => {
           setRunOnboardingTour(false);
-          setTutorialShownThisSession(true);
         }}
       />
     </div>
