@@ -100,7 +100,7 @@ export default function LoginPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-3">
+            <Link to="/" className="flex items-center justify-center gap-3 hover:opacity-80 transition">
               <img
                 src="/logo-color-manah.png"
                 alt="Manah Logo"
@@ -109,7 +109,7 @@ export default function LoginPage() {
               <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
                 manah
               </h1>
-            </div>
+            </Link>
           </div>
 
           {/* Error message */}

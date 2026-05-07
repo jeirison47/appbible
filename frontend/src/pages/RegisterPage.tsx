@@ -110,7 +110,7 @@ export default function RegisterPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-3 mb-3">
+            <Link to="/" className="flex items-center justify-center gap-3 mb-3 hover:opacity-80 transition">
               <img
                 src="/logo-color-manah.png"
                 alt="Manah Logo"
@@ -119,7 +119,7 @@ export default function RegisterPage() {
               <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
                 manah
               </h1>
-            </div>
+            </Link>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
               Únete y comienza tu aventura bíblica
             </p>
