@@ -200,6 +200,13 @@ export default function LoginPage() {
             </Link>
           </div>
 
+          {/* Legal Links */}
+          <div className="mt-4 text-center">
+            <Link to="/legal" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">
+              Política de Privacidad · Términos de Uso · Atribución
+            </Link>
+          </div>
+
           {/* Install PWA Button */}
           {isInstallable && (
             <div className="mt-4">

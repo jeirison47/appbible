@@ -1227,6 +1227,13 @@ export default function ProfilePage() {
             </div>
           )}
 
+          {/* Legal */}
+          <div className="text-center py-2">
+            <Link to="/legal" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">
+              Política de Privacidad · Términos de Uso · Atribución
+            </Link>
+          </div>
+
           <button
             onClick={handleLogout}
             className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 sm:gap-3"

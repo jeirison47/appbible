@@ -16,6 +16,7 @@ import ProfilePage from './pages/ProfilePage';
 import SearchPage from './pages/SearchPage';
 import StatsPage from './pages/StatsPage';
 import AppConfigPage from './pages/AppConfigPage';
+import LegalPage from './pages/LegalPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -198,6 +199,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Ruta pública: Legal */}
+          <Route path="/legal" element={<LegalPage />} />
+
           {/* Catch-all: redirigir a /inicio si está autenticado, sino a / */}
           <Route
             path="*"

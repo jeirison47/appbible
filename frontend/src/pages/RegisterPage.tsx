@@ -244,6 +244,13 @@ export default function RegisterPage() {
             </p>
           </div>
 
+          {/* Legal Links */}
+          <div className="mt-4 text-center">
+            <Link to="/legal" className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition">
+              Política de Privacidad · Términos de Uso · Atribución
+            </Link>
+          </div>
+
           {/* Benefits */}
           <div className="mt-6 p-4 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-lg">
             <p className="font-semibold text-gray-800 dark:text-gray-100 mb-2 text-sm">Al registrarte obtendrás:</p>
