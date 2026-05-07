@@ -349,9 +349,6 @@ export default function BookPathPage() {
                             }`}>
                               Cap. {chapter.number}
                             </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
-                              {chapter.title}
-                            </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               {chapter.verseCount} vs
                             </p>
@@ -428,9 +425,6 @@ export default function BookPathPage() {
                               isCompleted ? 'text-green-700 dark:text-green-400' : isNext ? 'text-orange-700 dark:text-orange-400' : 'text-gray-700 dark:text-gray-200'
                             }`}>
                               Cap. {chapter.number}
-                            </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
-                              {chapter.title}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                               {chapter.verseCount} vs

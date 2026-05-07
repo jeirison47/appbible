@@ -127,7 +127,7 @@ export const progressApi = {
   completeChapter: (data: {
     chapterId: string;
     readingTimeSeconds: number;
-    version?: 'RV1960' | 'KJV';
+    version?: string;
     readingMode?: 'PATH' | 'FREE';
   }) =>
     fetchAPI('/progress/complete-chapter', {
