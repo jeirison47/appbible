@@ -106,7 +106,7 @@ export default function LegalPage() {
               </Section>
 
               <Section title="6. Contacto">
-                <p>Para consultas sobre privacidad escríbenos a: <span className="font-medium text-indigo-600 dark:text-indigo-400">luis.marquez@har-per.com</span></p>
+                <p>Para consultas sobre privacidad escríbenos a: <span className="font-medium text-indigo-600 dark:text-indigo-400">jeirison47@gmail.com</span></p>
               </Section>
             </>
           )}
@@ -196,7 +196,7 @@ export default function LegalPage() {
 
               <div className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-200 dark:border-indigo-700">
                 <p className="text-xs text-indigo-800 dark:text-indigo-300">
-                  Esta aplicación es un proyecto personal sin fines comerciales ni lucrativos. El uso del contenido bíblico tiene carácter exclusivamente personal y educativo. Si eres titular de derechos y tienes alguna observación, contáctanos en <span className="font-semibold">luis.marquez@har-per.com</span>.
+                  Esta aplicación es un proyecto personal sin fines comerciales ni lucrativos. El uso del contenido bíblico tiene carácter exclusivamente personal y educativo. Si eres titular de derechos y tienes alguna observación, contáctanos en <span className="font-semibold">jeirison47@gmail.com</span>.
                 </p>
               </div>
             </>
