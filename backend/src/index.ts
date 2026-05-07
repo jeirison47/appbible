@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin.routes';
 import progressRoutes from './routes/progress.routes';
 import configRoutes from './routes/config.routes';
 import { tutorialRoutes } from './routes/tutorial.routes';
+import studyRoutes from './routes/study.routes';
 import { initializeDefaultConfig } from './scripts/init-config';
 
 const app = new Hono();
@@ -41,6 +42,7 @@ app.route('/api/admin', adminRoutes);
 app.route('/api/progress', progressRoutes);
 app.route('/api/config', configRoutes);
 app.route('/api/tutorials', tutorialRoutes);
+app.route('/api/study', studyRoutes);
 
 // 404 handler
 app.notFound((c) => {

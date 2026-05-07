@@ -17,6 +17,9 @@ import SearchPage from './pages/SearchPage';
 import StatsPage from './pages/StatsPage';
 import AppConfigPage from './pages/AppConfigPage';
 import LegalPage from './pages/LegalPage';
+import StudyHomePage from './pages/StudyHomePage';
+import StudyBookPage from './pages/StudyBookPage';
+import StudyLessonPage from './pages/StudyLessonPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import ScrollToTopButton from './components/ScrollToTopButton';
@@ -199,6 +202,11 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Rutas de estudio */}
+          <Route path="/aprender" element={<ProtectedRoute><StudyHomePage /></ProtectedRoute>} />
+          <Route path="/aprender/:bookSlug" element={<ProtectedRoute><StudyBookPage /></ProtectedRoute>} />
+          <Route path="/aprender/:bookSlug/:chapterNumber" element={<ProtectedRoute><StudyLessonPage /></ProtectedRoute>} />
+
           {/* Ruta pública: Legal */}
           <Route path="/legal" element={<LegalPage />} />
 

@@ -45,6 +45,7 @@ model User {
   chapterReads      ChapterRead[]
   dailyProgress     DailyProgress[]
   tutorialProgress  UserTutorialProgress[]
+  studyProgress     StudyProgress[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -173,6 +174,7 @@ model Chapter {
 
   reads           ChapterRead[]
   chapterVersions ChapterVersion[]
+  studyProgress   StudyProgress[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -304,6 +306,25 @@ model UserTutorialProgress {
   @@unique([userId, tutorialId])
   @@index([userId, tutorialId])
   @@map("user_tutorial_progress")
+}
+
+// ==================== STUDY MODE ====================
+
+model StudyProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  chapterId   String
+  score       Int
+  maxScore    Int
+  xpEarned    Int      @default(0)
+  completedAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chapterId])
+  @@index([userId])
+  @@map("study_progress")
 }
 
 // ==================== DAILY VERSE ====================

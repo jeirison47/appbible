@@ -169,6 +169,24 @@ export const progressApi = {
 };
 
 /**
+ * API de modo estudio
+ */
+export const studyApi = {
+  getBooks: () => fetchAPI('/study/books'),
+
+  getBook: (bookSlug: string) => fetchAPI(`/study/books/${bookSlug}`),
+
+  getLesson: (bookSlug: string, chapterNumber: number, version: string = 'RVR1960') =>
+    fetchAPI(`/study/books/${bookSlug}/${chapterNumber}/lesson?version=${version}`),
+
+  completeLesson: (data: { chapterId: string; score: number; maxScore: number }) =>
+    fetchAPI('/study/complete-lesson', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+};
+
+/**
  * API de configuración de la app
  */
 export const configApi = {
