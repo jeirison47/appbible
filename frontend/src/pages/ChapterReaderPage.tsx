@@ -299,7 +299,7 @@ export default function ChapterReaderPage() {
       ) : (
         <>
           {/* Chapter Content */}
-          <div className="max-w-6xl mx-auto px-2 sm:px-4 pt-20 sm:pt-28 pb-12">
+          <div className="max-w-6xl mx-auto px-2 sm:px-4 pt-20 sm:pt-28 pb-24">
             {/* Verses */}
             <div className="space-y-6 mb-16">
               {chapter.chapter.verses.map((v) => (

@@ -57,7 +57,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-manah-bg font-manrope pt-16 sm:pt-32">
+    <div className="min-h-screen bg-manah-bg font-manrope pt-16 sm:pt-32 pb-24">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">

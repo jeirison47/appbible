@@ -568,7 +568,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-manah-bg font-manrope">
       <Navbar />
 
-      <div className="pt-16 sm:pt-32 max-w-xl mx-auto px-4 pb-12">
+      <div className="pt-16 sm:pt-32 max-w-xl mx-auto px-4 pb-24">
 
         {/* Header */}
         <div className="mb-6">

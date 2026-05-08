@@ -31,7 +31,7 @@ export default function StudyHomePage() {
   return (
     <div className="min-h-screen bg-manah-bg font-manrope">
       <Navbar />
-      <div className="pt-16 sm:pt-32 max-w-4xl mx-auto px-4 pb-12">
+      <div className="pt-16 sm:pt-32 max-w-4xl mx-auto px-4 pb-24">
         {loading ? (
           <LoadingScreen fullScreen={false} />
         ) : (

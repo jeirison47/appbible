@@ -128,7 +128,7 @@ export default function BookPathPage() {
       ) : (
         <>
           {/* Path Content */}
-          <div className="max-w-sm mx-auto px-4 pt-8 pb-12">
+          <div className="max-w-sm mx-auto px-4 pt-8 pb-24">
             <div className="text-center mb-8">
               <p className="text-manah-muted text-sm font-semibold">
                 {data.book.totalChapters} capítulos en tu camino

@@ -48,7 +48,7 @@ export default function FreeReadingPage() {
   }, {} as Record<string, Book[]>);
 
   return (
-    <div className="min-h-screen bg-manah-bg font-manrope pt-16 sm:pt-32">
+    <div className="min-h-screen bg-manah-bg font-manrope pt-16 sm:pt-32 pb-24">
       <Navbar />
 
       {loading ? (
