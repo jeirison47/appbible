@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { readingApi, progressApi } from '../services/api';
-import Navbar from '../components/Navbar';
+import AppHeader from '../components/AppHeader';
+import LoadingScreen from '../components/LoadingScreen';
+import PathProgressBar from '../components/PathProgressBar';
 
 interface Book {
   id: string;
@@ -27,13 +29,11 @@ export default function CaminoPage() {
     try {
       setLoading(true);
 
-      // Hacer solo 2 llamadas API en paralelo
       const [progressRes, booksRes] = await Promise.all([
         progressApi.getMyProgress(),
         readingApi.getBooksWithCompletion(),
       ]);
 
-      // Configurar progreso total (de los stats del progreso del usuario)
       const { stats } = progressRes.data;
       const totalBooks = 66;
       const booksCompleted = stats.booksCompleted || 0;
@@ -45,7 +45,6 @@ export default function CaminoPage() {
         percentage: globalProgress,
       });
 
-      // Configurar libros (ya vienen con el campo completed)
       setBooks(booksRes.books);
     } catch (error) {
       console.error('Failed to load camino data:', error);
@@ -54,7 +53,6 @@ export default function CaminoPage() {
     }
   };
 
-  // Agrupar libros por categoría
   const groupBooksByCategory = () => {
     const grouped: { [key: string]: Book[] } = {};
     books.forEach((book) => {
@@ -67,152 +65,121 @@ export default function CaminoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-blue-50 to-green-50 dark:from-purple-950 dark:via-blue-950 dark:to-green-950 pt-32 pb-28 overflow-x-hidden">
-      {/* Navbar */}
-      <Navbar />
+    <div className="min-h-screen bg-manah-bg pt-24 sm:pt-40 pb-24 overflow-x-hidden font-manrope">
+      <AppHeader
+        variant="global"
+        subBar={
+          <div className="max-w-4xl mx-auto">
+            <PathProgressBar
+              label="Tu Camino"
+              completed={totalProgress.completed}
+              total={totalProgress.total}
+              percentage={totalProgress.percentage}
+            />
+          </div>
+        }
+      />
 
       {loading ? (
-        <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">Cargando tu camino...</p>
-          </div>
-        </div>
+        <LoadingScreen fullScreen={false} text="Cargando tu camino..." />
       ) : (
         <>
-      {/* Progress Bar - Fixed Bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-40 border-t-4 border-indigo-500">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Título */}
-            <h1 className="text-base sm:text-xl font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">
-              Tu Camino Bíblico
-            </h1>
 
-            {/* Barra de progreso con porcentaje dentro */}
-            <div className="flex-1 relative">
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 sm:h-8 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out relative flex items-center justify-center"
-                  style={{ width: `${totalProgress.percentage}%`, minWidth: '50px' }}
-                >
-                  <span className="text-xs sm:text-sm font-bold text-white z-10">
-                    {totalProgress.percentage}%
-                  </span>
-                  <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                </div>
+          {/* Hero Section */}
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 text-center">
+            <div className="bg-manah-card rounded-xl shadow-xl p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6 border border-manah-gold/20">
+              <div className="mb-2 sm:mb-3 flex justify-center">
+                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
+                </svg>
               </div>
-            </div>
-
-            {/* Libros completados */}
-            <div className="text-sm sm:text-base font-bold text-gray-700 dark:text-gray-200 whitespace-nowrap">
-              {totalProgress.completed} / {totalProgress.total}
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2 text-manah-cream">Tu Aventura Bíblica</h2>
+              <p className="text-xs sm:text-sm text-manah-muted mb-1">
+                Un camino continuo a través de la Palabra de Dios
+              </p>
+              <p className="text-[10px] sm:text-xs text-manah-muted/60">
+                Haz click en cualquier libro para ver sus capítulos.
+              </p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Hero Section */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 text-center">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 lg:p-6 text-white mb-4 sm:mb-6">
-          <div className="mb-2 sm:mb-3 flex justify-center">
-            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/>
-            </svg>
-          </div>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Tu Aventura Bíblica</h2>
-          <p className="text-xs sm:text-sm opacity-90 mb-1">
-            Un camino continuo a través de la Palabra de Dios
-          </p>
-          <p className="text-[10px] sm:text-xs opacity-80">
-            Haz click en cualquier libro para ver sus capítulos.
-          </p>
-        </div>
-      </div>
+          {/* Books Timeline - Grouped by Category */}
+          <div className="max-w-3xl mx-auto px-3 sm:px-4 overflow-x-hidden">
+            {Object.entries(groupBooksByCategory()).map(([category, categoryBooks], categoryIndex) => {
+              let bookCounter = 0;
+              Object.entries(groupBooksByCategory()).slice(0, categoryIndex).forEach(([_, prevBooks]) => {
+                bookCounter += prevBooks.length;
+              });
 
-      {/* Books Timeline - Grouped by Category */}
-      <div className="max-w-3xl mx-auto px-3 sm:px-4 overflow-x-hidden">
-        {Object.entries(groupBooksByCategory()).map(([category, categoryBooks], categoryIndex) => {
-          let bookCounter = 0;
-          // Contar los libros en las categorías anteriores para mantener el patrón alternado
-          Object.entries(groupBooksByCategory()).slice(0, categoryIndex).forEach(([_, prevBooks]) => {
-            bookCounter += prevBooks.length;
-          });
+              return (
+                <div key={category} className="mb-8">
+                  {/* Category Header */}
+                  <div className="text-center mb-6">
+                    <h2 className="text-xl sm:text-2xl font-bold text-manah-cream mb-2">{category}</h2>
+                    <div className="w-24 h-px bg-manah-gold/50 mx-auto"></div>
+                  </div>
 
-          return (
-            <div key={category} className="mb-8">
-              {/* Category Header */}
-              <div className="text-center mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 dark:text-indigo-300 mb-2">{category}</h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 mx-auto rounded-full"></div>
-              </div>
+                  {/* Books in this category */}
+                  <div className="relative">
+                    {/* Center Line */}
+                    <div className="absolute left-1/2 top-0 bottom-0 w-px bg-manah-gold/20 transform -translate-x-1/2"></div>
 
-              {/* Books in this category */}
-              <div className="relative">
-                {/* Center Line */}
-                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-300 via-purple-300 to-indigo-300 transform -translate-x-1/2"></div>
+                    {categoryBooks.map((book, index) => {
+                      const globalIndex = bookCounter + index;
+                      const isLeft = globalIndex % 2 === 0;
 
-                {categoryBooks.map((book, index) => {
-                  const globalIndex = bookCounter + index;
-                  const isLeft = globalIndex % 2 === 0;
+                      return (
+                        <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[52%] md:pr-[60%]' : 'pl-[52%] md:pl-[60%]'}`}>
+                          {/* Center Dot */}
+                          <div className={`absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 bg-manah-gold border-2 border-manah-bg shadow-md z-10`}></div>
 
-                  return (
-                    <div key={book.id} className={`relative mb-4 sm:mb-6 ${isLeft ? 'pr-[52%] md:pr-[60%]' : 'pl-[52%] md:pl-[60%]'}`}>
-                      {/* Center Dot */}
-                      <div className={`absolute top-12 ${isLeft ? 'right-[50%]' : 'left-[50%]'} transform ${isLeft ? 'translate-x-1/2' : '-translate-x-1/2'} w-3 h-3 rounded-full ${book.testament === 'OLD' ? 'bg-blue-500' : 'bg-purple-500'} border-3 border-white shadow-lg z-10`}></div>
+                          <Link to={`/camino/${book.slug}`} className="group block">
+                            <div className={`rounded-xl shadow-xl p-4 sm:p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl min-h-[240px] sm:min-h-[280px] flex flex-col justify-between border ${
+                              book.completed ? 'bg-manah-deep border-manah-gold/30' : 'bg-manah-card border-manah-gold/15'
+                            }`}>
+                              <div className="flex-1 flex flex-col justify-center">
+                                {/* Book Icon */}
+                                <div className="mb-3 flex justify-center">
+                                  <svg className="w-12 h-12 sm:w-14 sm:h-14 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
+                                  </svg>
+                                </div>
 
-                      <Link to={`/camino/${book.slug}`} className="group block">
-                        <div
-                          className={`rounded-2xl shadow-xl p-4 sm:p-6 text-white transform transition-all duration-300 hover:scale-105 hover:shadow-2xl min-h-[240px] sm:min-h-[280px] flex flex-col justify-between ${
-                            book.testament === 'OLD'
-                              ? 'bg-gradient-to-br from-blue-500 to-blue-700'
-                              : 'bg-gradient-to-br from-purple-500 to-purple-700'
-                          }`}
-                        >
-                          <div className="flex-1 flex flex-col justify-center">
-                            {/* Testament Icon */}
-                            <div className="mb-3 flex justify-center">
-                              <svg className="w-12 h-12 sm:w-14 sm:h-14 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M19 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
-                              </svg>
-                            </div>
+                                <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center text-manah-cream">{book.name}</h3>
 
-                            {/* Book Name */}
-                            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">{book.name}</h3>
+                                <div className="bg-manah-bg/50 rounded-xl py-3 px-4 mb-3">
+                                  <p className="text-xs font-semibold mb-1 text-center text-manah-muted">Capítulos</p>
+                                  <p className="text-2xl sm:text-3xl font-bold text-center text-manah-gold">
+                                    {book.totalChapters}
+                                  </p>
+                                </div>
 
-                            {/* Total Chapters */}
-                            <div className="bg-white/20 rounded-lg py-3 px-4 backdrop-blur mb-3">
-                              <p className="text-xs font-semibold mb-1 text-center">Capítulos</p>
-                              <p className="text-2xl sm:text-3xl font-bold text-center">
-                                {book.totalChapters}
-                              </p>
-                            </div>
-
-                            {/* Completion badge */}
-                            {book.completed && (
-                              <div className="bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-full text-xs font-bold flex items-center justify-center gap-2">
-                                <span>✓</span>
-                                <span>COMPLETADO</span>
+                                {book.completed && (
+                                  <div className="bg-manah-gold text-manah-bg px-3 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+                                    <span>✓</span>
+                                    <span>COMPLETADO</span>
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
 
-                          {/* Ver detalles indicator */}
-                          <div className="mt-auto pt-3 text-center">
-                            <p className="text-sm font-semibold group-hover:underline transition-all">Ver capítulos →</p>
-                          </div>
+                              <div className="mt-auto pt-3 text-center">
+                                <p className="text-sm font-semibold text-manah-gold/70 group-hover:text-manah-gold transition-all">Ver capítulos →</p>
+                              </div>
+                            </div>
+                          </Link>
                         </div>
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      </>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );
 }
+
+
+

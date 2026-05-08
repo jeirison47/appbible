@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { readingApi } from '../services/api';
-import { useAuthStore } from '../stores/authStore';
-import ThemeToggle from '../components/ThemeToggle';
+import AppHeader from '../components/AppHeader';
+import LoadingScreen from '../components/LoadingScreen';
 
 interface Chapter {
   number: number;
@@ -22,8 +22,6 @@ interface BookData {
 
 export default function FreeBookChaptersPage() {
   const { bookSlug } = useParams<{ bookSlug: string }>();
-  const roles = useAuthStore((state) => state.roles);
-  const isAdmin = roles.some((r) => r.name === 'admin');
   const [book, setBook] = useState<BookData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,105 +43,71 @@ export default function FreeBookChaptersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950">
-      {/* Simple Header - Only Logo and Profile */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 ${isAdmin ? 'bg-gradient-to-r from-orange-600 to-red-600' : 'bg-gradient-to-r from-indigo-600 to-purple-600'}`}>
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
-            {/* Logo */}
-            <Link to="/inicio" className="flex items-center gap-2 sm:gap-3">
-              <img
-                src="/logo-header-manah.png"
-                alt="Manah Logo"
-                className="h-8 sm:h-10 w-auto"
-              />
-              <h1 className="text-base sm:text-lg md:text-xl font-bold text-white" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
-                manah {isAdmin && 'Admin'}
-              </h1>
+    <div className="min-h-screen bg-manah-bg font-manrope">
+      <AppHeader
+        variant="reader"
+        contextBar={book ? {
+          left: (
+            <Link to="/lectura-libre" className="flex items-center gap-1 sm:gap-2 text-manah-muted hover:text-manah-gold transition font-semibold text-sm sm:text-base cursor-pointer">
+              <span className="text-xl sm:text-2xl">←</span>
+              <span className="hidden sm:inline">Biblioteca</span>
             </Link>
-
-            {/* Botones de Tema y Perfil */}
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <Link
-                to="/perfil"
-                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                </svg>
-                <span className="hidden sm:inline font-medium">Perfil</span>
-              </Link>
+          ),
+          center: (
+            <div>
+              <p className="text-xs sm:text-sm text-manah-muted">{book.category}</p>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-manah-cream">{book.name}</h1>
             </div>
-          </div>
-        </div>
-      </nav>
+          ),
+          right: (
+            <div className="text-right">
+              <p className="text-xs sm:text-sm text-manah-muted">Capítulos</p>
+              <p className="text-lg sm:text-xl font-bold text-manah-gold">{book.totalChapters}</p>
+            </div>
+          ),
+        } : undefined}
+      />
 
       {loading ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-            <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg font-semibold">Cargando capítulos...</p>
-          </div>
-        </div>
+        <LoadingScreen fullScreen={false} text="Cargando capítulos..." />
       ) : !book ? (
         <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-            <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">No se pudo cargar el libro</p>
-            <Link to="/lectura-libre" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+          <div className="text-center bg-manah-card rounded-xl shadow-xl p-8">
+            <p className="text-manah-muted text-lg mb-4">No se pudo cargar el libro</p>
+            <Link to="/lectura-libre" className="text-manah-gold hover:underline font-semibold">
               ← <span className="hidden sm:inline">Volver a Lectura Libre</span>
             </Link>
           </div>
         </div>
       ) : (
         <>
-      {/* Secondary Header */}
-      <nav className="fixed top-12 sm:top-16 left-0 right-0 bg-white dark:bg-gray-800 shadow-md z-40 border-b-4 border-indigo-500">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              to="/lectura-libre"
-              className="flex items-center gap-1 sm:gap-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition font-semibold text-sm sm:text-base"
-            >
-              <span className="text-xl sm:text-2xl">←</span>
-              <span className="hidden sm:inline">Biblioteca</span>
-            </Link>
-            <div className="text-center">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{book.category}</p>
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">{book.name}</h1>
-            </div>
-            <div className="text-right">
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Capítulos</p>
-              <p className="text-lg sm:text-xl font-bold text-indigo-600 dark:text-indigo-400">{book.totalChapters}</p>
+          {/* Content */}
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 pt-16 sm:pt-40 pb-6">
+            {/* Chapters Grid */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+              {book.chapters.map((chapter) => (
+                <Link
+                  key={chapter.number}
+                  to={`/lectura-libre/${book.slug}/${chapter.number}`}
+                  className="group cursor-pointer"
+                >
+                  <div className="bg-manah-card rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 p-3 sm:p-4 text-center transform group-hover:scale-110 group-hover:-translate-y-2 h-24 sm:h-28 md:h-32 flex flex-col justify-center items-center gap-1 sm:gap-2 border border-manah-gold/15 group-hover:border-manah-gold/50">
+                    <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-manah-gold group-hover:scale-125 transition-transform">
+                      {chapter.number}
+                    </div>
+                    <p className="text-xs sm:text-sm text-manah-muted/60">
+                      {chapter.verseCount} vs
+                    </p>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-        </div>
-      </nav>
-
-      {/* Content */}
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 pt-36 sm:pt-40 pb-6">
-        {/* Chapters Grid */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
-          {book.chapters.map((chapter) => (
-            <Link
-              key={chapter.number}
-              to={`/lectura-libre/${book.slug}/${chapter.number}`}
-              className="group"
-            >
-              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 p-3 sm:p-4 text-center transform group-hover:scale-110 group-hover:-translate-y-2 h-24 sm:h-28 md:h-32 flex flex-col justify-center items-center gap-1 sm:gap-2">
-                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-600 dark:text-indigo-400 group-hover:scale-125 transition-transform">
-                  {chapter.number}
-                </div>
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  {chapter.verseCount} vs
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-      </>
+        </>
       )}
     </div>
   );
 }
+
+
+

@@ -23,6 +23,7 @@ import StudyLessonPage from './pages/StudyLessonPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import LoadingScreen from './components/LoadingScreen';
 import { useAuthStore } from './stores/authStore';
 import { authApi } from './services/api';
 import { TutorialProvider } from './contexts/TutorialContext';
@@ -73,14 +74,7 @@ function App() {
 
   // Mostrar loading mientras se revalida el usuario
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4 text-lg font-semibold">Cargando...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

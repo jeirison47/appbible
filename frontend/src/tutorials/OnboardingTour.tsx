@@ -23,10 +23,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           <h2 className="text-xl font-bold mb-2" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
             ¡Bienvenido a manah! 🎉
           </h2>
-          <p className="text-gray-700">
+          <p className="text-manah-muted">
             Tu compañero para leer la Biblia y crecer espiritualmente.
           </p>
-          <p className="text-gray-700 mt-2">
+          <p className="text-manah-muted mt-2">
             Te voy a mostrar todas las funcionalidades en solo unos pasos. ¡Vamos a empezar!
           </p>
         </div>
@@ -39,10 +39,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Menú de Navegación 🧭</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Aquí encuentras todas las secciones: Inicio, Camino, Lectura Libre, Buscar y Estadísticas.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Usa estos botones para moverte por la app.
           </p>
         </div>
@@ -54,10 +54,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Inicio 🏠</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Tu página principal donde ves tu progreso diario.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Aquí verás tu XP, racha actual y metas del día.
           </p>
         </div>
@@ -69,10 +69,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Puntos de Experiencia (XP) ⭐</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Ganas XP completando capítulos y por cada minuto que pasas leyendo.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             ¡Sube de nivel acumulando XP y mantén tu racha activa!
                         Cada 10 minutos de lectura = XP adicional. ¡Sube de nivel acumulando XP!
 
@@ -86,10 +86,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Metas Diarias 🎯</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Tu objetivo personal de capítulos para leer hoy.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Puedes personalizar tu meta en tu perfil. Es una meta personal que no afecta tu racha.
           </p>
         </div>
@@ -101,10 +101,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Tu Racha 🔥</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Mantén tu racha leyendo todos los días.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Alcanza tu meta diaria de XP para mantenerla activa. ¡Rompe tu récord personal!
           </p>
         </div>
@@ -116,10 +116,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Tiempo de Lectura Hoy ⏱️</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Acumula tiempo leyendo la Biblia cada día.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Cada 10 minutos de lectura te da XP adicional. ¡Mientras más leas, más XP ganas!
           </p>
         </div>
@@ -131,10 +131,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Modo Camino 📖</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Lee la Biblia en orden cronológico.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Sigue un recorrido guiado por toda la historia bíblica. Perfecto para leer la Biblia completa de forma ordenada.
           </p>
         </div>
@@ -146,10 +146,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Lectura Libre 📚</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Explora cualquier libro o capítulo que quieras.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Elige tu propio camino de lectura. Ideal para estudios específicos o devocionales.
           </p>
         </div>
@@ -161,10 +161,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Buscar 🔍</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Encuentra versículos, palabras o temas específicos.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Busca en toda la Biblia de forma rápida. Perfecto para estudios bíblicos profundos.
           </p>
         </div>
@@ -176,10 +176,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Estadísticas 📊</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Visualiza todo tu progreso y logros.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Ve cuántos capítulos has leído, tu racha más larga, niveles y más. Monitorea tu crecimiento espiritual.
           </p>
         </div>
@@ -191,10 +191,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       content: (
         <div>
           <h3 className="font-bold mb-1">Tu Perfil 👤</h3>
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-manah-muted">
             Personaliza tu información y configuración.
           </p>
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-manah-muted mt-1">
             Ajusta tu meta diaria aquí. Puedes volver a ver estos tutoriales cuando quieras.
           </p>
         </div>
@@ -208,10 +208,10 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           <h2 className="text-xl font-bold mb-2" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
             ¡Todo listo para empezar! 🚀
           </h2>
-          <p className="text-gray-700">
+          <p className="text-manah-muted">
             Ya conoces todas las funcionalidades de manah.
           </p>
-          <p className="text-gray-700 mt-2">
+          <p className="text-manah-muted mt-2">
             Comienza a leer, gana XP y mantén tu racha activa. ¡Que Dios bendiga tu tiempo de lectura!
           </p>
         </div>
@@ -244,20 +244,20 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       callback={handleJoyrideCallback}
       styles={{
         options: {
-          primaryColor: '#9333ea',
+          primaryColor: '#d6a449',
           zIndex: 10000,
         },
         buttonNext: {
-          backgroundColor: '#9333ea',
+          backgroundColor: '#d6a449',
           borderRadius: '0.5rem',
           padding: '0.5rem 1rem',
         },
         buttonBack: {
-          color: '#6b7280',
+          color: '#b5a98f',
           marginRight: '0.5rem',
         },
         buttonSkip: {
-          color: '#6b7280',
+          color: '#b5a98f',
         },
         tooltip: {
           borderRadius: '1rem',

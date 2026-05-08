@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Paleta Manah — modo light */
+:root {
+  --manah-bg:     245 240 232;   /* #f5f0e8 — crema cálido */
+  --manah-card:   255 255 255;   /* #ffffff — blanco */
+  --manah-deep:   238 245 242;   /* #eef5f2 — verde muy suave */
+  --manah-gold:   214 164 73;    /* #d6a449 — dorado igual */
+  --manah-bronze: 178 126 26;    /* #b27e1a — bronce igual */
+  --manah-cream:  14  31  26;    /* #0e1f1a — verde oscuro como texto principal */
+  --manah-muted:  22  56  49;    /* #163831 — verde medio como texto secundario */
+}
+
+/* Paleta Manah — modo dark */
+.dark {
+  --manah-bg:     14  31  26;    /* #0e1f1a */
+  --manah-card:   17  46  40;    /* #112e28 */
+  --manah-deep:   22  56  49;    /* #163831 */
+  --manah-gold:   214 164 73;    /* #d6a449 */
+  --manah-bronze: 178 126 26;    /* #b27e1a */
+  --manah-cream:  237 228 196;   /* #ede4c4 */
+  --manah-muted:  181 169 143;   /* #b5a98f */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

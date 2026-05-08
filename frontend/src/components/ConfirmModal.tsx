@@ -1,4 +1,4 @@
-interface ConfirmModalProps {
+﻿interface ConfirmModalProps {
   isOpen: boolean;
   title: string;
   message: string;
@@ -24,55 +24,55 @@ export default function ConfirmModal({
   const typeStyles = {
     danger: {
       icon: '⚠️',
-      confirmBtn: 'bg-red-600 hover:bg-red-700',
+      confirmBtn: 'bg-red-600 hover:bg-red-700 text-white',
     },
     warning: {
       icon: '⚠️',
-      confirmBtn: 'bg-yellow-600 hover:bg-yellow-700',
+      confirmBtn: 'bg-manah-bronze hover:bg-manah-gold text-manah-bg',
     },
     info: {
       icon: 'ℹ️',
-      confirmBtn: 'bg-blue-600 hover:bg-blue-700',
+      confirmBtn: 'bg-manah-gold hover:bg-manah-bronze text-manah-bg',
     },
   };
 
   const styles = typeStyles[type];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="fixed inset-0 z-50 overflow-y-auto font-manrope">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black/60 transition-opacity cursor-pointer"
         onClick={onCancel}
       ></div>
 
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
+        <div className="relative bg-manah-card rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all border border-manah-gold/30">
           {/* Icon */}
-          <div className="flex items-center justify-center w-16 h-16 mx-auto bg-gradient-to-br from-red-100 to-orange-100 dark:from-red-900/40 dark:to-orange-900/40 rounded-full mb-4">
+          <div className="flex items-center justify-center w-16 h-16 mx-auto bg-manah-deep rounded-xl mb-4 border border-manah-gold/10">
             <span className="text-4xl">{styles.icon}</span>
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 text-center mb-2">
+          <h3 className="text-xl font-bold text-manah-cream text-center mb-2">
             {title}
           </h3>
 
           {/* Message */}
-          <p className="text-gray-600 dark:text-gray-300 text-center mb-6">{message}</p>
+          <p className="text-manah-muted text-center mb-6">{message}</p>
 
           {/* Buttons */}
           <div className="flex gap-3">
             <button
               onClick={onCancel}
-              className="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition font-semibold"
+              className="flex-1 px-4 py-3 bg-manah-deep text-manah-cream rounded-xl hover:bg-manah-deep/80 transition font-semibold cursor-pointer"
             >
               {cancelText}
             </button>
             <button
               onClick={onConfirm}
-              className={`flex-1 px-4 py-3 text-white rounded-lg transition font-semibold ${styles.confirmBtn}`}
+              className={`flex-1 px-4 py-3 rounded-xl transition font-semibold cursor-pointer ${styles.confirmBtn}`}
             >
               {confirmText}
             </button>
@@ -82,3 +82,4 @@ export default function ConfirmModal({
     </div>
   );
 }
+

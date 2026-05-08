@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { usePermission } from '../hooks/usePermission';
@@ -52,7 +52,7 @@ interface ProgressData {
     completed: boolean;
     percentage: number;
     chaptersRemaining: number;
-    minutesRead: number; // Viene en segundos desde el backend
+    minutesRead: number;
   };
   stats: {
     totalChaptersRead: number;
@@ -107,7 +107,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [seconds, setSeconds] = useState(0);
 
-  // Admin state
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [userStats, setUserStats] = useState<UserStats[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -116,20 +115,17 @@ export default function HomePage() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState<string | null>(null);
 
-  // Tutorial state
   const { onboarding, isLoading: tutorialLoading } = useTutorial();
   const [runOnboardingTour, setRunOnboardingTour] = useState(false);
 
   const isAdmin = roles.some((r) => r.name === 'admin');
 
-  // Actualizar seconds cuando cambie el progreso (minutesRead viene en segundos desde el backend)
   useEffect(() => {
     if (progress?.dailyGoal?.minutesRead) {
       setSeconds(progress.dailyGoal.minutesRead);
     }
   }, [progress?.dailyGoal?.minutesRead]);
 
-  // Función para formatear tiempo
   const formatTime = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
@@ -140,21 +136,14 @@ export default function HomePage() {
 
   useEffect(() => {
     if (isAdmin) {
-      // Cargar estadísticas del sistema para admin
       loadSystemStats();
       loadUserStats();
     } else {
-      // Cargar progreso del usuario regular
       progressApi
         .getMyProgress()
-        .then((data) => {
-          setProgress(data.data);
-        })
-        .catch((err) => {
-          console.error('Failed to load progress:', err);
-        });
+        .then((data) => setProgress(data.data))
+        .catch((err) => console.error('Failed to load progress:', err));
 
-      // Cargar versículo del día
       readingApi
         .getVerseOfTheDay('RV1960')
         .then((data) => {
@@ -168,23 +157,16 @@ export default function HomePage() {
     }
   }, [isAdmin]);
 
-  // Mostrar tutorial automáticamente a usuarios nuevos SOLO en su primer login
   useEffect(() => {
-    // Verificar si viene desde ProfilePage con la opción de mostrar tutorial manualmente
     const locationState = location.state as { showTutorial?: boolean } | null;
     const shouldShowManually = locationState?.showTutorial;
 
     if (!tutorialLoading && !isAdmin && location.pathname === '/inicio') {
-      // Mostrar automáticamente solo si el usuario nunca ha completado ni saltado el tutorial
-      // (esto solo sucede en el primer login de un usuario nuevo)
       const isFirstTime = !onboarding.completed && !onboarding.skipped;
       const shouldShow = shouldShowManually || isFirstTime;
 
       if (shouldShow) {
-        // Esperar un poco antes de mostrar el tutorial para que la página cargue
-        const timer = setTimeout(() => {
-          setRunOnboardingTour(true);
-        }, 1000);
+        const timer = setTimeout(() => setRunOnboardingTour(true), 1000);
         return () => clearTimeout(timer);
       }
     }
@@ -222,9 +204,7 @@ export default function HomePage() {
       const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/admin/users/${selectedUserId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       const data = await response.json();
@@ -233,7 +213,7 @@ export default function HomePage() {
         toast.success('Usuario eliminado exitosamente');
         setShowDeleteModal(false);
         setSelectedUserId(null);
-        await loadUserStats(); // Recargar la tabla
+        await loadUserStats();
       } else {
         toast.error(data.message || 'Error al eliminar usuario');
       }
@@ -255,9 +235,7 @@ export default function HomePage() {
       const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/admin/users/${selectedUserId}/reset-progress`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       const data = await response.json();
@@ -266,7 +244,7 @@ export default function HomePage() {
         toast.success('Progreso reseteado exitosamente');
         setShowResetProgressModal(false);
         setSelectedUserId(null);
-        await loadUserStats(); // Recargar la tabla
+        await loadUserStats();
       } else {
         toast.error(data.message || 'Error al resetear progreso');
       }
@@ -288,9 +266,7 @@ export default function HomePage() {
       const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/admin/users/${selectedUserId}/reset-password`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       const data = await response.json();
@@ -298,7 +274,6 @@ export default function HomePage() {
       if (response.ok) {
         setNewPassword(data.newPassword);
         toast.success('Contraseña reseteada exitosamente');
-        // No cerrar el modal aún, mostrar la contraseña
       } else {
         toast.error(data.message || 'Error al resetear contraseña');
         setShowResetPasswordModal(false);
@@ -319,18 +294,16 @@ export default function HomePage() {
   // Vista de Admin
   if (isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 dark:from-orange-950 dark:via-yellow-950 dark:to-red-950 pt-32">
-        {/* Navbar */}
+      <div className="min-h-screen bg-stone-50 dark:bg-stone-900 pt-32">
         <Navbar />
 
-        {/* Content */}
         <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
           {/* Welcome Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-orange-600">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-1 sm:mb-2">
+          <div className="bg-white dark:bg-stone-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-orange-600">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-800 dark:text-stone-100 mb-1 sm:mb-2">
               Panel de Administrador
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg">
+            <p className="text-stone-600 dark:text-stone-300 text-sm sm:text-base lg:text-lg">
               Gestiona el sistema y supervisa el progreso de los usuarios
             </p>
           </div>
@@ -339,95 +312,103 @@ export default function HomePage() {
           {systemStats && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
               {/* Total Users */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-blue-500">
+              <div className="bg-white dark:bg-stone-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-stone-400">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Usuarios Totales</p>
-                  <span className="text-xl sm:text-2xl">👥</span>
+                  <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 font-medium">Usuarios Totales</p>
+                  <svg className="w-6 h-6 text-stone-500 dark:text-stone-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                  </svg>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">{systemStats.totalUsers}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
+                <p className="text-2xl sm:text-3xl font-bold text-stone-700 dark:text-stone-200">{systemStats.totalUsers}</p>
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 sm:mt-2">
                   {systemStats.activeUsers} activos
                 </p>
               </div>
 
               {/* Total Chapters Read */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
+              <div className="bg-white dark:bg-stone-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Capítulos Leídos</p>
-                  <span className="text-xl sm:text-2xl">📖</span>
+                  <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 font-medium">Capítulos Leídos</p>
+                  <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
+                  </svg>
                 </div>
                 <p className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">{systemStats.totalChaptersRead}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">En total</p>
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 sm:mt-2">En total</p>
               </div>
 
               {/* Total XP */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-purple-500 col-span-2 md:col-span-1">
+              <div className="bg-white dark:bg-stone-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-amber-500 col-span-2 md:col-span-1">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">XP Total</p>
-                  <span className="text-xl sm:text-2xl">⭐</span>
+                  <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 font-medium">XP Total</p>
+                  <svg className="w-6 h-6 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                  </svg>
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">{systemStats.totalXpEarned}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Entre todos los usuarios</p>
+                <p className="text-2xl sm:text-3xl font-bold text-amber-700 dark:text-amber-400">{systemStats.totalXpEarned}</p>
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 sm:mt-2">Entre todos los usuarios</p>
               </div>
             </div>
           )}
 
           {/* User Statistics Table */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6">Estadísticas de Usuarios</h3>
+          <div className="bg-white dark:bg-stone-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
+            <h3 className="text-xl sm:text-2xl font-bold text-stone-800 dark:text-stone-100 mb-4 sm:mb-6">Estadísticas de Usuarios</h3>
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-                <p className="text-gray-600 dark:text-gray-300 mt-4">Cargando estadísticas...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
+                <p className="text-stone-600 dark:text-stone-300 mt-4">Cargando estadísticas...</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b-2 border-gray-200 dark:border-gray-700">
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Usuario</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-200">Email</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Nivel</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">XP Total</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Racha</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Capítulos</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Libros</th>
-                      <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-200">Acciones</th>
+                    <tr className="border-b-2 border-stone-200 dark:border-stone-700">
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-700 dark:text-stone-200">Usuario</th>
+                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-700 dark:text-stone-200">Email</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">Nivel</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">XP Total</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">Racha</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">Capítulos</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">Libros</th>
+                      <th className="px-4 py-3 text-center text-sm font-semibold text-stone-700 dark:text-stone-200">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {userStats.map((user) => (
-                      <tr key={user.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                    {userStats.map((u) => (
+                      <tr key={u.id} className="border-b border-stone-100 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800/50">
                         <td className="px-4 py-4">
-                          <div className="font-medium text-gray-800 dark:text-gray-100">{user.displayName}</div>
+                          <div className="font-medium text-stone-800 dark:text-stone-100">{u.displayName}</div>
                         </td>
-                        <td className="px-4 py-4 text-gray-600 dark:text-gray-300 text-sm">{user.email}</td>
+                        <td className="px-4 py-4 text-stone-600 dark:text-stone-300 text-sm">{u.email}</td>
                         <td className="px-4 py-4 text-center">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                            Nivel {user.currentLevel}
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300">
+                            Nivel {u.currentLevel}
                           </span>
                         </td>
-                        <td className="px-4 py-4 text-center font-semibold text-indigo-600 dark:text-indigo-400">
-                          {user.totalXp} XP
+                        <td className="px-4 py-4 text-center font-semibold text-amber-700 dark:text-amber-400">
+                          {u.totalXp} XP
                         </td>
                         <td className="px-4 py-4 text-center">
                           <span className="inline-flex items-center gap-1">
-                            <span>🔥</span>
-                            <span className="font-semibold text-orange-600 dark:text-orange-400">{user.currentStreak}</span>
+                            <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M13.5 0.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 0.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+                            </svg>
+                            <span className="font-semibold text-orange-600 dark:text-orange-400">{u.currentStreak}</span>
                           </span>
                         </td>
                         <td className="px-4 py-4 text-center font-semibold text-green-600 dark:text-green-400">
-                          {user.totalChaptersRead}
+                          {u.totalChaptersRead}
                         </td>
-                        <td className="px-4 py-4 text-center font-semibold text-blue-600 dark:text-blue-400">
-                          {user.booksCompleted}
+                        <td className="px-4 py-4 text-center font-semibold text-stone-700 dark:text-stone-300">
+                          {u.booksCompleted}
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center justify-center gap-2">
                             <button
-                              onClick={() => handleResetProgress(user.id)}
-                              className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
+                              onClick={() => handleResetProgress(u.id)}
+                              className="p-2 text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition-colors"
                               title="Resetear Progreso"
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -435,8 +416,8 @@ export default function HomePage() {
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleResetPassword(user.id)}
-                              className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 rounded-lg transition-colors"
+                              onClick={() => handleResetPassword(u.id)}
+                              className="p-2 text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 rounded-lg transition-colors"
                               title="Resetear Contraseña"
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -444,8 +425,8 @@ export default function HomePage() {
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleDeleteUser(user.id)}
-                              className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 rounded-lg transition-colors"
+                              onClick={() => handleDeleteUser(u.id)}
+                              className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                               title="Eliminar Usuario"
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -463,7 +444,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Modal de Confirmación: Eliminar Usuario */}
         <ConfirmModal
           isOpen={showDeleteModal}
           title="Eliminar Usuario"
@@ -471,14 +451,10 @@ export default function HomePage() {
           confirmText="Sí, eliminar"
           cancelText="Cancelar"
           onConfirm={confirmDeleteUser}
-          onCancel={() => {
-            setShowDeleteModal(false);
-            setSelectedUserId(null);
-          }}
+          onCancel={() => { setShowDeleteModal(false); setSelectedUserId(null); }}
           type="danger"
         />
 
-        {/* Modal de Confirmación: Resetear Progreso */}
         <ConfirmModal
           isOpen={showResetProgressModal}
           title="Resetear Progreso"
@@ -486,28 +462,24 @@ export default function HomePage() {
           confirmText="Sí, resetear"
           cancelText="Cancelar"
           onConfirm={confirmResetProgress}
-          onCancel={() => {
-            setShowResetProgressModal(false);
-            setSelectedUserId(null);
-          }}
+          onCancel={() => { setShowResetProgressModal(false); setSelectedUserId(null); }}
           type="danger"
         />
 
-        {/* Modal de Contraseña Reseteada */}
         {showResetPasswordModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
-              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
+            <div className="bg-white dark:bg-stone-800 rounded-lg shadow-xl max-w-md w-full p-6">
+              <h3 className="text-xl font-bold text-stone-800 dark:text-stone-100 mb-4">
                 {newPassword ? 'Contraseña Reseteada' : 'Resetear Contraseña'}
               </h3>
 
               {newPassword ? (
                 <div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  <p className="text-stone-600 dark:text-stone-300 mb-4">
                     La contraseña ha sido reseteada exitosamente. Copia esta contraseña temporal y compártela con el usuario:
                   </p>
-                  <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-4">
-                    <p className="text-lg font-mono font-bold text-center text-indigo-600 dark:text-indigo-400 select-all">
+                  <div className="bg-stone-100 dark:bg-stone-700 p-4 rounded-lg mb-4">
+                    <p className="text-lg font-mono font-bold text-center text-amber-700 dark:text-amber-400 select-all">
                       {newPassword}
                     </p>
                   </div>
@@ -520,13 +492,13 @@ export default function HomePage() {
                         navigator.clipboard.writeText(newPassword);
                         toast.success('Contraseña copiada al portapapeles');
                       }}
-                      className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                      className="flex-1 bg-amber-700 text-white px-4 py-2 rounded-lg hover:bg-amber-800 transition-colors font-medium"
                     >
                       Copiar Contraseña
                     </button>
                     <button
                       onClick={closePasswordModal}
-                      className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                      className="flex-1 bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-100 px-4 py-2 rounded-lg hover:bg-stone-300 transition-colors font-medium"
                     >
                       Cerrar
                     </button>
@@ -534,25 +506,22 @@ export default function HomePage() {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  <p className="text-stone-600 dark:text-stone-300 mb-4">
                     ¿Estás seguro de que deseas resetear la contraseña de este usuario? Se generará una nueva contraseña temporal.
                   </p>
-                  <p className="text-sm text-yellow-600 mb-4">
+                  <p className="text-sm text-yellow-600 dark:text-yellow-400 mb-4">
                     ⚠️ Nota: Solo se puede resetear la contraseña de usuarios locales (no usuarios de Auth0).
                   </p>
                   <div className="flex gap-2">
                     <button
                       onClick={confirmResetPassword}
-                      className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="flex-1 bg-amber-700 text-white px-4 py-2 rounded-lg hover:bg-amber-800 transition-colors font-medium"
                     >
                       Sí, resetear
                     </button>
                     <button
-                      onClick={() => {
-                        setShowResetPasswordModal(false);
-                        setSelectedUserId(null);
-                      }}
-                      className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                      onClick={() => { setShowResetPasswordModal(false); setSelectedUserId(null); }}
+                      className="flex-1 bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-100 px-4 py-2 rounded-lg hover:bg-stone-300 transition-colors font-medium"
                     >
                       Cancelar
                     </button>
@@ -567,357 +536,285 @@ export default function HomePage() {
   }
 
   // Vista de Usuario Regular
+  const today = new Date();
+  const dayNames = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
+  const monthNames = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+  const dateStr = `${dayNames[today.getDay()]} · ${today.getDate()} DE ${monthNames[today.getMonth()]}`;
+  const hour = today.getHours();
+  const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+  const initial = (user?.displayName ?? 'U')[0].toUpperCase();
+
+  const currentStreak = progress?.user.currentStreak ?? 0;
+  const longestStreak = progress?.user.longestStreak ?? 0;
+  const goalMetToday = progress?.streak?.status.goalMetToday ?? false;
+  const dayOfWeek = today.getDay();
+  const todayIdx = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const dayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+  const filledDays = dayLabels.map((_, i) => {
+    if (i > todayIdx) return false;
+    const daysAgo = todayIdx - i;
+    if (daysAgo === 0) return goalMetToday;
+    return daysAgo < currentStreak;
+  });
+
+  const currentLevel = progress?.xp?.currentLevel ?? 0;
+  const totalXp = progress?.user.totalXp ?? 0;
+  const xpPct = progress?.xp?.progress.percentage ?? 0;
+  const dailyProgress = progress?.dailyGoal?.progress ?? 0;
+  const dailyGoal = progress?.dailyGoal?.goal ?? 0;
+  const displayMinutes = Math.floor((progress?.dailyGoal?.minutesRead ?? 0) / 60);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950 pt-32">
-      {/* Navbar */}
+    <div className="min-h-screen bg-manah-bg font-manrope">
       <Navbar />
 
-      {/* Content */}
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-        {/* Welcome Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-indigo-600">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-1 sm:mb-2">
-            ¡Hola {user?.displayName}!
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg">
-            Bienvenido de vuelta a tu aventura bíblica
-          </p>
+      <div className="pt-16 sm:pt-32 max-w-xl mx-auto px-4 pb-12">
+
+        {/* Header */}
+        <div className="mb-6">
+          <p className="text-xs font-bold text-manah-muted tracking-widest mb-1">{dateStr}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-manah-cream">
+            Hola, {user?.displayName}.
+          </h1>
         </div>
 
-        {/* Verse of the Day */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2">
-            <span className="text-xl sm:text-2xl">📖</span>
-            Versículo del Día
-          </h3>
-
+        {/* Versículo del Día */}
+        <div className="mb-6">
+          <p className="text-center text-xs font-bold text-manah-gold/60 tracking-[0.2em] mb-5">· VERSÍCULO DEL DÍA ·</p>
           {loading || !verse ? (
-            <div className="animate-pulse bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-900/50 rounded-lg sm:rounded-xl p-4 sm:p-6">
-              <div className="space-y-3">
-                <div className="h-4 bg-indigo-200 dark:bg-indigo-700 rounded w-full"></div>
-                <div className="h-4 bg-indigo-200 dark:bg-indigo-700 rounded w-5/6"></div>
-                <div className="h-4 bg-indigo-200 dark:bg-indigo-700 rounded w-4/6"></div>
-                <div className="h-3 bg-indigo-200 dark:bg-indigo-700 rounded w-32 mt-4"></div>
-              </div>
+            <div className="animate-pulse space-y-3 px-4">
+              <div className="h-5 bg-manah-deep rounded w-full"></div>
+              <div className="h-5 bg-manah-deep rounded w-5/6 mx-auto"></div>
+              <div className="h-5 bg-manah-deep rounded w-4/6 mx-auto"></div>
+              <div className="h-3 bg-manah-deep rounded w-32 mx-auto mt-4"></div>
             </div>
           ) : verse ? (
             <Link
               to={`/lectura-libre/${verse.reference.bookSlug}/${verse.reference.chapter}/${verse.reference.verse}`}
-              className="block bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-900/50 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-800/60 dark:hover:to-purple-800/60 transition-all transform hover:scale-[1.02] cursor-pointer"
+              className="block text-center group px-2"
             >
-              <p className="text-base sm:text-lg lg:text-xl text-gray-700 dark:text-gray-200 leading-relaxed mb-3 sm:mb-4">
+              <p className="text-lg sm:text-xl text-manah-cream leading-relaxed italic font-light mb-4 group-hover:text-manah-gold transition-colors">
                 "{verse.text}"
               </p>
-              <div className="flex items-center justify-between">
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-semibold">
-                  {verse.reference.fullReference} ({verse.version})
-                </p>
-                <span className="text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 dark:text-indigo-400 font-semibold flex items-center gap-1">
-                  Leer más →
-                </span>
-              </div>
+              <p className="text-xs font-bold text-manah-gold/60 tracking-[0.15em]">
+                — {verse.reference.fullReference} —
+              </p>
             </Link>
           ) : (
-            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">No se pudo cargar el versículo</p>
+            <p className="text-center text-manah-muted text-sm">No se pudo cargar el versículo</p>
           )}
         </div>
 
-        {/* Stats Grid - Estadísticas principales */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-          {/* XP Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-indigo-500">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">XP Total</p>
-              <span className="text-xl sm:text-2xl">⭐</span>
+        <div className="w-full h-px bg-manah-gold/15 mb-5" />
+
+        {/* Racha */}
+        <div className="bg-manah-gold rounded-xl p-5 mb-4">
+          {loading || !progress ? (
+            <div className="animate-pulse space-y-4">
+              <div className="h-4 bg-manah-deep rounded w-20"></div>
+              <div className="h-12 bg-manah-deep rounded w-36"></div>
+              <div className="flex gap-2">
+                {[...Array(7)].map((_, i) => <div key={i} className="flex-1 h-9 bg-manah-deep rounded-xl"></div>)}
+              </div>
             </div>
+          ) : (
+            <>
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-xs font-bold text-manah-cream/60 tracking-widest mb-2">RACHA</p>
+                  <div className="flex items-end gap-2">
+                    <span className="text-5xl font-bold text-manah-cream leading-none">{currentStreak}</span>
+                    <div className="flex items-center gap-1 mb-1">
+                      <span className="text-manah-cream/70 text-sm">días seguidos</span>
+                      <svg className="w-5 h-5 text-manah-cream/70" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13.5 0.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 0.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0 ml-4">
+                  {longestStreak > 0 && (
+                    <p className="text-xs text-manah-cream/50 mb-2">mejor {longestStreak}d</p>
+                  )}
+                  {progress.streak?.status && (
+                    <div className="w-28">
+                      <div className="flex justify-between text-xs text-manah-cream/60 mb-1">
+                        <span>{progress.streak.status.xpToday}/{progress.streak.status.xpRequired} XP</span>
+                        <span>{Math.floor(progress.streak.status.xpProgress)}%</span>
+                      </div>
+                      <div className="w-full bg-manah-cream/20 h-1.5 rounded-full overflow-hidden">
+                        <div
+                          className="bg-manah-cream/60 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.min(progress.streak.status.xpProgress, 100)}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-manah-cream/60 mt-1 leading-tight">
+                        {progress.streak.status.goalMetToday ? '¡Meta cumplida!' : 'para mantener racha'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {dayLabels.map((day, i) => (
+                  <div
+                    key={i}
+                    className={`flex-1 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-colors ${
+                      filledDays[i]
+                        ? 'bg-manah-muted dark:bg-manah-cream text-manah-bg dark:text-manah-bg'
+                        : i > todayIdx
+                        ? 'bg-manah-cream/10 text-manah-cream/30'
+                        : 'bg-manah-cream/15 text-manah-cream/50'
+                    }`}
+                  >
+                    {day}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {/* Nivel */}
+          <div className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
             {loading || !progress ? (
-              <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-2 sm:mb-3"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1"></div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mt-1"></div>
+              <div className="animate-pulse space-y-2">
+                <div className="h-4 bg-manah-deep rounded w-4"></div>
+                <div className="h-7 bg-manah-deep rounded"></div>
+                <div className="h-3 bg-manah-deep rounded w-3/4"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-indigo-600 dark:text-indigo-400">{progress.user.totalXp}</p>
-                {progress.xp && (
-                  <div className="mt-2 sm:mt-3">
-                    <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
-                      <span>Nivel {progress.xp.currentLevel}</span>
-                      <span>{progress.xp.progress.percentage}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2">
-                      <div
-                        className="bg-indigo-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${progress.xp.progress.percentage}%` }}
-                      ></div>
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {progress.xp.progress.remaining} XP para nivel {progress.xp.currentLevel + 1}
-                    </p>
-                  </div>
-                )}
+                <svg className="w-4 h-4 text-manah-gold mb-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+                <p className="text-xl font-bold text-manah-cream">Lv {currentLevel}</p>
+                <p className="text-xs text-manah-muted mt-0.5">{totalXp} xp</p>
+                <div className="w-full bg-manah-bg h-1 mt-2">
+                  <div className="bg-manah-gold h-1 transition-all" style={{ width: `${xpPct}%` }} />
+                </div>
               </>
             )}
           </div>
 
-          {/* Meta Diaria */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-green-500">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Meta Diaria</p>
-              <span className="text-xl sm:text-2xl">📊</span>
-            </div>
+          {/* Meta */}
+          <div className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
             {loading || !progress ? (
-              <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-16 mb-2 sm:mb-3"></div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mt-1"></div>
+              <div className="animate-pulse space-y-2">
+                <div className="h-4 bg-manah-deep rounded w-4"></div>
+                <div className="h-7 bg-manah-deep rounded"></div>
+                <div className="h-3 bg-manah-deep rounded w-3/4"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600 dark:text-green-400">
-                  {progress.dailyGoal.progress}/{progress.dailyGoal.goal}
-                </p>
-                {progress.dailyGoal && (
-                  <div className="mt-2 sm:mt-3">
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2">
-                      <div
-                        className="bg-green-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${progress.dailyGoal.percentage}%` }}
-                      ></div>
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {progress.dailyGoal.completed
-                        ? '¡Meta completada! 🎉'
-                        : `${progress.dailyGoal.chaptersRemaining} ${progress.dailyGoal.chaptersRemaining === 1 ? 'cap. restante' : 'caps. restantes'}`}
-                    </p>
-                  </div>
-                )}
+                <svg className="w-4 h-4 text-green-400 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+                <p className="text-xl font-bold text-manah-cream">{dailyProgress}/{dailyGoal}</p>
+                <p className="text-xs text-manah-muted mt-0.5">capítulos</p>
+                <div className="w-full bg-manah-bg h-1 mt-2">
+                  <div className="bg-manah-gold h-1 transition-all" style={{ width: `${progress.dailyGoal.percentage}%` }} />
+                </div>
               </>
             )}
           </div>
 
-          {/* Racha */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-orange-500">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Racha</p>
-              <span className="text-xl sm:text-2xl">🔥</span>
-            </div>
+          {/* Tiempo */}
+          <div className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
             {loading || !progress ? (
-              <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-12 mb-2 sm:mb-3"></div>
-                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mt-1"></div>
+              <div className="animate-pulse space-y-2">
+                <div className="h-4 bg-manah-deep rounded w-4"></div>
+                <div className="h-7 bg-manah-deep rounded"></div>
+                <div className="h-3 bg-manah-deep rounded w-3/4"></div>
               </div>
             ) : (
               <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600 dark:text-orange-400">
-                  {progress.user.currentStreak} días
-                </p>
-                {progress.streak?.status && (
-                  <div className="mt-2 sm:mt-3">
-                    <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
-                      <span>{progress.streak.status.xpToday} XP</span>
-                      <span>{Math.floor(progress.streak.status.xpProgress)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 sm:h-2">
-                      <div
-                        className="bg-orange-600 h-1.5 sm:h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${Math.min(progress.streak.status.xpProgress, 100)}%`
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {progress.streak.status.goalMetToday
-                        ? '¡Meta del día cumplida! ✨'
-                        : `${progress.streak.status.xpRequired - progress.streak.status.xpToday} XP para mantener racha`}
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* Tiempo de Lectura Hoy */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-5 border-t-4 border-purple-500">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium">Tiempo Hoy</p>
-              <span className="text-xl sm:text-2xl">⏱️</span>
-            </div>
-            {loading || !progress ? (
-              <div className="animate-pulse">
-                <div className="h-8 sm:h-10 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-1 sm:mb-2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-              </div>
-            ) : (
-              <>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600 dark:text-purple-400">
-                  {formattedTime}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">
-                  Sigue leyendo para ganar XP
-                </p>
+                <svg className="w-4 h-4 text-manah-muted mb-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/>
+                </svg>
+                <p className="text-xl font-bold text-manah-cream">{displayMinutes} m</p>
+                <p className="text-xs text-manah-muted mt-0.5">tiempo hoy</p>
               </>
             )}
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
-          {/* Lectura Camino */}
+        {/* Acceso Rápido */}
+        <div className="grid grid-cols-2 gap-3">
           <Link
             to={
               progress?.lastRead?.camino
                 ? `/camino/${progress.lastRead.camino.bookSlug}/${progress.lastRead.camino.chapterNumber}`
                 : '/camino'
             }
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-6 lg:p-8 hover:shadow-xl transition-all transform hover:scale-105"
+            className="bg-manah-card rounded-xl border border-manah-gold/20 p-4 hover:border-manah-gold/50 hover:shadow-lg transition-all"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Lectura Camino</h3>
-                {progress?.lastRead?.camino ? (
-                  <>
-                    <p className="opacity-90 mb-1 text-sm sm:text-base">Continuar leyendo:</p>
-                    <p className="text-xs sm:text-sm font-semibold">
-                      {progress.lastRead.camino.bookName} - Cap. {progress.lastRead.camino.chapterNumber}
-                    </p>
-                  </>
-                ) : (
-                  <p className="opacity-90 text-sm sm:text-base">Comienza tu camino de lectura guiado</p>
-                )}
-              </div>
-              <span className="text-3xl sm:text-4xl lg:text-5xl">🛣</span>
+            <div className="w-10 h-10 bg-manah-deep rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1.5 4v1.5c0 .28.09.54.24.75l7.5 10A1 1 0 0 0 10 16.5h1.5v4a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-4H15a1 1 0 0 0 .76-.25l7.5-10c.15-.21.24-.47.24-.75V4a.5.5 0 0 0-.5-.5H2a.5.5 0 0 0-.5.5zM3.5 5h17L14 13.5H10L3.5 5z"/>
+              </svg>
             </div>
+            <p className="font-bold text-sm text-manah-cream mb-1">Ruta bíblica</p>
+            <p className="text-xs text-manah-muted">
+              {progress?.lastRead?.camino
+                ? `${progress.lastRead.camino.bookName} ${progress.lastRead.camino.chapterNumber} →`
+                : 'Comienza tu camino →'}
+            </p>
           </Link>
 
-          {/* Lectura Libre */}
           <Link
             to={
               progress?.lastRead?.libre
                 ? `/lectura-libre/${progress.lastRead.libre.bookSlug}/${progress.lastRead.libre.chapterNumber}`
                 : '/lectura-libre'
             }
-            className="bg-gradient-to-r from-pink-600 to-orange-600 text-white rounded-xl sm:rounded-2xl shadow-lg p-5 sm:p-6 lg:p-8 hover:shadow-xl transition-all transform hover:scale-105"
+            className="bg-manah-card rounded-xl border border-manah-gold/20 p-4 hover:border-manah-gold/50 hover:shadow-lg transition-all"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Lectura Libre</h3>
-                {progress?.lastRead?.libre ? (
-                  <>
-                    <p className="opacity-90 mb-1 text-sm sm:text-base">Continuar leyendo:</p>
-                    <p className="text-xs sm:text-sm font-semibold">
-                      {progress.lastRead.libre.bookName} - Cap. {progress.lastRead.libre.chapterNumber}
-                    </p>
-                  </>
-                ) : (
-                  <p className="opacity-90 text-sm sm:text-base">Explora cualquier libro o capítulo</p>
-                )}
-              </div>
-              <span className="text-3xl sm:text-4xl lg:text-5xl">📖</span>
+            <div className="w-10 h-10 bg-manah-gold/10 rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
+              </svg>
             </div>
+            <p className="font-bold text-sm text-manah-cream mb-1">Lectura libre</p>
+            <p className="text-xs text-manah-muted">
+              {progress?.lastRead?.libre
+                ? `${progress.lastRead.libre.bookName} ${progress.lastRead.libre.chapterNumber} →`
+                : 'Explora 66 libros →'}
+            </p>
           </Link>
         </div>
 
-        {/* Progress Summary Card */}
-        {progress && (
-          <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg sm:rounded-xl shadow-2xl p-3 sm:p-6 mb-4 sm:mb-6 text-white">
-            <div className="mb-3 sm:mb-4">
-              <h3 className="text-base sm:text-xl lg:text-2xl font-bold mb-0.5 sm:mb-1">Mi Camino Bíblico</h3>
-              <p className="text-xs opacity-90">Resumen de tu progreso espiritual</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
-              {/* Libros Completados */}
-              <div className="bg-white/20 backdrop-blur rounded-lg p-2 sm:p-4">
-                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                  <span className="text-xs font-semibold">Libros Completados</span>
-                  <span className="text-base sm:text-xl">📚</span>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl sm:text-3xl font-bold mb-0.5 sm:mb-1">
-                    {progress.stats.booksCompleted || 0}
-                  </div>
-                  <div className="text-xs opacity-80">de 66 libros</div>
-                  <div className="w-full bg-white/20 rounded-full h-1 sm:h-1.5 mt-1 sm:mt-2 overflow-hidden">
-                    <div
-                      className="bg-white h-full rounded-full transition-all duration-500"
-                      style={{ width: `${Math.round(((progress.stats.booksCompleted || 0) / 66) * 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
+        {/* Paleta de colores - solo pruebas */}
+        <div className="mt-8 p-4 bg-manah-card rounded-xl">
+          <p className="text-xs font-bold text-manah-muted tracking-widest mb-3">PALETA DE COLORES</p>
+          <div className="space-y-2">
+            {[
+              { color: '#0e1f1a', label: 'bg-manah-bg — Fondo principal' },
+              { color: '#112e28', label: 'bg-manah-card — Cards' },
+              { color: '#163831', label: 'bg-manah-deep — Cards internas' },
+              { color: '#d6a449', label: 'bg-manah-gold — Dorado principal' },
+              { color: '#b27e1a', label: 'bg-manah-bronze — Dorado hover' },
+              { color: '#ede4c4', label: 'bg-manah-cream — Texto principal' },
+              { color: '#b5a98f', label: 'bg-manah-muted — Texto secundario' },
+            ].map(({ color, label }) => (
+              <div key={color} className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 border border-white/10" style={{ backgroundColor: color }} />
+                <span className="text-xs text-manah-muted font-mono">{label}</span>
               </div>
-
-              {/* Capítulos Leídos */}
-              <div className="bg-white/20 backdrop-blur rounded-lg p-2 sm:p-4">
-                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                  <span className="text-xs font-semibold">Capítulos Leídos</span>
-                  <span className="text-base sm:text-xl">📖</span>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl sm:text-3xl font-bold mb-0.5 sm:mb-1">
-                    {progress.stats.totalChaptersRead || 0}
-                  </div>
-                  <div className="text-xs opacity-80">de 1,189 capítulos</div>
-                  <div className="w-full bg-white/20 rounded-full h-1 sm:h-1.5 mt-1 sm:mt-2 overflow-hidden">
-                    <div
-                      className="bg-white h-full rounded-full transition-all duration-500"
-                      style={{ width: `${Math.round(((progress.stats.totalChaptersRead || 0) / 1189) * 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Racha Actual */}
-              <div className="bg-white/20 backdrop-blur rounded-lg p-2 sm:p-4">
-                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                  <span className="text-xs font-semibold">Racha Actual</span>
-                  <span className="text-base sm:text-xl">🔥</span>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl sm:text-3xl font-bold mb-0.5 sm:mb-1">
-                    {progress.user.currentStreak || 0}
-                  </div>
-                  <div className="text-xs opacity-80">días consecutivos</div>
-                  {progress.user.longestStreak && progress.user.longestStreak > 0 && (
-                    <div className="text-xs opacity-70 mt-0.5 sm:mt-1">
-                      Récord: {progress.user.longestStreak} días
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* Debug: Permissions - Solo para Admin */}
-        {isAdmin && (
-          <details className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-            <summary className="cursor-pointer font-semibold text-gray-700 dark:text-gray-200">
-              Ver Permisos del Sistema
-            </summary>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {permissions.map((perm) => (
-                <span
-                  key={perm}
-                  className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm"
-                >
-                  {perm}
-                </span>
-              ))}
-            </div>
-          </details>
-        )}
       </div>
 
-      {/* Tutorial de Bienvenida */}
       <OnboardingTour
         run={runOnboardingTour}
-        onComplete={() => {
-          setRunOnboardingTour(false);
-        }}
+        onComplete={() => setRunOnboardingTour(false)}
       />
     </div>
   );
 }
+
+

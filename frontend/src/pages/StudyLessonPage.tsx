@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { studyApi } from '../services/api';
 import { useAuthStore } from '../stores/authStore';
 import { normalizeVersion, DEFAULT_VERSION } from '../utils/bibleVersions';
+import LoadingScreen from '../components/LoadingScreen';
 
 interface Exercise {
   id: string;
@@ -66,7 +67,6 @@ export default function StudyLessonPage() {
     if (!answered) return;
 
     if (isLast) {
-      // Save results
       const finalCorrect = selected === current.correctIndex
         ? correctCount
         : correctCount;
@@ -93,20 +93,13 @@ export default function StudyLessonPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-indigo-600 mx-auto"></div>
-          <p className="text-gray-500 dark:text-gray-400 mt-4">Preparando lección...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen text="Preparando lección..." />;
   }
 
   if (!lesson) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <p className="text-gray-600 dark:text-gray-300">No se pudo cargar la lección.</p>
+      <div className="min-h-screen bg-manah-bg font-manrope flex items-center justify-center">
+        <p className="text-manah-muted">No se pudo cargar la lección.</p>
       </div>
     );
   }
@@ -116,27 +109,41 @@ export default function StudyLessonPage() {
     const perfect = correctCount === exercises.length;
 
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md text-center">
-          <div className="text-5xl mb-3">{perfect ? '🏆' : pct >= 70 ? '🎉' : '📚'}</div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">
+      <div className="min-h-screen bg-manah-bg font-manrope flex items-center justify-center p-4">
+        <div className="bg-manah-card rounded-xl shadow-2xl border border-manah-gold/20 p-6 sm:p-8 w-full max-w-md text-center">
+          <div className="flex justify-center mb-3">
+            {perfect ? (
+              <svg className="w-14 h-14 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V18H9v2h6v-2h-2v-2.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+              </svg>
+            ) : pct >= 70 ? (
+              <svg className="w-14 h-14 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+              </svg>
+            ) : (
+              <svg className="w-14 h-14 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v9l3-2.25L13 13V4h6v16z"/>
+              </svg>
+            )}
+          </div>
+          <h2 className="text-2xl font-bold text-manah-cream mb-1">
             {perfect ? '¡Perfecto!' : pct >= 70 ? '¡Bien hecho!' : 'Sigue practicando'}
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
+          <p className="text-manah-muted text-sm mb-6">
             {lesson.book.name} · Capítulo {lesson.chapter.number}
           </p>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3 mb-6">
-            <StatCard label="Correctas" value={`${correctCount}/${exercises.length}`} color="text-green-600 dark:text-green-400" />
-            <StatCard label="Precisión" value={`${pct}%`} color={pct === 100 ? 'text-yellow-500' : pct >= 70 ? 'text-indigo-600 dark:text-indigo-400' : 'text-orange-500'} />
-            <StatCard label="XP Ganado" value={`+${xpEarned}`} color="text-purple-600 dark:text-purple-400" />
+            <StatCard label="Correctas" value={`${correctCount}/${exercises.length}`} color="text-green-400" />
+            <StatCard label="Precisión" value={`${pct}%`} color={pct === 100 ? 'text-manah-gold' : pct >= 70 ? 'text-manah-gold' : 'text-orange-400'} />
+            <StatCard label="XP Ganado" value={`+${xpEarned}`} color="text-manah-gold" />
           </div>
 
           {/* Score bar */}
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-6">
+          <div className="w-full bg-manah-bg h-3 mb-6">
             <div
-              className={`h-3 rounded-full transition-all ${perfect ? 'bg-yellow-400' : pct >= 70 ? 'bg-green-500' : 'bg-orange-400'}`}
+              className={`h-3 transition-all ${perfect ? 'bg-manah-gold' : pct >= 70 ? 'bg-green-500' : 'bg-orange-400'}`}
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -156,14 +163,14 @@ export default function StudyLessonPage() {
                     .catch(console.error)
                     .finally(() => setLoading(false));
                 }}
-                className="w-full py-3 bg-white dark:bg-gray-700 border-2 border-indigo-300 dark:border-indigo-600 text-indigo-600 dark:text-indigo-400 rounded-xl font-semibold hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition"
+                className="w-full py-3 bg-manah-deep border border-manah-gold/20 text-manah-cream rounded-xl font-semibold hover:bg-manah-deep/80 transition cursor-pointer"
               >
                 Intentar de nuevo
               </button>
             )}
             <button
               onClick={() => navigate(`/aprender/${bookSlug}`)}
-              className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition"
+              className="w-full py-3 bg-manah-gold hover:bg-manah-bronze text-manah-bg rounded-xl font-semibold hover:shadow-lg transition cursor-pointer"
             >
               {perfect ? 'Continuar' : 'Volver a lecciones'}
             </button>
@@ -177,25 +184,25 @@ export default function StudyLessonPage() {
   const progress = ((currentIdx) / exercises.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <div className="min-h-screen bg-manah-bg font-manrope flex flex-col">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
+      <div className="bg-manah-card border-b border-manah-gold/10 sticky top-0 z-10">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center gap-4">
           <button
             onClick={() => navigate(`/aprender/${bookSlug}`)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition text-xl font-bold flex-shrink-0"
+            className="text-manah-muted hover:text-manah-cream transition text-xl font-bold flex-shrink-0 cursor-pointer"
           >
             ✕
           </button>
           <div className="flex-1">
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+            <div className="w-full bg-manah-deep h-3">
               <div
-                className="bg-indigo-500 h-3 rounded-full transition-all duration-500"
+                className="bg-manah-gold h-3 transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
-          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 flex-shrink-0">
+          <span className="text-sm font-semibold text-manah-muted flex-shrink-0">
             {currentIdx + 1}/{exercises.length}
           </span>
         </div>
@@ -205,12 +212,12 @@ export default function StudyLessonPage() {
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full px-4 py-6">
         {/* Type badge */}
         <div className="mb-4">
-          <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+          <span className={`text-xs font-bold px-3 py-1 rounded-xl border ${
             current.type === 'FILL_IN_BLANK'
-              ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400'
+              ? 'bg-manah-gold/10 text-manah-gold border-manah-gold/20'
               : current.type === 'WHICH_VERSE'
-              ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
-              : 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400'
+              ? 'bg-manah-deep text-manah-muted border-manah-gold/10'
+              : 'bg-manah-gold/10 text-manah-gold border-manah-gold/20'
           }`}>
             {current.type === 'FILL_IN_BLANK' ? 'Completar versículo' :
              current.type === 'WHICH_VERSE' ? 'Identificar versículo' :
@@ -219,9 +226,9 @@ export default function StudyLessonPage() {
         </div>
 
         {/* Question */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-5 mb-6">
+        <div className="bg-manah-card rounded-xl border border-manah-gold/10 p-5 mb-6">
           {current.question.split('\n').map((line, i) => (
-            <p key={i} className={`${i === 0 ? 'font-bold text-gray-800 dark:text-gray-100 text-base' : 'mt-2 text-gray-700 dark:text-gray-200 text-sm leading-relaxed italic'}`}>
+            <p key={i} className={`${i === 0 ? 'font-bold text-manah-cream text-base' : 'mt-2 text-manah-muted text-sm leading-relaxed italic'}`}>
               {line}
             </p>
           ))}
@@ -230,18 +237,18 @@ export default function StudyLessonPage() {
         {/* Options */}
         <div className="space-y-3 flex-1">
           {current.options.map((option, idx) => {
-            let style = 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 hover:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20';
+            let style = 'border-manah-gold/20 bg-manah-deep text-manah-cream hover:border-manah-gold/60';
 
             if (answered) {
               if (idx === current.correctIndex) {
-                style = 'border-green-400 bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200';
+                style = 'border-green-500 bg-green-900/30 text-green-200';
               } else if (idx === selected && idx !== current.correctIndex) {
-                style = 'border-red-400 bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200';
+                style = 'border-red-500 bg-red-900/30 text-red-200';
               } else {
-                style = 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-400 dark:text-gray-500 opacity-60';
+                style = 'border-manah-deep bg-manah-card text-manah-muted/40 opacity-60';
               }
             } else if (selected === idx) {
-              style = 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-200';
+              style = 'border-manah-gold bg-manah-gold/10 text-manah-gold';
             }
 
             return (
@@ -273,17 +280,17 @@ export default function StudyLessonPage() {
           <div className="mt-6">
             <div className={`p-3 rounded-xl mb-4 text-sm font-semibold ${
               selected === current.correctIndex
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                ? 'bg-green-900/30 text-green-300 border border-green-700/30'
+                : 'bg-red-900/30 text-red-300 border border-red-700/30'
             }`}>
               {selected === current.correctIndex
-                ? '¡Correcto! 🎉'
+                ? '¡Correcto!'
                 : `Incorrecto. La respuesta correcta era la opción ${String.fromCharCode(65 + current.correctIndex)}.`}
             </div>
             <button
               onClick={handleContinue}
               disabled={saving}
-              className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold text-lg hover:shadow-lg transition disabled:opacity-60"
+              className="w-full py-4 bg-manah-gold hover:bg-manah-bronze text-manah-bg rounded-xl font-bold text-lg hover:shadow-lg transition disabled:opacity-60 cursor-pointer"
             >
               {saving ? 'Guardando...' : isLast ? 'Ver resultados' : 'Continuar'}
             </button>
@@ -296,9 +303,12 @@ export default function StudyLessonPage() {
 
 function StatCard({ label, value, color }: { label: string; value: string; color: string }) {
   return (
-    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+    <div className="bg-manah-deep rounded-xl p-3 border border-manah-gold/10">
       <p className={`text-xl font-bold ${color}`}>{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</p>
+      <p className="text-xs text-manah-muted mt-0.5">{label}</p>
     </div>
   );
 }
+
+
+

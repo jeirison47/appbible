@@ -6,14 +6,14 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+      className="p-2 rounded-xl bg-manah-cream/10 hover:bg-manah-cream/20 transition-colors"
       aria-label={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
       title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
     >
       {theme === 'light' ? (
         // Ícono de luna (cambiar a modo oscuro)
         <svg
-          className="w-5 h-5 text-white"
+          className="w-5 h-5 text-manah-cream/70"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ export default function ThemeToggle() {
       ) : (
         // Ícono de sol (cambiar a modo claro)
         <svg
-          className="w-5 h-5 text-white"
+          className="w-5 h-5 text-manah-cream/70"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"

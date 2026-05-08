@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 
@@ -15,17 +15,17 @@ export default function LegalPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-manah-bg font-manrope">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+      <div className="bg-manah-card border-b border-manah-gold/20">
         <div className="max-w-3xl mx-auto px-4 py-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Legal</h1>
-            <p className="text-indigo-200 text-sm mt-0.5">Información legal de Manah</p>
+            <h1 className="text-2xl font-bold text-manah-cream">Legal</h1>
+            <p className="text-manah-muted text-sm mt-0.5">Información legal de Manah</p>
           </div>
           <Link
             to={isAuthenticated ? '/inicio' : '/'}
-            className="flex items-center gap-2 text-white/80 hover:text-white transition text-sm font-medium"
+            className="flex items-center gap-2 text-manah-muted hover:text-manah-gold transition text-sm font-medium cursor-pointer"
           >
             <span className="text-lg">←</span>
             Volver
@@ -35,15 +35,15 @@ export default function LegalPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-6">
         {/* Tabs */}
-        <div className="flex gap-1 bg-white dark:bg-gray-800 rounded-xl p-1 shadow mb-6">
+        <div className="flex gap-1 bg-manah-card rounded-xl p-1 shadow mb-6 border border-manah-gold/10">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 py-2 px-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === tab.id
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'bg-manah-gold text-manah-bg shadow'
+                  : 'text-manah-muted hover:bg-manah-deep'
               }`}
             >
               {tab.label}
@@ -52,13 +52,13 @@ export default function LegalPage() {
         </div>
 
         {/* Content */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6 space-y-6 text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+        <div className="bg-manah-card rounded-xl shadow border border-manah-gold/10 p-6 space-y-6 text-manah-muted text-sm leading-relaxed">
 
           {activeTab === 'privacy' && (
             <>
               <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Política de Privacidad</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Última actualización: mayo 2025</p>
+                <h2 className="text-lg font-bold text-manah-cream mb-1">Política de Privacidad</h2>
+                <p className="text-xs text-manah-muted/60">Última actualización: mayo 2025</p>
               </div>
 
               <Section title="1. Información que recopilamos">
@@ -89,10 +89,10 @@ export default function LegalPage() {
               <Section title="3. Servicios de terceros">
                 <p>Manah utiliza los siguientes servicios externos:</p>
                 <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li><strong>Auth0</strong> — para inicio de sesión con Google (solo si lo usas)</li>
-                  <li><strong>Neon DB</strong> — base de datos PostgreSQL donde se almacenan tus datos</li>
-                  <li><strong>Render</strong> — servidor backend (alojamiento)</li>
-                  <li><strong>Vercel</strong> — frontend (alojamiento)</li>
+                  <li><strong className="text-manah-cream">Auth0</strong> — para inicio de sesión con Google (solo si lo usas)</li>
+                  <li><strong className="text-manah-cream">Neon DB</strong> — base de datos PostgreSQL donde se almacenan tus datos</li>
+                  <li><strong className="text-manah-cream">Render</strong> — servidor backend (alojamiento)</li>
+                  <li><strong className="text-manah-cream">Vercel</strong> — frontend (alojamiento)</li>
                 </ul>
                 <p className="mt-2">Cada uno de estos servicios tiene su propia política de privacidad.</p>
               </Section>
@@ -106,7 +106,7 @@ export default function LegalPage() {
               </Section>
 
               <Section title="6. Contacto">
-                <p>Para consultas sobre privacidad escríbenos a: <span className="font-medium text-indigo-600 dark:text-indigo-400">jeirison47@gmail.com</span></p>
+                <p>Para consultas sobre privacidad escríbenos a: <span className="font-medium text-manah-gold">jeirison47@gmail.com</span></p>
               </Section>
             </>
           )}
@@ -114,8 +114,8 @@ export default function LegalPage() {
           {activeTab === 'terms' && (
             <>
               <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Términos de Uso</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Última actualización: mayo 2025</p>
+                <h2 className="text-lg font-bold text-manah-cream mb-1">Términos de Uso</h2>
+                <p className="text-xs text-manah-muted/60">Última actualización: mayo 2025</p>
               </div>
 
               <Section title="1. Naturaleza de la aplicación">
@@ -153,8 +153,8 @@ export default function LegalPage() {
           {activeTab === 'attribution' && (
             <>
               <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">Atribución de Versiones Bíblicas</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Manah es un proyecto personal sin fines comerciales</p>
+                <h2 className="text-lg font-bold text-manah-cream mb-1">Atribución de Versiones Bíblicas</h2>
+                <p className="text-xs text-manah-muted/60">Manah es un proyecto personal sin fines comerciales</p>
               </div>
 
               <p>Los textos bíblicos utilizados en esta aplicación pertenecen a sus respectivos titulares de derechos. Manah no reclama ningún derecho sobre estos textos.</p>
@@ -194,9 +194,9 @@ export default function LegalPage() {
                 />
               </div>
 
-              <div className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-200 dark:border-indigo-700">
-                <p className="text-xs text-indigo-800 dark:text-indigo-300">
-                  Esta aplicación es un proyecto personal sin fines comerciales ni lucrativos. El uso del contenido bíblico tiene carácter exclusivamente personal y educativo. Si eres titular de derechos y tienes alguna observación, contáctanos en <span className="font-semibold">jeirison47@gmail.com</span>.
+              <div className="mt-4 p-4 bg-manah-deep rounded-xl border border-manah-gold/20">
+                <p className="text-xs text-manah-muted">
+                  Esta aplicación es un proyecto personal sin fines comerciales ni lucrativos. El uso del contenido bíblico tiene carácter exclusivamente personal y educativo. Si eres titular de derechos y tienes alguna observación, contáctanos en <span className="font-semibold text-manah-gold">jeirison47@gmail.com</span>.
                 </p>
               </div>
             </>
@@ -210,7 +210,7 @@ export default function LegalPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <h3 className="font-bold text-manah-cream mb-2">{title}</h3>
       <div className="space-y-1">{children}</div>
     </div>
   );
@@ -218,9 +218,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function AttributionItem({ version, owner }: { version: string; owner: string }) {
   return (
-    <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
-      <p className="font-semibold text-gray-800 dark:text-gray-100 text-sm">{version}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{owner}</p>
+    <div className="p-3 bg-manah-deep rounded-xl border border-manah-gold/15">
+      <p className="font-semibold text-manah-cream text-sm">{version}</p>
+      <p className="text-xs text-manah-muted mt-0.5">{owner}</p>
     </div>
   );
 }
+
+
+
