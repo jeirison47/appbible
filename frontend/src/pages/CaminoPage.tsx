@@ -69,14 +69,12 @@ export default function CaminoPage() {
       <AppHeader
         variant="global"
         subBar={!loading ? (
-          <div className="max-w-4xl mx-auto">
-            <PathProgressBar
-              label="Tu Camino"
-              completed={totalProgress.completed}
-              total={totalProgress.total}
-              percentage={totalProgress.percentage}
-            />
-          </div>
+          <PathProgressBar
+            label="Tu Camino"
+            completed={totalProgress.completed}
+            total={totalProgress.total}
+            percentage={totalProgress.percentage}
+          />
         ) : undefined}
       />
 

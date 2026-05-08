@@ -32,7 +32,7 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
   };
 
   const mobileNavLinkClass = (path: string) => {
-    const base = 'flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-xl transition-all duration-200 min-w-[60px]';
+    const base = 'flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl transition-all duration-200 flex-1';
     const active = 'bg-manah-gold text-manah-bg shadow-md';
     const inactive = 'text-manah-cream/70 hover:bg-manah-gold/10 hover:text-manah-cream';
     return `${base} ${isActive(path) ? active : inactive}`;
@@ -128,9 +128,8 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
       <nav className={`fixed top-0 left-0 right-0 z-50 font-manrope ${isAdmin ? 'bg-gradient-to-r from-orange-900 to-red-900' : 'bg-manah-bg'}`}>
         <div className="max-w-7xl mx-auto">
 
-          {/* Row 1: Logo + Theme + Profile (global only) */}
-          {variant === 'global' && (
-            <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
+          {/* Row 1: Logo + Theme + Profile (always on sm+, mobile only on global) */}
+          <div className={`${variant === 'reader' ? 'hidden sm:flex' : 'flex'} items-center justify-between px-3 sm:px-4 py-2 sm:py-3`}>
               <Link to="/inicio" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
                 <img src="/logo-color-manah.png" alt="Manah Logo" className="h-8 sm:h-10 w-auto" />
                 <h1 className="text-base sm:text-lg md:text-xl font-bold text-manah-gold" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
@@ -149,8 +148,10 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
                   <span className="hidden sm:inline font-medium">Perfil</span>
                 </Link>
               </div>
-            </div>
-          )}
+          </div>
+
+          {/* Desktop nav (both variants) */}
+          {desktopNav}
 
           {/* Context bar (reader only) */}
           {variant === 'reader' && contextBar && (
@@ -169,9 +170,6 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
               {subBar}
             </div>
           )}
-
-          {/* Desktop nav (both variants) */}
-          {desktopNav}
 
         </div>
       </nav>

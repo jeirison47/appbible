@@ -36,7 +36,7 @@ export default function ScrollToTopButton() {
   // Ajustar posición según la página:
   // - En páginas de Camino (con barra de progreso): más arriba (bottom-32 sm:bottom-24)
   // - En otras páginas: más abajo (bottom-8 sm:bottom-8)
-  const bottomPosition = isCaminoPage ? 'bottom-32 sm:bottom-24' : 'bottom-8 sm:bottom-8';
+  const bottomPosition = isCaminoPage ? 'bottom-32 sm:bottom-24' : 'bottom-20 sm:bottom-8';
 
   return (
     <>

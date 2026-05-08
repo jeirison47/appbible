@@ -621,12 +621,12 @@ export default function HomePage() {
             <>
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-xs font-bold text-manah-cream/60 tracking-widest mb-2">RACHA</p>
+                  <p className="text-xs font-bold text-manah-bg/60 tracking-widest mb-2">RACHA</p>
                   <div className="flex items-end gap-2">
-                    <span className="text-5xl font-bold text-manah-cream leading-none">{currentStreak}</span>
+                    <span className="text-5xl font-bold text-manah-bg leading-none">{currentStreak}</span>
                     <div className="flex items-center gap-1 mb-1">
-                      <span className="text-manah-cream/70 text-sm">días seguidos</span>
-                      <svg className="w-5 h-5 text-manah-cream/70" fill="currentColor" viewBox="0 0 24 24">
+                      <span className="text-manah-bg/70 text-sm">días seguidos</span>
+                      <svg className="w-5 h-5 text-manah-bg/70" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M13.5 0.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 0.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
                       </svg>
                     </div>
@@ -634,21 +634,21 @@ export default function HomePage() {
                 </div>
                 <div className="text-right flex-shrink-0 ml-4">
                   {longestStreak > 0 && (
-                    <p className="text-xs text-manah-cream/50 mb-2">mejor {longestStreak}d</p>
+                    <p className="text-xs text-manah-bg/50 mb-2">mejor {longestStreak}d</p>
                   )}
                   {progress.streak?.status && (
                     <div className="w-28">
-                      <div className="flex justify-between text-xs text-manah-cream/60 mb-1">
+                      <div className="flex justify-between text-xs text-manah-bg/60 mb-1">
                         <span>{progress.streak.status.xpToday}/{progress.streak.status.xpRequired} XP</span>
                         <span>{Math.floor(progress.streak.status.xpProgress)}%</span>
                       </div>
-                      <div className="w-full bg-manah-cream/20 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-manah-bg/20 h-1.5 rounded-full overflow-hidden">
                         <div
-                          className="bg-manah-cream/60 h-1.5 rounded-full transition-all duration-300"
+                          className="bg-manah-bg/60 h-1.5 rounded-full transition-all duration-300"
                           style={{ width: `${Math.min(progress.streak.status.xpProgress, 100)}%` }}
                         />
                       </div>
-                      <p className="text-xs text-manah-cream/60 mt-1 leading-tight">
+                      <p className="text-xs text-manah-bg/60 mt-1 leading-tight">
                         {progress.streak.status.goalMetToday ? '¡Meta cumplida!' : 'para mantener racha'}
                       </p>
                     </div>
@@ -661,10 +661,10 @@ export default function HomePage() {
                     key={i}
                     className={`flex-1 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-colors ${
                       filledDays[i]
-                        ? 'bg-manah-muted dark:bg-manah-cream text-manah-bg dark:text-manah-bg'
+                        ? 'bg-manah-bg dark:bg-manah-deep text-manah-cream dark:text-manah-cream'
                         : i > todayIdx
-                        ? 'bg-manah-cream/10 text-manah-cream/30'
-                        : 'bg-manah-cream/15 text-manah-cream/50'
+                        ? 'bg-manah-bg/10 text-manah-bg/30'
+                        : 'bg-manah-bg/15 text-manah-bg/50'
                     }`}
                   >
                     {day}

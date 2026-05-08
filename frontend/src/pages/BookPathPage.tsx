@@ -74,7 +74,7 @@ export default function BookPathPage() {
   }, [loading, currentChapterNumber]);
 
   return (
-    <div className="min-h-screen bg-manah-bg font-manrope pt-14 sm:pt-28 pb-16">
+    <div className="min-h-screen bg-manah-bg font-manrope pt-14 sm:pt-52 pb-16">
       <AppHeader
         variant="reader"
         contextBar={data ? {
@@ -103,14 +103,12 @@ export default function BookPathPage() {
           ),
         } : undefined}
         subBar={data ? (
-          <div className="max-w-sm mx-auto">
-            <PathProgressBar
-              label={data.book.name}
-              completed={data.progress.chaptersCompleted}
-              total={data.progress.totalChapters}
-              percentage={data.progress.percentage}
-            />
-          </div>
+          <PathProgressBar
+            label={data.book.name}
+            completed={data.progress.chaptersCompleted}
+            total={data.progress.totalChapters}
+            percentage={data.progress.percentage}
+          />
         ) : undefined}
       />
 

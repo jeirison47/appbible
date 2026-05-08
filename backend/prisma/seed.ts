@@ -186,48 +186,7 @@ async function main() {
 
   console.log('✅ Created normal user: user@bibliaquest.com / user123');
 
-  // 6. Crear metadata de los 66 libros de la Biblia
-  const { booksMetadata } = await import('./booksMetadata');
-
-  console.log('📚 Creating 66 books metadata...');
-
-  for (const bookData of booksMetadata) {
-    await prisma.book.create({
-      data: bookData,
-    });
-  }
-
-  console.log('✅ Created all 66 books metadata');
-
-  // 7. Obtener libro de Juan para crear capítulo de prueba
-  const book = await prisma.book.findUnique({
-    where: { slug: 'juan' },
-  });
-
-  if (!book) {
-    throw new Error('Book Juan not found');
-  }
-
-  await prisma.chapter.create({
-    data: {
-      bookId: book.id,
-      number: 3,
-      title: 'Jesús y Nicodemo',
-      contentRV1960: 'Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.',
-      contentNVI: 'Porque tanto amó Dios al mundo que dio a su Hijo unigénito, para que todo el que cree en él no se pierda, sino que tenga vida eterna.',
-      contentTLA: 'Dios amó tanto a la gente de este mundo, que me entregó a mí, que soy su único Hijo, para que todo el que crea en mí no muera, sino que tenga vida eterna.',
-      contentNTV: 'Pues Dios amó tanto al mundo que dio a su único Hijo, para que todo el que crea en él no se pierda, sino que tenga vida eterna.',
-      versesRV1960: { "16": "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna." },
-      versesNVI: { "16": "Porque tanto amó Dios al mundo que dio a su Hijo unigénito, para que todo el que cree en él no se pierda, sino que tenga vida eterna." },
-      versesTLA: { "16": "Dios amó tanto a la gente de este mundo, que me entregó a mí, que soy su único Hijo, para que todo el que crea en mí no muera, sino que tenga vida eterna." },
-      versesNTV: { "16": "Pues Dios amó tanto al mundo que dio a su único Hijo, para que todo el que crea en él no se pierda, sino que tenga vida eterna." },
-      verseCount: 1,
-    },
-  });
-
-  console.log('✅ Created test chapter: Juan 3:16');
-
-  // 8. Crear configuración inicial de la app (Manah)
+  // 6. Crear configuración inicial de la app (Manah)
   const appConfigData = [
     { key: 'app_name', value: 'Manah', type: 'string' },
     { key: 'app_short_name', value: 'Manah', type: 'string' },
