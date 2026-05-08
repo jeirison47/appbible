@@ -786,27 +786,6 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Paleta de colores - solo pruebas */}
-        <div className="mt-8 p-4 bg-manah-card rounded-xl">
-          <p className="text-xs font-bold text-manah-muted tracking-widest mb-3">PALETA DE COLORES</p>
-          <div className="space-y-2">
-            {[
-              { color: '#0e1f1a', label: 'bg-manah-bg — Fondo principal' },
-              { color: '#112e28', label: 'bg-manah-card — Cards' },
-              { color: '#163831', label: 'bg-manah-deep — Cards internas' },
-              { color: '#d6a449', label: 'bg-manah-gold — Dorado principal' },
-              { color: '#b27e1a', label: 'bg-manah-bronze — Dorado hover' },
-              { color: '#ede4c4', label: 'bg-manah-cream — Texto principal' },
-              { color: '#b5a98f', label: 'bg-manah-muted — Texto secundario' },
-            ].map(({ color, label }) => (
-              <div key={color} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg flex-shrink-0 border border-white/10" style={{ backgroundColor: color }} />
-                <span className="text-xs text-manah-muted font-mono">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
       </div>
 
       <OnboardingTour

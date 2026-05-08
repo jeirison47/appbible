@@ -32,10 +32,18 @@ export default function StudyHomePage() {
     <div className="min-h-screen bg-manah-bg font-manrope">
       <Navbar />
       <div className="pt-16 sm:pt-32 max-w-4xl mx-auto px-4 pb-12">
-        <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-manah-cream">Aprender</h1>
-          <p className="text-manah-muted text-sm mt-1">
-            Estudia la Biblia con ejercicios interactivos. Completa un libro para desbloquear el siguiente.
+        <div className="bg-manah-card rounded-xl shadow-xl p-4 sm:p-5 lg:p-6 mb-6 border border-manah-gold/20 text-center">
+          <div className="mb-2 sm:mb-3 flex justify-center">
+            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+            </svg>
+          </div>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2 text-manah-cream">Aprender</h2>
+          <p className="text-xs sm:text-sm text-manah-muted">
+            Estudia la Biblia con ejercicios interactivos
+          </p>
+          <p className="text-[10px] sm:text-xs text-manah-muted/60 mt-1">
+            Completa un libro para desbloquear el siguiente.
           </p>
         </div>
 

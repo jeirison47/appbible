@@ -96,16 +96,16 @@ export default function StatsPage() {
         <>
           <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
             {/* Header */}
-            <div className="bg-manah-card rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6 border-l-4 border-manah-gold">
-              <div className="flex items-center gap-3 mb-1 sm:mb-2">
-                <svg className="w-7 h-7 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
+            <div className="bg-manah-card rounded-xl shadow-xl p-4 sm:p-5 lg:p-6 mb-4 sm:mb-6 border border-manah-gold/20 text-center">
+              <div className="mb-2 sm:mb-3 flex justify-center">
+                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
                 </svg>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-manah-cream">
-                  Tus Estadísticas
-                </h2>
               </div>
-              <p className="text-manah-muted text-sm sm:text-base lg:text-lg">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2 text-manah-cream">
+                Tus Estadísticas
+              </h2>
+              <p className="text-xs sm:text-sm text-manah-muted">
                 Revisa tu progreso detallado en tu aventura bíblica
               </p>
             </div>

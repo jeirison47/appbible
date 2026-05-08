@@ -68,7 +68,7 @@ export default function CaminoPage() {
     <div className="min-h-screen bg-manah-bg pt-24 sm:pt-40 pb-24 overflow-x-hidden font-manrope">
       <AppHeader
         variant="global"
-        subBar={
+        subBar={!loading ? (
           <div className="max-w-4xl mx-auto">
             <PathProgressBar
               label="Tu Camino"
@@ -77,7 +77,7 @@ export default function CaminoPage() {
               percentage={totalProgress.percentage}
             />
           </div>
-        }
+        ) : undefined}
       />
 
       {loading ? (
