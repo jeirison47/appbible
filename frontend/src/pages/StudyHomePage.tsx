@@ -32,6 +32,10 @@ export default function StudyHomePage() {
     <div className="min-h-screen bg-manah-bg font-manrope">
       <Navbar />
       <div className="pt-16 sm:pt-32 max-w-4xl mx-auto px-4 pb-12">
+        {loading ? (
+          <LoadingScreen fullScreen={false} />
+        ) : (
+          <>
         <div className="bg-manah-card rounded-xl shadow-xl p-4 sm:p-5 lg:p-6 mb-6 border border-manah-gold/20 text-center">
           <div className="mb-2 sm:mb-3 flex justify-center">
             <svg className="w-10 h-10 sm:w-12 sm:h-12 text-manah-gold" fill="currentColor" viewBox="0 0 24 24">
@@ -46,11 +50,6 @@ export default function StudyHomePage() {
             Completa un libro para desbloquear el siguiente.
           </p>
         </div>
-
-        {loading ? (
-          <LoadingScreen fullScreen={false} />
-        ) : (
-          <>
             <Section title="Antiguo Testamento" books={oldBooks} />
             <Section title="Nuevo Testamento" books={newBooks} />
           </>

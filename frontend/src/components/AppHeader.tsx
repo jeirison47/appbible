@@ -132,8 +132,7 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
           {variant === 'global' && (
             <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
               <Link to="/inicio" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-                <img src="/logo-color-manah.png" alt="Manah Logo" className="h-8 sm:h-10 w-auto dark:hidden" />
-                <img src="/logo-header-manah.png" alt="Manah Logo" className="h-8 sm:h-10 w-auto hidden dark:block" />
+                <img src="/logo-color-manah.png" alt="Manah Logo" className="h-8 sm:h-10 w-auto" />
                 <h1 className="text-base sm:text-lg md:text-xl font-bold text-manah-gold" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
                   manah {isAdmin && 'Admin'}
                 </h1>

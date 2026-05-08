@@ -62,8 +62,7 @@ export default function LoadingScreen({ fullScreen = true, text }: LoadingScreen
           className="relative z-10"
           style={{ animation: 'loadingLogoPulse 2.5s ease-in-out infinite' }}
         >
-          <img src="/logo-color-manah.png" alt="Manah" className="w-16 h-16 object-contain dark:hidden" />
-          <img src="/logo-header-manah.png" alt="Manah" className="w-16 h-16 object-contain hidden dark:block" />
+          <img src="/logo-color-manah.png" alt="Manah" className="w-16 h-16 object-contain" />
         </div>
       </div>
 
