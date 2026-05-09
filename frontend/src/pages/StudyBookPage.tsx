@@ -39,7 +39,7 @@ export default function StudyBookPage() {
   const pct = data ? Math.round((completed / data.chapters.length) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-manah-bg font-manrope pt-20 sm:pt-52 pb-24">
+    <div className="min-h-screen bg-manah-bg font-manrope pt-32 sm:pt-60 pb-28">
       <AppHeader
         variant="reader"
         contextBar={data ? {
