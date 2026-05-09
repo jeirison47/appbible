@@ -1,7 +1,8 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { studyApi } from '../services/api';
-import Navbar from '../components/Navbar';
+import AppHeader from '../components/AppHeader';
+import PathProgressBar from '../components/PathProgressBar';
 import LoadingScreen from '../components/LoadingScreen';
 
 interface ChapterData {
@@ -34,52 +35,52 @@ export default function StudyBookPage() {
     }
   }, [bookSlug]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-manah-bg font-manrope">
-        <Navbar />
-        <LoadingScreen fullScreen={false} />
-      </div>
-    );
-  }
-
-  if (!data) return null;
-
-  const { book, chapters } = data;
-  const completed = chapters.filter(c => c.isCompleted).length;
-  const pct = Math.round((completed / chapters.length) * 100);
+  const completed = data ? data.chapters.filter(c => c.isCompleted).length : 0;
+  const pct = data ? Math.round((completed / data.chapters.length) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-manah-bg font-manrope">
-      <Navbar />
-      <div className="pt-16 sm:pt-32 max-w-2xl mx-auto px-4 pb-12">
-        <div className="mb-6">
-          <Link to="/aprender" className="text-sm text-manah-gold hover:text-manah-bronze flex items-center gap-1 mb-3 transition">
-            ← Todos los libros
-          </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-manah-cream">{book.name}</h1>
-          <p className="text-manah-muted text-sm mt-1">{book.category} · {book.totalChapters} lecciones</p>
+    <div className="min-h-screen bg-manah-bg font-manrope pt-20 sm:pt-52 pb-24">
+      <AppHeader
+        variant="reader"
+        contextBar={data ? {
+          left: (
+            <Link to="/aprender" className="flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
+              <div className="w-9 h-9 rounded-xl bg-manah-gold flex items-center justify-center">
+                <svg className="w-5 h-5 text-manah-bg" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+                </svg>
+              </div>
+              <span className="hidden sm:inline text-manah-muted font-semibold text-sm">Volver</span>
+            </Link>
+          ),
+          center: (
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-manah-cream leading-tight">{data.book.name}</h1>
+              <p className="text-xs text-manah-muted mt-0.5">{data.book.category}</p>
+            </div>
+          ),
+        } : undefined}
+        subBar={data ? (
+          <PathProgressBar
+            label={data.book.name}
+            completed={completed}
+            total={data.chapters.length}
+            percentage={pct}
+          />
+        ) : undefined}
+      />
 
-          <div className="mt-3">
-            <div className="flex justify-between text-xs text-manah-muted mb-1">
-              <span>{completed} completadas</span>
-              <span>{pct}%</span>
-            </div>
-            <div className="w-full bg-manah-deep h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-manah-gold h-2 transition-all"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
+      {loading ? (
+        <LoadingScreen fullScreen={false} />
+      ) : !data ? null : (
+        <div className="max-w-2xl mx-auto px-4 py-6">
+          <div className="space-y-2">
+            {data.chapters.map((chapter) => (
+              <ChapterCard key={chapter.id} chapter={chapter} bookSlug={data.book.slug} bookName={data.book.name} />
+            ))}
           </div>
         </div>
-
-        <div className="space-y-2">
-          {chapters.map((chapter) => (
-            <ChapterCard key={chapter.id} chapter={chapter} bookSlug={book.slug} bookName={book.name} />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -146,7 +147,3 @@ function ChapterCard({ chapter, bookSlug, bookName }: { chapter: ChapterData; bo
   if (chapter.isLocked) return <div className="cursor-not-allowed">{content}</div>;
   return <Link to={`/aprender/${bookSlug}/${chapter.number}`}>{content}</Link>;
 }
-
-
-
-
