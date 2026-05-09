@@ -78,6 +78,13 @@ export const TutorialProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const completeTutorial = async (tutorialId: string) => {
+    // Actualización optimista: marcar completado de inmediato
+    setTutorials(prev => ({
+      ...prev,
+      [tutorialId]: { ...prev[tutorialId as keyof typeof prev], completed: true, skipped: false },
+    }));
+    setActiveTutorial(null);
+
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -89,15 +96,19 @@ export const TutorialProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           'Content-Type': 'application/json'
         },
       });
-
-      setActiveTutorial(null);
-      await refreshTutorials();
     } catch (error) {
       console.error('Error completing tutorial:', error);
     }
   };
 
   const skipTutorial = async (tutorialId: string) => {
+    // Actualización optimista: marcar saltado de inmediato
+    setTutorials(prev => ({
+      ...prev,
+      [tutorialId]: { ...prev[tutorialId as keyof typeof prev], skipped: true },
+    }));
+    setActiveTutorial(null);
+
     try {
       const token = localStorage.getItem('token');
       if (!token) return;
@@ -109,9 +120,6 @@ export const TutorialProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           'Content-Type': 'application/json'
         },
       });
-
-      setActiveTutorial(null);
-      await refreshTutorials();
     } catch (error) {
       console.error('Error skipping tutorial:', error);
     }

@@ -95,9 +95,11 @@ export class ReadingController {
       });
       if (!chapterVersion) return c.json({ error: `Version ${version} not available for this chapter` }, 404);
 
-      const chapterRead = await prisma.chapterRead.findUnique({
-        where: { userId_chapterId: { userId, chapterId: chapter.id } },
-      });
+      const chapterRead = userId
+        ? await prisma.chapterRead.findUnique({
+            where: { userId_chapterId: { userId, chapterId: chapter.id } },
+          })
+        : null;
 
       let nextChapter = null;
       if (chapter.number < book.totalChapters) {

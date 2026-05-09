@@ -65,7 +65,7 @@ export default function StudyBookPage() {
               <span>{completed} completadas</span>
               <span>{pct}%</span>
             </div>
-            <div className="w-full bg-manah-deep h-2">
+            <div className="w-full bg-manah-deep h-2 rounded-full overflow-hidden">
               <div
                 className="bg-manah-gold h-2 transition-all"
                 style={{ width: `${pct}%` }}

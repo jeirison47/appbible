@@ -116,7 +116,7 @@ function BookCard({ book }: { book: StudyBook }) {
 
       {!book.isLocked && (
         <div>
-          <div className="w-full bg-manah-bg h-1.5">
+          <div className="w-full bg-manah-bg h-1.5 rounded-full overflow-hidden">
             <div
               className={`h-1.5 transition-all ${book.isCompleted ? 'bg-manah-gold' : 'bg-manah-gold'}`}
               style={{ width: `${pct}%` }}

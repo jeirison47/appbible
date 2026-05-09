@@ -93,7 +93,7 @@ export default function StudyLessonPage() {
   };
 
   if (loading) {
-    return <LoadingScreen text="Preparando lección..." />;
+    return <LoadingScreen />;
   }
 
   if (!lesson) {
@@ -141,7 +141,7 @@ export default function StudyLessonPage() {
           </div>
 
           {/* Score bar */}
-          <div className="w-full bg-manah-bg h-3 mb-6">
+          <div className="w-full bg-manah-bg h-3 mb-6 rounded-full overflow-hidden">
             <div
               className={`h-3 transition-all ${perfect ? 'bg-manah-gold' : pct >= 70 ? 'bg-green-500' : 'bg-orange-400'}`}
               style={{ width: `${pct}%` }}
@@ -195,7 +195,7 @@ export default function StudyLessonPage() {
             ✕
           </button>
           <div className="flex-1">
-            <div className="w-full bg-manah-deep h-3">
+            <div className="w-full bg-manah-deep h-3 rounded-full overflow-hidden">
               <div
                 className="bg-manah-gold h-3 transition-all duration-500"
                 style={{ width: `${progress}%` }}

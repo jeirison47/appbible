@@ -91,7 +91,7 @@ export default function StatsPage() {
       <Navbar />
 
       {loading ? (
-        <LoadingScreen fullScreen={false} text="Cargando estadísticas..." />
+        <LoadingScreen fullScreen={false} />
       ) : (
         <>
           <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
@@ -223,9 +223,9 @@ export default function StatsPage() {
                     {progress?.dailyGoal.progress || 0}/{progress?.dailyGoal.goal || 1}
                   </p>
                   <div className="mt-2 sm:mt-3">
-                    <div className="w-full bg-manah-bg h-2 sm:h-3">
+                    <div className="w-full bg-manah-bg h-2 sm:h-3 rounded-full overflow-hidden">
                       <div
-                        className="bg-manah-gold h-2 sm:h-3 transition-all duration-300"
+                        className="bg-manah-gold h-2 sm:h-3 rounded-full transition-all duration-300"
                         style={{ width: `${progress?.dailyGoal.percentage || 0}%` }}
                       ></div>
                     </div>
@@ -256,7 +256,7 @@ export default function StatsPage() {
                         <span>{progress.streak.status.xpToday} XP</span>
                         <span>{progress.streak.status.xpRequired} XP requeridos</span>
                       </div>
-                      <div className="w-full bg-manah-bg h-2 sm:h-3">
+                      <div className="w-full bg-manah-bg h-2 sm:h-3 rounded-full overflow-hidden">
                         <div
                           className={`h-2 sm:h-3 transition-all duration-300 ${
                             progress.streak.status.goalMetToday ? 'bg-manah-gold' : 'bg-manah-bronze'
@@ -305,7 +305,7 @@ export default function StatsPage() {
                       <span>{progress.xp.progress.percentage}%</span>
                       <span>{progress.xp.progress.required} XP</span>
                     </div>
-                    <div className="w-full bg-manah-bg h-3 sm:h-4">
+                    <div className="w-full bg-manah-bg h-3 sm:h-4 rounded-full overflow-hidden">
                       <div
                         className="bg-manah-gold h-3 sm:h-4 transition-all duration-300"
                         style={{ width: `${progress.xp.progress.percentage}%` }}

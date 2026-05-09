@@ -2,6 +2,7 @@ import React from 'react';
 import Joyride, { STATUS } from 'react-joyride';
 import type { Step } from 'react-joyride';
 import { useTutorial } from '../contexts/TutorialContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface OnboardingTourProps {
   run: boolean;
@@ -10,118 +11,101 @@ interface OnboardingTourProps {
 
 export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete }) => {
   const { completeTutorial, skipTutorial } = useTutorial();
+  const { theme } = useTheme();
 
-  // Detectar si estamos en móvil (< 768px es el breakpoint md de Tailwind)
+  // Tooltip invertido: dark → fondo claro, light → fondo oscuro
+  const tooltipBg    = theme === 'dark' ? '#ffffff' : '#112e28';
+  const tooltipText  = theme === 'dark' ? '#0e1f1a' : '#ede4c4';
+  const tooltipMuted = theme === 'dark' ? '#163831' : '#b5a98f';
+
   const isMobile = window.innerWidth < 768;
   const navSuffix = isMobile ? '-mobile' : '';
+  const navPlacement = isMobile ? 'top' : 'bottom';
+
+  const title = (text: string) => (
+    <h3 style={{ fontWeight: 700, marginBottom: '4px', color: tooltipText }}>{text}</h3>
+  );
+  const body = (text: string, mt = false) => (
+    <p style={{ fontSize: '0.875rem', color: tooltipMuted, marginTop: mt ? '4px' : undefined }}>{text}</p>
+  );
 
   const steps: Step[] = [
     {
       target: 'body',
       content: (
-        <div className="p-2">
-          <h2 className="text-xl font-bold mb-2" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
+        <div style={{ padding: '8px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px', color: tooltipText, fontFamily: 'Delius Swash Caps, cursive' }}>
             ¡Bienvenido a manah! 🎉
           </h2>
-          <p className="text-manah-muted">
-            Tu compañero para leer la Biblia y crecer espiritualmente.
-          </p>
-          <p className="text-manah-muted mt-2">
-            Te voy a mostrar todas las funcionalidades en solo unos pasos. ¡Vamos a empezar!
-          </p>
+          {body('Tu compañero para leer la Biblia y crecer espiritualmente.')}
+          {body('Te voy a mostrar todas las funcionalidades en solo unos pasos. ¡Vamos a empezar!', true)}
         </div>
       ),
       placement: 'center' as const,
       disableBeacon: true,
     },
     {
-      target: 'nav, header, [class*="nav"]',
+      target: isMobile ? '[data-tutorial="mobile-nav"]' : 'nav',
       content: (
         <div>
-          <h3 className="font-bold mb-1">Menú de Navegación 🧭</h3>
-          <p className="text-sm text-manah-muted">
-            Aquí encuentras todas las secciones: Inicio, Camino, Lectura Libre, Buscar y Estadísticas.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Usa estos botones para moverte por la app.
-          </p>
+          {title('Menú de Navegación 🧭')}
+          {body('Aquí encuentras todas las secciones: Inicio, Camino, Aprender, Lectura Libre, Buscar y Estadísticas.')}
+          {body('Usa estos botones para moverte por la app.', true)}
         </div>
       ),
-      placement: 'bottom' as const,
+      placement: navPlacement as const,
     },
     {
       target: `[data-tutorial="nav-inicio${navSuffix}"]`,
       content: (
         <div>
-          <h3 className="font-bold mb-1">Inicio 🏠</h3>
-          <p className="text-sm text-manah-muted">
-            Tu página principal donde ves tu progreso diario.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Aquí verás tu XP, racha actual y metas del día.
-          </p>
+          {title('Inicio 🏠')}
+          {body('Tu página principal donde ves tu progreso diario.')}
+          {body('Aquí verás tu racha, XP, metas del día y el versículo diario.', true)}
+        </div>
+      ),
+      placement: navPlacement as const,
+    },
+    {
+      target: '[data-tutorial="racha-card"]',
+      content: (
+        <div>
+          {title('Tu Racha 🔥')}
+          {body('Mantén tu racha leyendo todos los días.')}
+          {body('Alcanza tu meta diaria de XP para mantenerla activa. ¡Rompe tu récord personal!', true)}
         </div>
       ),
       placement: 'bottom' as const,
     },
     {
-      target: '.border-indigo-500',
+      target: '[data-tutorial="xp-card"]',
       content: (
         <div>
-          <h3 className="font-bold mb-1">Puntos de Experiencia (XP) ⭐</h3>
-          <p className="text-sm text-manah-muted">
-            Ganas XP completando capítulos y por cada minuto que pasas leyendo.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            ¡Sube de nivel acumulando XP y mantén tu racha activa!
-                        Cada 10 minutos de lectura = XP adicional. ¡Sube de nivel acumulando XP!
-
-          </p>
+          {title('Puntos de Experiencia (XP) ⭐')}
+          {body('Ganas XP completando capítulos y lecciones de estudio.')}
+          {body('¡Sube de nivel acumulando XP y mantén tu racha activa!', true)}
         </div>
       ),
       placement: 'bottom' as const,
     },
     {
-      target: '.border-green-500',
+      target: '[data-tutorial="meta-card"]',
       content: (
         <div>
-          <h3 className="font-bold mb-1">Metas Diarias 🎯</h3>
-          <p className="text-sm text-manah-muted">
-            Tu objetivo personal de capítulos para leer hoy.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Puedes personalizar tu meta en tu perfil. Es una meta personal que no afecta tu racha.
-          </p>
+          {title('Metas Diarias 🎯')}
+          {body('Tu objetivo personal de capítulos para leer hoy.')}
+          {body('Puedes personalizar tu meta en tu perfil.', true)}
         </div>
       ),
       placement: 'bottom' as const,
     },
     {
-      target: '.border-orange-500',
+      target: '[data-tutorial="tiempo-card"]',
       content: (
         <div>
-          <h3 className="font-bold mb-1">Tu Racha 🔥</h3>
-          <p className="text-sm text-manah-muted">
-            Mantén tu racha leyendo todos los días.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Alcanza tu meta diaria de XP para mantenerla activa. ¡Rompe tu récord personal!
-          </p>
-        </div>
-      ),
-      placement: 'bottom' as const,
-    },
-    {
-      target: '.border-purple-500',
-      content: (
-        <div>
-          <h3 className="font-bold mb-1">Tiempo de Lectura Hoy ⏱️</h3>
-          <p className="text-sm text-manah-muted">
-            Acumula tiempo leyendo la Biblia cada día.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Cada 10 minutos de lectura te da XP adicional. ¡Mientras más leas, más XP ganas!
-          </p>
+          {title('Tiempo de Lectura ⏱️')}
+          {body('Acumula tiempo leyendo la Biblia cada día.')}
+          {body('Cada minuto que lees suma a tu progreso diario.', true)}
         </div>
       ),
       placement: 'bottom' as const,
@@ -130,73 +114,75 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
       target: `[data-tutorial="nav-camino${navSuffix}"]`,
       content: (
         <div>
-          <h3 className="font-bold mb-1">Modo Camino 📖</h3>
-          <p className="text-sm text-manah-muted">
-            Lee la Biblia en orden cronológico.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Sigue un recorrido guiado por toda la historia bíblica. Perfecto para leer la Biblia completa de forma ordenada.
-          </p>
+          {title('Modo Camino 📖')}
+          {body('Lee la Biblia en orden cronológico.')}
+          {body('Sigue un recorrido guiado por toda la historia bíblica. Perfecto para leer la Biblia completa de forma ordenada.', true)}
         </div>
       ),
-      placement: 'bottom' as const,
+      placement: navPlacement as const,
+    },
+    {
+      target: `[data-tutorial="nav-aprender${navSuffix}"]`,
+      content: (
+        <div>
+          {title('Modo Aprender 🎓')}
+          {body('Practica lo que lees con ejercicios interactivos.')}
+          {body('Completa lecciones por capítulo, gana XP y refuerza tu conocimiento bíblico.', true)}
+        </div>
+      ),
+      placement: navPlacement as const,
     },
     {
       target: `[data-tutorial="nav-lectura-libre${navSuffix}"]`,
       content: (
         <div>
-          <h3 className="font-bold mb-1">Lectura Libre 📚</h3>
-          <p className="text-sm text-manah-muted">
-            Explora cualquier libro o capítulo que quieras.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Elige tu propio camino de lectura. Ideal para estudios específicos o devocionales.
-          </p>
+          {title('Lectura Libre 📚')}
+          {body('Explora cualquier libro o capítulo que quieras.')}
+          {body('Elige tu propio camino de lectura. Ideal para estudios específicos o devocionales.', true)}
         </div>
       ),
-      placement: 'bottom' as const,
+      placement: navPlacement as const,
     },
     {
       target: `[data-tutorial="nav-buscar${navSuffix}"]`,
       content: (
         <div>
-          <h3 className="font-bold mb-1">Buscar 🔍</h3>
-          <p className="text-sm text-manah-muted">
-            Encuentra versículos, palabras o temas específicos.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Busca en toda la Biblia de forma rápida. Perfecto para estudios bíblicos profundos.
-          </p>
+          {title('Buscar 🔍')}
+          {body('Encuentra versículos, palabras o temas específicos.')}
+          {body('Busca en toda la Biblia de forma rápida. Perfecto para estudios bíblicos profundos.', true)}
         </div>
       ),
-      placement: 'bottom' as const,
+      placement: navPlacement as const,
     },
     {
       target: `[data-tutorial="nav-estadisticas${navSuffix}"]`,
       content: (
         <div>
-          <h3 className="font-bold mb-1">Estadísticas 📊</h3>
-          <p className="text-sm text-manah-muted">
-            Visualiza todo tu progreso y logros.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Ve cuántos capítulos has leído, tu racha más larga, niveles y más. Monitorea tu crecimiento espiritual.
-          </p>
+          {title('Estadísticas 📊')}
+          {body('Visualiza todo tu progreso y logros.')}
+          {body('Ve cuántos capítulos has leído, tu racha más larga, niveles y más.', true)}
         </div>
       ),
-      placement: 'bottom' as const,
+      placement: navPlacement as const,
     },
     {
       target: 'a[href="/perfil"]',
       content: (
         <div>
-          <h3 className="font-bold mb-1">Tu Perfil 👤</h3>
-          <p className="text-sm text-manah-muted">
-            Personaliza tu información y configuración.
-          </p>
-          <p className="text-sm text-manah-muted mt-1">
-            Ajusta tu meta diaria aquí. Puedes volver a ver estos tutoriales cuando quieras.
-          </p>
+          {title('Tu Perfil 👤')}
+          {body('Personaliza tu información y configuración.')}
+          {body('Ajusta tu meta diaria, versión bíblica y preferencias. Puedes volver a ver este tutorial cuando quieras.', true)}
+        </div>
+      ),
+      placement: 'bottom' as const,
+    },
+    {
+      target: '[data-tutorial="theme-toggle"]',
+      content: (
+        <div>
+          {title('Modo claro / oscuro 🌙')}
+          {body('Cambia entre el tema claro y oscuro según tu preferencia.')}
+          {body('Puedes cambiarlo en cualquier momento desde aquí.', true)}
         </div>
       ),
       placement: 'bottom' as const,
@@ -204,16 +190,12 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
     {
       target: 'body',
       content: (
-        <div className="p-2">
-          <h2 className="text-xl font-bold mb-2" style={{ fontFamily: 'Delius Swash Caps, cursive' }}>
+        <div style={{ padding: '8px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px', color: tooltipText, fontFamily: 'Delius Swash Caps, cursive' }}>
             ¡Todo listo para empezar! 🚀
           </h2>
-          <p className="text-manah-muted">
-            Ya conoces todas las funcionalidades de manah.
-          </p>
-          <p className="text-manah-muted mt-2">
-            Comienza a leer, gana XP y mantén tu racha activa. ¡Que Dios bendiga tu tiempo de lectura!
-          </p>
+          {body('Ya conoces todas las funcionalidades de manah.')}
+          {body('Comienza a leer, gana XP y mantén tu racha activa. ¡Que Dios bendiga tu tiempo de lectura!', true)}
         </div>
       ),
       placement: 'center' as const,
@@ -246,25 +228,31 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
         options: {
           primaryColor: '#d6a449',
           zIndex: 10000,
+          backgroundColor: tooltipBg,
+          textColor: tooltipText,
+          arrowColor: tooltipBg,
         },
         buttonNext: {
           backgroundColor: '#d6a449',
+          color: '#0e1f1a',
           borderRadius: '0.5rem',
           padding: '0.5rem 1rem',
         },
         buttonBack: {
-          color: '#b5a98f',
+          color: tooltipMuted,
           marginRight: '0.5rem',
         },
         buttonSkip: {
-          color: '#b5a98f',
+          color: tooltipMuted,
         },
         tooltip: {
           borderRadius: '1rem',
           padding: '1.5rem',
+          backgroundColor: tooltipBg,
         },
         tooltipContent: {
           padding: '0.5rem 0',
+          color: tooltipText,
         },
       }}
       locale={{

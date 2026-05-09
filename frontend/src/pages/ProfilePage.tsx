@@ -224,7 +224,7 @@ export default function ProfilePage() {
         <Navbar />
 
         {loading ? (
-          <LoadingScreen fullScreen={false} text="Cargando perfil..." />
+          <LoadingScreen fullScreen={false} />
         ) : (
           <>
             <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
@@ -335,7 +335,7 @@ export default function ProfilePage() {
       <Navbar />
 
       {loading ? (
-        <LoadingScreen fullScreen={false} text="Cargando perfil..." />
+        <LoadingScreen fullScreen={false} />
       ) : (
         <>
           <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
@@ -615,7 +615,7 @@ export default function ProfilePage() {
                           <span>{profile?.dailyGoal?.progress || 0} {(profile?.dailyGoal?.progress || 0) === 1 ? 'capítulo' : 'capítulos'}</span>
                           <span>{Math.floor(((profile?.dailyGoal?.progress || 0) / (profile?.user.dailyGoal || 1)) * 100)}%</span>
                         </div>
-                        <div className="w-full bg-manah-bg h-3">
+                        <div className="w-full bg-manah-bg h-3 rounded-full overflow-hidden">
                           <div className="bg-manah-gold h-3 transition-all duration-300"
                             style={{ width: `${Math.min(Math.floor(((profile?.dailyGoal?.progress || 0) / (profile?.user.dailyGoal || 1)) * 100), 100)}%` }}
                           ></div>
@@ -655,7 +655,7 @@ export default function ProfilePage() {
                           <span>{profile.user.currentStreak} días</span>
                           <span>{profile.streakGoal.progress}%</span>
                         </div>
-                        <div className="w-full bg-manah-bg h-3">
+                        <div className="w-full bg-manah-bg h-3 rounded-full overflow-hidden">
                           <div className="bg-manah-gold h-3 transition-all duration-300"
                             style={{ width: `${Math.min(profile.streakGoal.progress, 100)}%` }}
                           ></div>

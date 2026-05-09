@@ -6,6 +6,23 @@ interface JWTPayload {
   permissions: string[];
 }
 
+export async function optionalAuthMiddleware(c: Context, next: Next) {
+  const authHeader = c.req.header('Authorization');
+
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+      c.set('userId', decoded.userId);
+      c.set('permissions', decoded.permissions || []);
+    } catch {
+      // token inválido o expirado — continuar como invitado
+    }
+  }
+
+  await next();
+}
+
 export async function authMiddleware(c: Context, next: Next) {
   const authHeader = c.req.header('Authorization');
 

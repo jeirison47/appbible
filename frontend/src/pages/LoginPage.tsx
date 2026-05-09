@@ -76,7 +76,7 @@ export default function LoginPage() {
   };
 
   if (isLoading || syncingAuth0) {
-    return <LoadingScreen text={syncingAuth0 ? 'Sincronizando con el servidor...' : 'Cargando...'} />;
+    return <LoadingScreen />;
   }
 
   return (
@@ -87,7 +87,7 @@ export default function LoginPage() {
           <div className="text-center mb-6">
             <Link to="/" className="flex items-center justify-center gap-3 hover:opacity-80 transition cursor-pointer">
               <img
-                src="/logo-header-manah.png"
+                src="/logo-color-manah.png"
                 alt="Manah Logo"
                 className="h-16 w-auto"
               />
@@ -150,7 +150,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-manah-gold/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-manah-card text-manah-muted font-medium">O continuar con</span>
+              <span className="px-4 bg-manah-card text-manah-muted font-medium">O</span>
             </div>
           </div>
 
@@ -174,14 +174,21 @@ export default function LoginPage() {
 
           {/* Link to register */}
           <div className="mt-6 text-center">
-            <p className="text-manah-muted text-sm mb-3">
-              ¿No tienes cuenta?
+            <p className="text-manah-muted text-sm">
+              ¿No tienes cuenta?{' '}
+              <Link to="/register" className="font-bold underline text-manah-gold hover:text-manah-cream transition cursor-pointer">
+                Regístrate
+              </Link>
             </p>
+          </div>
+
+          {/* Guest access */}
+          <div className="mt-4">
             <Link
-              to="/register"
-              className="block w-full bg-manah-deep text-manah-cream py-3 rounded-xl hover:bg-manah-deep/80 transition font-semibold shadow-md cursor-pointer"
+              to="/inicio"
+              className="block w-full bg-manah-deep text-manah-cream py-3 rounded-xl hover:bg-manah-deep/80 transition font-semibold shadow-md text-center cursor-pointer"
             >
-              Crear Cuenta Nueva
+              Continuar como invitado
             </Link>
           </div>
 

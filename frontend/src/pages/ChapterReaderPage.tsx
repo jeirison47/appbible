@@ -237,8 +237,8 @@ export default function ChapterReaderPage() {
         contextBar={chapter ? {
           left: (
             <Link to={`/camino/${bookSlug}`} className="flex items-center gap-2 hover:opacity-80 transition cursor-pointer">
-              <div className="w-9 h-9 rounded-xl bg-manah-deep flex items-center justify-center">
-                <svg className="w-5 h-5 text-manah-cream" fill="currentColor" viewBox="0 0 24 24">
+              <div className="w-9 h-9 rounded-xl bg-manah-gold flex items-center justify-center">
+                <svg className="w-5 h-5 text-manah-bg" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
                 </svg>
               </div>
@@ -257,9 +257,9 @@ export default function ChapterReaderPage() {
             <div className="relative">
               <button
                 onClick={() => setShowVersionPicker(!showVersionPicker)}
-                className="w-9 h-9 rounded-xl bg-manah-deep flex items-center justify-center hover:opacity-80 transition cursor-pointer"
+                className="w-9 h-9 rounded-xl bg-manah-gold flex items-center justify-center hover:opacity-80 transition cursor-pointer"
               >
-                <svg className="w-5 h-5 text-manah-cream" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-manah-bg" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
                 </svg>
               </button>
@@ -286,7 +286,7 @@ export default function ChapterReaderPage() {
       />
 
       {loading ? (
-        <LoadingScreen fullScreen={false} text="Cargando capítulo..." />
+        <LoadingScreen fullScreen={false} />
       ) : !chapter ? (
         <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] pt-32">
           <div className="text-center bg-manah-card rounded-xl shadow-xl p-8">

@@ -52,7 +52,7 @@ export default function FreeReadingPage() {
       <Navbar />
 
       {loading ? (
-        <LoadingScreen fullScreen={false} text="Cargando biblioteca..." />
+        <LoadingScreen fullScreen={false} />
       ) : (
         <>
           <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
@@ -102,7 +102,7 @@ export default function FreeReadingPage() {
                     </span>
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                     {categoryBooks.map((book) => (
                       <Link
                         key={book.id}

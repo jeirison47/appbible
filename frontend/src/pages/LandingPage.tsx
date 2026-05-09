@@ -1,8 +1,7 @@
 ﻿import { Link } from 'react-router-dom';
-import { useTheme } from '../contexts/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function LandingPage() {
-  const { toggleTheme } = useTheme();
 
   return (
     <div className="min-h-screen bg-manah-bg font-manrope">
@@ -13,7 +12,7 @@ export default function LandingPage() {
             {/* Logo */}
             <div className="flex items-center gap-2 sm:gap-3">
               <img
-                src="/logo-header-manah.png"
+                src="/logo-color-manah.png"
                 alt="Manah Logo"
                 className="h-8 sm:h-10 w-auto"
               />
@@ -24,13 +23,7 @@ export default function LandingPage() {
 
             {/* Nav Links */}
             <div className="flex items-center gap-3 sm:gap-4">
-              <button
-                onClick={toggleTheme}
-                className="p-2 hover:bg-manah-deep transition cursor-pointer rounded-xl"
-                aria-label="Toggle theme"
-              >
-                ☀️
-              </button>
+              <ThemeToggle />
               <Link
                 to="/login"
                 className="hidden sm:block text-manah-muted hover:text-manah-gold font-medium text-sm sm:text-base transition"

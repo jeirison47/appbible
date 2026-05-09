@@ -99,15 +99,8 @@ function App() {
             element={isAuthenticated ? <Navigate to="/inicio" replace /> : <RegisterPage />}
           />
 
-          {/* Ruta protegida: HomePage (Dashboard) */}
-          <Route
-            path="/inicio"
-            element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            }
-          />
+          {/* Ruta pública: HomePage (Dashboard) */}
+          <Route path="/inicio" element={<HomePage />} />
           <Route
             path="/perfil"
             element={
@@ -132,14 +125,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/buscar"
-            element={
-              <ProtectedRoute>
-                <SearchPage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/buscar" element={<SearchPage />} />
           <Route
             path="/camino"
             element={
@@ -164,38 +150,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/lectura-libre"
-            element={
-              <ProtectedRoute>
-                <FreeReadingPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/lectura-libre/:bookSlug"
-            element={
-              <ProtectedRoute>
-                <FreeBookChaptersPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/lectura-libre/:bookSlug/:chapterNumber"
-            element={
-              <ProtectedRoute>
-                <FreeVerseReaderPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/lectura-libre/:bookSlug/:chapterNumber/:verseNumber"
-            element={
-              <ProtectedRoute>
-                <FreeVerseReaderPage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/lectura-libre" element={<FreeReadingPage />} />
+          <Route path="/lectura-libre/:bookSlug" element={<FreeBookChaptersPage />} />
+          <Route path="/lectura-libre/:bookSlug/:chapterNumber" element={<FreeVerseReaderPage />} />
+          <Route path="/lectura-libre/:bookSlug/:chapterNumber/:verseNumber" element={<FreeVerseReaderPage />} />
           {/* Rutas de estudio */}
           <Route path="/aprender" element={<ProtectedRoute><StudyHomePage /></ProtectedRoute>} />
           <Route path="/aprender/:bookSlug" element={<ProtectedRoute><StudyBookPage /></ProtectedRoute>} />
@@ -205,10 +163,7 @@ function App() {
           <Route path="/legal" element={<LegalPage />} />
 
           {/* Catch-all: redirigir a /inicio si está autenticado, sino a / */}
-          <Route
-            path="*"
-            element={<Navigate to={isAuthenticated ? "/inicio" : "/"} replace />}
-          />
+          <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Routes>
       </BrowserRouter>
       </TutorialProvider>

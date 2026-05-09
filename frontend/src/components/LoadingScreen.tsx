@@ -76,9 +76,7 @@ export default function LoadingScreen({ fullScreen = true, text }: LoadingScreen
             manah
           </h1>
         )}
-        {text && (
-          <p className="text-manah-gold text-sm font-bold">{text}</p>
-        )}
+        {!fullScreen && <p className="text-manah-gold text-sm font-bold">{text ?? 'Cargando...'}</p>}
       </div>
     </div>
   );

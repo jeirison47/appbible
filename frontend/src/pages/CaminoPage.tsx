@@ -79,7 +79,7 @@ export default function CaminoPage() {
       />
 
       {loading ? (
-        <LoadingScreen fullScreen={false} text="Cargando tu camino..." />
+        <LoadingScreen fullScreen={false} />
       ) : (
         <>
 

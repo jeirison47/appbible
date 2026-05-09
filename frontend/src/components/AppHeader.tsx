@@ -17,6 +17,7 @@ interface AppHeaderProps {
 export default function AppHeader({ variant = 'global', contextBar, subBar }: AppHeaderProps) {
   const location = useLocation();
   const roles = useAuthStore((state) => state.roles);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isAdmin = roles.some((r) => r.name === 'admin');
 
   const isActive = (path: string) => {
@@ -47,14 +48,18 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
         </Link>
         {!isAdmin && (
           <>
-            <Link to="/camino" className={navLinkClass('/camino')} data-tutorial="nav-camino">
-              <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-              Camino
-            </Link>
-            <Link to="/aprender" className={navLinkClass('/aprender')}>
-              <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
-              Aprender
-            </Link>
+            {isAuthenticated && (
+              <Link to="/camino" className={navLinkClass('/camino')} data-tutorial="nav-camino">
+                <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                Camino
+              </Link>
+            )}
+            {isAuthenticated && (
+              <Link to="/aprender" className={navLinkClass('/aprender')} data-tutorial="nav-aprender">
+                <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                Aprender
+              </Link>
+            )}
             <Link to="/lectura-libre" className={navLinkClass('/lectura-libre')} data-tutorial="nav-lectura-libre">
               <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
               Lectura Libre
@@ -63,10 +68,12 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
               <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
               Buscar
             </Link>
-            <Link to="/estadisticas" className={navLinkClass('/estadisticas')} data-tutorial="nav-estadisticas">
-              <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-              Estadísticas
-            </Link>
+            {isAuthenticated && (
+              <Link to="/estadisticas" className={navLinkClass('/estadisticas')} data-tutorial="nav-estadisticas">
+                <svg className="w-5 h-5 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Estadísticas
+              </Link>
+            )}
           </>
         )}
         {isAdmin && (
@@ -80,21 +87,25 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
   );
 
   const mobileBottomNav = (
-    <div className="fixed bottom-0 left-0 right-0 md:hidden bg-manah-card border-t border-manah-gold/20 z-50 font-manrope">
+    <div data-tutorial="mobile-nav" className="fixed bottom-0 left-0 right-0 md:hidden bg-manah-card border-t border-manah-gold/20 z-50 font-manrope">
       {!isAdmin ? (
         <div className="flex items-center justify-around px-2 py-2">
           <Link to="/inicio" className={mobileNavLinkClass('/inicio')} data-tutorial="nav-inicio-mobile">
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             <span className="text-[10px] font-medium">Inicio</span>
           </Link>
-          <Link to="/camino" className={mobileNavLinkClass('/camino')} data-tutorial="nav-camino-mobile">
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-            <span className="text-[10px] font-medium">Camino</span>
-          </Link>
-          <Link to="/aprender" className={mobileNavLinkClass('/aprender')}>
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
-            <span className="text-[10px] font-medium">Aprender</span>
-          </Link>
+          {isAuthenticated && (
+            <Link to="/camino" className={mobileNavLinkClass('/camino')} data-tutorial="nav-camino-mobile">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+              <span className="text-[10px] font-medium">Camino</span>
+            </Link>
+          )}
+          {isAuthenticated && (
+            <Link to="/aprender" className={mobileNavLinkClass('/aprender')} data-tutorial="nav-aprender-mobile">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+              <span className="text-[10px] font-medium">Aprender</span>
+            </Link>
+          )}
           <Link to="/lectura-libre" className={mobileNavLinkClass('/lectura-libre')} data-tutorial="nav-lectura-libre-mobile">
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
             <span className="text-[10px] font-medium">Libre</span>
@@ -103,10 +114,12 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             <span className="text-[10px] font-medium">Buscar</span>
           </Link>
-          <Link to="/estadisticas" className={mobileNavLinkClass('/estadisticas')} data-tutorial="nav-estadisticas-mobile">
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            <span className="text-[10px] font-medium">Stats</span>
-          </Link>
+          {isAuthenticated && (
+            <Link to="/estadisticas" className={mobileNavLinkClass('/estadisticas')} data-tutorial="nav-estadisticas-mobile">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+              <span className="text-[10px] font-medium">Stats</span>
+            </Link>
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-around px-2 py-2">
@@ -138,15 +151,27 @@ export default function AppHeader({ variant = 'global', contextBar, subBar }: Ap
               </Link>
               <div className="flex items-center gap-2">
                 <ThemeToggle />
-                <Link
-                  to="/perfil"
-                  className="p-2 sm:px-4 sm:py-2 rounded-xl bg-manah-gold text-manah-bg hover:bg-manah-bronze transition cursor-pointer flex items-center gap-2"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                  </svg>
-                  <span className="hidden sm:inline font-medium">Perfil</span>
-                </Link>
+                {isAuthenticated ? (
+                  <Link
+                    to="/perfil"
+                    className="p-2 sm:px-4 sm:py-2 rounded-xl bg-manah-gold text-manah-bg hover:bg-manah-bronze transition cursor-pointer flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                    <span className="hidden sm:inline font-medium">Perfil</span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="p-2 sm:px-4 sm:py-2 rounded-xl bg-manah-gold text-manah-bg hover:bg-manah-bronze transition cursor-pointer flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
+                    </svg>
+                    <span className="hidden sm:inline font-medium">Entrar</span>
+                  </Link>
+                )}
               </div>
           </div>
 

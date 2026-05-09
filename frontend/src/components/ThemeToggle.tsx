@@ -6,6 +6,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
+      data-tutorial="theme-toggle"
       className="p-2 rounded-xl bg-manah-cream/10 hover:bg-manah-cream/20 transition-colors"
       aria-label={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
       title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}

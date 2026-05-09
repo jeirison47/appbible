@@ -139,10 +139,12 @@ export default function HomePage() {
       loadSystemStats();
       loadUserStats();
     } else {
-      progressApi
-        .getMyProgress()
-        .then((data) => setProgress(data.data))
-        .catch((err) => console.error('Failed to load progress:', err));
+      if (user) {
+        progressApi
+          .getMyProgress()
+          .then((data) => setProgress(data.data))
+          .catch((err) => console.error('Failed to load progress:', err));
+      }
 
       readingApi
         .getVerseOfTheDay('RV1960')
@@ -155,13 +157,13 @@ export default function HomePage() {
           setLoading(false);
         });
     }
-  }, [isAdmin]);
+  }, [isAdmin, user]);
 
   useEffect(() => {
     const locationState = location.state as { showTutorial?: boolean } | null;
     const shouldShowManually = locationState?.showTutorial;
 
-    if (!tutorialLoading && !isAdmin && location.pathname === '/inicio') {
+    if (!tutorialLoading && !isAdmin && user && location.pathname === '/inicio') {
       const isFirstTime = !onboarding.completed && !onboarding.skipped;
       const shouldShow = shouldShowManually || isFirstTime;
 
@@ -574,7 +576,7 @@ export default function HomePage() {
         <div className="mb-6">
           <p className="text-xs font-bold text-manah-muted tracking-widest mb-1">{dateStr}</p>
           <h1 className="text-2xl sm:text-3xl font-bold text-manah-cream">
-            Hola, {user?.displayName}.
+            {user ? `Hola, ${user.displayName}.` : 'Bienvenido.'}
           </h1>
         </div>
 
@@ -607,8 +609,25 @@ export default function HomePage() {
 
         <div className="w-full h-px bg-manah-gold/15 mb-5" />
 
-        {/* Racha */}
-        <div className="bg-manah-gold rounded-xl p-5 mb-4">
+        {/* CTA para invitados */}
+        {!user && (
+          <div className="bg-manah-card border border-manah-gold/20 rounded-xl p-6 mb-6 text-center">
+            <p className="text-manah-muted text-sm mb-4">Crea una cuenta para acceder a tu camino de lectura, racha, estadísticas y más.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/register" className="bg-manah-gold text-manah-bg px-6 py-2.5 rounded-xl font-bold hover:bg-manah-bronze transition cursor-pointer">
+                Crear cuenta
+              </Link>
+              <Link to="/login" className="bg-manah-deep text-manah-cream px-6 py-2.5 rounded-xl font-bold hover:bg-manah-deep/80 transition cursor-pointer border border-manah-gold/20">
+                Iniciar sesión
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Racha y progreso — solo usuarios autenticados */}
+        {user && (
+        <>
+        <div data-tutorial="racha-card" className="bg-manah-gold rounded-xl p-5 mb-4">
           {loading || !progress ? (
             <div className="animate-pulse space-y-4">
               <div className="h-4 bg-manah-deep rounded w-20"></div>
@@ -625,8 +644,8 @@ export default function HomePage() {
                   <div className="flex items-end gap-2">
                     <span className="text-5xl font-bold text-manah-bg leading-none">{currentStreak}</span>
                     <div className="flex items-center gap-1 mb-1">
-                      <span className="text-manah-bg/70 text-sm">días seguidos</span>
-                      <svg className="w-5 h-5 text-manah-bg/70" fill="currentColor" viewBox="0 0 24 24">
+                      <span className="text-manah-bg text-sm font-bold">días seguidos</span>
+                      <svg className="w-5 h-5 text-manah-bg" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M13.5 0.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5 0.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
                       </svg>
                     </div>
@@ -634,21 +653,21 @@ export default function HomePage() {
                 </div>
                 <div className="text-right flex-shrink-0 ml-4">
                   {longestStreak > 0 && (
-                    <p className="text-xs text-manah-bg/50 mb-2">mejor {longestStreak}d</p>
+                    <p className="text-xs font-bold text-manah-bg/50 mb-2">mejor {longestStreak}d</p>
                   )}
                   {progress.streak?.status && (
                     <div className="w-28">
-                      <div className="flex justify-between text-xs text-manah-bg/60 mb-1">
+                      <div className="flex justify-between text-xs font-bold text-manah-bg/60 mb-1">
                         <span>{progress.streak.status.xpToday}/{progress.streak.status.xpRequired} XP</span>
                         <span>{Math.floor(progress.streak.status.xpProgress)}%</span>
                       </div>
                       <div className="w-full bg-manah-bg/20 h-1.5 rounded-full overflow-hidden">
                         <div
-                          className="bg-manah-bg/60 h-1.5 rounded-full transition-all duration-300"
+                          className="bg-manah-bg h-1.5 rounded-full transition-all duration-300"
                           style={{ width: `${Math.min(progress.streak.status.xpProgress, 100)}%` }}
                         />
                       </div>
-                      <p className="text-xs text-manah-bg/60 mt-1 leading-tight">
+                      <p className="text-xs font-bold text-manah-bg/60 mt-1 leading-tight">
                         {progress.streak.status.goalMetToday ? '¡Meta cumplida!' : 'para mantener racha'}
                       </p>
                     </div>
@@ -678,7 +697,7 @@ export default function HomePage() {
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-3 mb-4">
           {/* Nivel */}
-          <div className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
+          <div data-tutorial="xp-card" className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
             {loading || !progress ? (
               <div className="animate-pulse space-y-2">
                 <div className="h-4 bg-manah-deep rounded w-4"></div>
@@ -692,7 +711,7 @@ export default function HomePage() {
                 </svg>
                 <p className="text-xl font-bold text-manah-cream">Lv {currentLevel}</p>
                 <p className="text-xs text-manah-muted mt-0.5">{totalXp} xp</p>
-                <div className="w-full bg-manah-bg h-1 mt-2">
+                <div className="w-full bg-manah-bg h-1 mt-2 rounded-full overflow-hidden">
                   <div className="bg-manah-gold h-1 transition-all" style={{ width: `${xpPct}%` }} />
                 </div>
               </>
@@ -700,7 +719,7 @@ export default function HomePage() {
           </div>
 
           {/* Meta */}
-          <div className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
+          <div data-tutorial="meta-card" className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
             {loading || !progress ? (
               <div className="animate-pulse space-y-2">
                 <div className="h-4 bg-manah-deep rounded w-4"></div>
@@ -714,7 +733,7 @@ export default function HomePage() {
                 </svg>
                 <p className="text-xl font-bold text-manah-cream">{dailyProgress}/{dailyGoal}</p>
                 <p className="text-xs text-manah-muted mt-0.5">capítulos</p>
-                <div className="w-full bg-manah-bg h-1 mt-2">
+                <div className="w-full bg-manah-bg h-1 mt-2 rounded-full overflow-hidden">
                   <div className="bg-manah-gold h-1 transition-all" style={{ width: `${progress.dailyGoal.percentage}%` }} />
                 </div>
               </>
@@ -722,7 +741,7 @@ export default function HomePage() {
           </div>
 
           {/* Tiempo */}
-          <div className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
+          <div data-tutorial="tiempo-card" className="bg-manah-card rounded-xl border border-manah-gold/15 p-3">
             {loading || !progress ? (
               <div className="animate-pulse space-y-2">
                 <div className="h-4 bg-manah-deep rounded w-4"></div>
@@ -785,6 +804,8 @@ export default function HomePage() {
             </p>
           </Link>
         </div>
+        </>
+        )}
 
       </div>
 

@@ -85,7 +85,7 @@ export default function RegisterPage() {
   };
 
   if (isLoading || syncingAuth0) {
-    return <LoadingScreen text={syncingAuth0 ? 'Sincronizando con el servidor...' : 'Cargando...'} />;
+    return <LoadingScreen />;
   }
 
   return (
@@ -96,7 +96,7 @@ export default function RegisterPage() {
           <div className="text-center mb-6">
             <Link to="/" className="flex items-center justify-center gap-3 mb-3 hover:opacity-80 transition cursor-pointer">
               <img
-                src="/logo-header-manah.png"
+                src="/logo-color-manah.png"
                 alt="Manah Logo"
                 className="h-16 w-auto"
               />
@@ -221,9 +221,9 @@ export default function RegisterPage() {
               ¿Ya tienes cuenta?{' '}
               <Link
                 to="/login"
-                className="text-manah-gold hover:text-manah-bronze font-semibold"
+                className="text-manah-gold hover:text-manah-cream font-bold underline transition cursor-pointer"
               >
-                Inicia sesión aquí
+                Inicia Sesión
               </Link>
             </p>
           </div>
@@ -235,28 +235,6 @@ export default function RegisterPage() {
             </Link>
           </div>
 
-          {/* Benefits */}
-          <div className="mt-6 p-4 bg-manah-deep border border-manah-gold/20 rounded-xl">
-            <p className="font-semibold text-manah-cream mb-2 text-sm">Al registrarte obtendrás:</p>
-            <ul className="space-y-1 text-xs text-manah-muted">
-              <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
-                Acceso completo a toda la Biblia
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
-                Sistema de progreso y logros
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
-                Lectura guiada por capítulos
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-green-500">✓</span>
-                Versículo diario personalizado
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
