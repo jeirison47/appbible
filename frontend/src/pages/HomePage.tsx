@@ -565,6 +565,7 @@ export default function HomePage() {
   const dailyProgress = progress?.dailyGoal?.progress ?? 0;
   const dailyGoal = progress?.dailyGoal?.goal ?? 0;
   const displayMinutes = Math.floor((progress?.dailyGoal?.minutesRead ?? 0) / 60);
+  const displaySeconds = (progress?.dailyGoal?.minutesRead ?? 0) % 60;
 
   return (
     <div className="min-h-screen bg-manah-bg font-manrope">
@@ -753,7 +754,7 @@ export default function HomePage() {
                 <svg className="w-4 h-4 text-manah-muted mb-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/>
                 </svg>
-                <p className="text-xl font-bold text-manah-cream">{displayMinutes} m</p>
+                <p className="text-xl font-bold text-manah-cream">{displayMinutes}m {displaySeconds}s</p>
                 <p className="text-xs text-manah-muted mt-0.5">tiempo hoy</p>
               </>
             )}
