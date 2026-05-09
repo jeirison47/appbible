@@ -20,7 +20,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
 
   const isMobile = window.innerWidth < 768;
   const navSuffix = isMobile ? '-mobile' : '';
-  const navPlacement = isMobile ? 'top' : 'bottom';
+  const navPlacement = (isMobile ? 'top' : 'bottom') as 'top' | 'bottom';
 
   const title = (text: string) => (
     <h3 style={{ fontWeight: 700, marginBottom: '4px', color: tooltipText }}>{text}</h3>
@@ -53,7 +53,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Usa estos botones para moverte por la app.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: `[data-tutorial="nav-inicio${navSuffix}"]`,
@@ -64,7 +64,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Aquí verás tu racha, XP, metas del día y el versículo diario.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: '[data-tutorial="racha-card"]',
@@ -119,7 +119,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Sigue un recorrido guiado por toda la historia bíblica. Perfecto para leer la Biblia completa de forma ordenada.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: `[data-tutorial="nav-aprender${navSuffix}"]`,
@@ -130,7 +130,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Completa lecciones por capítulo, gana XP y refuerza tu conocimiento bíblico.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: `[data-tutorial="nav-lectura-libre${navSuffix}"]`,
@@ -141,7 +141,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Elige tu propio camino de lectura. Ideal para estudios específicos o devocionales.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: `[data-tutorial="nav-buscar${navSuffix}"]`,
@@ -152,7 +152,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Busca en toda la Biblia de forma rápida. Perfecto para estudios bíblicos profundos.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: `[data-tutorial="nav-estadisticas${navSuffix}"]`,
@@ -163,7 +163,7 @@ export const OnboardingTour: React.FC<OnboardingTourProps> = ({ run, onComplete 
           {body('Ve cuántos capítulos has leído, tu racha más larga, niveles y más.', true)}
         </div>
       ),
-      placement: navPlacement as const,
+      placement: navPlacement,
     },
     {
       target: 'a[href="/perfil"]',
